@@ -109,12 +109,19 @@ fixed at `new_context()` time, so capturing both orientations appears to need tw
 contexts. Ask whether a documented recipe exists or the engine should cover it. Low
 priority — only matters if turntable video in both orientations is actually wanted.
 
-## 6. Next actions
+## 6. Actions taken 2026-07-20
 
-1. Comment on **#144** as a downstream consumer describing the caxgauge need (local static
-   viewer, named camera presets, multi-view capture, console-as-hard-failure). Highest
-   value, zero duplication.
-2. File **B** (docs caveat) — small, uncontroversial, prevents a real trap.
-3. Raise **A** (SSRF scope) as a security-scoped discussion, worded as ceiling-raising.
-4. Defer **C** into the #144 conversation; defer **D** until orientation video is needed.
-5. Add caxgauge to #176's consumer list only once P5 actually ships.
+| Action | Status |
+|---|---|
+| Comment on **#144** as downstream consumer — local static viewer, named camera presets, multi-view capture, console-as-hard-failure, plus the in-scope question (C, folded in) | Posted: [comment](https://github.com/qte77/polyfetch-scrape/issues/144#issuecomment-5025307320) |
+| **B** — docs: surface the isolated-world `page.evaluate` caveat in `USING.md` | Filed: [#180](https://github.com/qte77/polyfetch-scrape/issues/180) |
+| **A** — SSRF literal-IP scope, framed as ceiling-raising with four options and the local-E2E tension named | Filed: [#181](https://github.com/qte77/polyfetch-scrape/issues/181) |
+| **D** — portrait + landscape video in one session | Deferred; only matters if orientation video is actually wanted |
+| Add caxgauge to #176's consumer list | Deferred until P5 ships — do not claim consumer status before there is code |
+
+### Watch for the answer to the scope question
+
+The #144 comment asks whether E2E UI testing of one's own app is in scope for polyfetch at
+all. **If the answer is no, revisit plan 001 §5.1 before implementing P5** — the render
+substrate would be resting on a borrowed, unsupported surface. Nothing else in P1-P4
+depends on it.

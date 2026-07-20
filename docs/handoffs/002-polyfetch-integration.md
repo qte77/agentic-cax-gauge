@@ -14,8 +14,14 @@ document. Read that first. This one covers only the `polyfetch-scrape` dependenc
 ## State
 
 Findings verified and recorded in [`plan 002`](../plans/002-polyfetch-integration.md).
-**No upstream issues filed, no comments posted** — those are outward-facing actions
-awaiting human go-ahead. No code written.
+Upstream contact made 2026-07-20 (plan 002 §6): consumer comment on
+[#144](https://github.com/qte77/polyfetch-scrape/issues/144), docs issue
+[#180](https://github.com/qte77/polyfetch-scrape/issues/180), SSRF scope issue
+[#181](https://github.com/qte77/polyfetch-scrape/issues/181). **No code written.**
+
+**Check #144 for a reply before implementing P5** — it asks whether E2E UI testing of
+one's own app is in scope for polyfetch. A "no" means plan 001 §5.1's render substrate
+needs rethinking. P1-P4 are unaffected either way, so this does not block starting.
 
 ## The three things that matter
 
