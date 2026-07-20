@@ -93,16 +93,76 @@ Nothing below exists yet. All paths relative to repo root.
 | `src/caxgauge/loop.py` | Orchestrator: generate -> verify -> critique -> escalate | P3 |
 | `src/caxgauge/generate.py` | Spec -> prompt; sandboxed execution of returned code | P3 |
 | `src/caxgauge/verify/slicer.py` | Printability gate, CLI wrap, PASS/WARN/FAIL/SKIP | P4 |
-| `src/caxgauge/verify/render.py` | Multi-view turntable PNGs for critique | P5 |
-| `src/caxgauge/critique/vlm.py` | Thin adapter over `vlm-toolkit`; cap 3, revert-on-break | P5 |
+| `src/caxgauge/verify/render.py` | Multi-view PNG/video capture, driven through `polyfetch-scrape` against the local viewer | P5 |
+| `viewer/index.html` | Minimal static three.js + STLLoader page; loads a mesh by query param, exposes named camera presets. Deliberately ~100 lines of static HTML, **not** a React app | P5 |
+| `src/caxgauge/verify/browser.py` | **Deterministic** browser-side checks: `pageerror` / `requestfailed` / non-200 `response` capture. A mesh that fails to parse in the viewer is a hard failure, not a VLM judgement | P5 |
+| `src/caxgauge/critique/loop.py` | Bounded critique orchestration; cap 3, revert-on-break. Backend-agnostic | P5 |
+| `src/caxgauge/critique/backends/` | `CritiqueBackend` Protocol + stub. **OpenAI-spec chat-completions-with-images is the primary wire format** (see §5.1) | P5 |
 | `src/caxgauge/verify/sim.py` | CAE acceptance asserts — **seam only, empty in v0** | deferred |
-| `src/caxgauge/gui/` | Experimental sandboxed computer-use fallback; must not gate CI | P6 |
+| `src/caxgauge/gui/` | Browser-based CAD driving via `polyfetch` `render_session` + DOM selectors; must not gate CI | P6 |
 | `tests/` | Mirrors `src/` 1:1 | all |
 | `configs/` | Example `DesignSpec` files | P1 |
 
 **Why `verify/sim.py` is reserved now:** a CAE acceptance check ("peak stress under
 yield") is structurally identical to a geometry check ("bbox under 80mm") — a bound on a
 measured scalar. Reserving the seam costs nothing and stops CAE being bolted on sideways.
+
+### 5.1 Render and critique substrate — `polyfetch-scrape`
+
+Rendering geometry headlessly is the awkward part of P5. Native VTK/OpenGL offscreen
+rendering needs GL/X11 in CI and is fragile. Instead: render in a **minimal static
+three.js page** and drive it with `../polyfetch-scrape` (Apache-2.0, Python ≥3.11,
+v0.7.0), which owns Patchright/Chromium install, launch, teardown, capture and an SSRF
+guard.
+
+What that buys, all from the existing engine surface:
+
+- **Multi-view capture** — `render_session(url)` gives a live instrumented `Page`; drive
+  named camera presets, screenshot each. Named + single screenshots are engine-level;
+  `fetch --json` returns `screenshot_b64`.
+- **Turntable video** — VP8 `.webm` via `Response.video_path`, a core render option.
+- **Viewport / orientation / device emulation** — landscape and portrait, device presets,
+  colour-scheme. Set at `new_context()` time as options, or live via
+  `page.set_viewport_size(...)`.
+- **A deterministic browser-side gate** — `page.on("pageerror" | "requestfailed" |
+  "response" | "console")`. If a mesh fails to parse in the loader, that is a **hard
+  failure signal**, not a VLM opinion. This belongs in `verify/`, not `critique/`.
+- **E2E UI testing** of any caxgauge report UI — clicks, dropdowns, `aria_snapshot()`.
+
+**Non-negotiable constraints, taken from `polyfetch-scrape/AGENT_LEARNINGS.md` — adopt
+from day one rather than rediscovering them:**
+
+1. **Never assert three.js state via `page.evaluate`.** Patchright is a stealth Playwright
+   fork running `evaluate` in an **isolated world**; page-script globals (`window.THREE`,
+   module-scoped vars) read back `undefined` even when the scene rendered correctly. Their
+   log records exactly this false negative. **Screenshots are ground truth for "did it
+   render"; `page.on(...)` for "did it load".** Reserve `evaluate` for DOM you set or read
+   structurally.
+2. **Capture all four events.** Uncaught/parse errors fire `pageerror`, *not* `console`.
+   Blocked or non-2xx resources fire `requestfailed` / non-200 `response`. Listening to
+   `console` alone silently misses most real failures.
+3. **A clean console means "no error on this network", not "no error".** To trust the
+   capture, force a failure once and confirm the listeners fire.
+
+**Consumption:** env-borrow via `uv run --directory ../polyfetch-scrape` (documented in its
+`USING.md`) — no venv poisoning. `make doctor` is idempotent and reinstalls the Chromium
+cache when borrowing.
+
+### 5.2 Critique backends — pluggable, OpenAI-spec first
+
+Do not hardcode a single VLM. `CritiqueBackend` is a Protocol; the **OpenAI-spec
+chat-completions-with-images format is the primary wire protocol** because it is what most
+serving stacks already speak:
+
+| Backend | Route | Note |
+|---|---|---|
+| **OpenAI-spec endpoint** | Default | Covers `llama-server`, vLLM, LM Studio, OpenRouter, and hosted APIs with one adapter. Base-URL + model configurable |
+| `../vlm-toolkit` | In-process or HTTP | Estate-owned local GGUF VLM + YOLO26 detector. Its HTTP mode is `llama-server`, which **already speaks the OpenAI spec** — so it is a provider behind the default adapter, not a separate integration |
+| landing.ai | Adapter | Different API shape, specialised detection. Estate prior art in `../VisAgent-Proto` (v0.0.0 draft — treat as reference, not a dependency) |
+| stub | Always available | Returns a fixed verdict; keeps CI green with no model configured |
+
+This keeps the local/offline path (vlm-toolkit) and the hosted path behind one interface,
+and means a model swap is config, not code.
 
 ## 6. Source map
 
@@ -277,7 +337,8 @@ Exact paths verified this session. Do not re-search for these.
 | STEP round-trip escape hatch | `../so101-biolab-automation/docs/hardware/cad-tooling.md:125-145` | `build123d -> STEP -> FreeCAD GUI edit -> STEP -> slicer`; hand-edited STEP becomes new leaf source of truth. |
 | Config-over-code | Pydantic `BaseSettings.from_yaml()` throughout both repos | Keeps agent-generated parameters auditable/version-controlled, not baked into generated code. |
 | Governance scaffold | `AGENTS.md` + `.claude/rules/` + `AGENT_LEARNINGS.md` + `AGENT_REQUESTS.md` + compound-learning promotion path | Estate standard. Copy structure, not content. |
-| **VLM critique backend** | **`../vlm-toolkit`** | Local GGUF VLM + YOLO26 detector, in-process (`llama-cpp-python`) or HTTP (`llama-server`), Python `>=3.11,<3.13`, Apache-2.0. Already names so101 + i3mega as planned consumers. **P5 consumes this — do not build a second VLM integration.** Pre-`v0.1.0`, API unstable: pin it, keep the adapter thin. See its `docs/architecture.md`, `docs/consumers.md`. |
+| **VLM critique backend** | **`../vlm-toolkit`** | Local GGUF VLM + YOLO26 detector, in-process (`llama-cpp-python`) or HTTP (`llama-server`), Python `>=3.11,<3.13`, Apache-2.0. Already names so101 + i3mega as planned consumers. **P5 consumes this — do not build a second VLM integration.** Pre-`v0.1.0`, API unstable: pin it, keep the adapter thin. Its `llama-server` HTTP mode already speaks the OpenAI spec, so route it through the default adapter (§5.2). See its `docs/architecture.md`, `docs/consumers.md`. |
+| **Render capture, browser gate, E2E UI** | **`../polyfetch-scrape`** (v0.7.0, Apache-2.0, Python ≥3.11) | Owns Patchright/Chromium install, launch, teardown, capture and SSRF guard. Gives screenshots + named captures, VP8 video (`Response.video_path`), device/viewport/orientation/colour-scheme emulation, `render_session()` for multi-step driving, and DevTools console/network/JS-error capture. Removes the VTK-in-CI problem and supplies a **deterministic** browser-side failure signal. Consume via env-borrow (`uv run --directory`, see its `USING.md`) — no venv poison. **Adopt the three Patchright constraints in §5.1 from day one.** |
 
 ### Research-hub relationship — `../ai-agents-research`
 
@@ -335,8 +396,20 @@ Each phase independently shippable.
 - **P3 — Loop orchestrator + generation.** Sandboxed execution; failures feed back as
   structured text.
 - **P4 — Manufacturability gate.** Port `verify/slicer.py` from the two validators.
-- **P5 — Bounded VLM critique.** `verify/render.py` + `critique/vlm.py` over `vlm-toolkit`.
-- **P6 — GUI fallback (experimental).** One tool, sandboxed, non-gating, cuttable.
+- **P5 — Render, browser gate, bounded critique.** Three separable pieces, in order:
+  (1) `viewer/index.html`, a boring static three.js + STLLoader page with named camera
+  presets; (2) `verify/browser.py` — **deterministic, ships before any VLM work**: load
+  the mesh via `polyfetch`, capture `pageerror` / `requestfailed` / non-200 `response`;
+  a mesh that will not parse is a hard failure, and this has value with no model
+  configured at all; (3) `verify/render.py` + `critique/` — multi-view PNG and turntable
+  video, then bounded critique behind the `CritiqueBackend` Protocol (§5.2), cap 3,
+  revert-on-break, escalate past the cap.
+- **P6 — GUI-driven CAD (experimental). Reframed.** Target *browser-based* CAD (Onshape
+  first) driven through `polyfetch` `render_session()` using **DOM selectors and
+  `aria_snapshot()`**, not desktop CAD via pixel-level computer-use. Materially better
+  risk profile — real selectors instead of screenshot guessing — and it reuses tooling
+  P5 already depends on. Desktop-GUI computer-use is now **out of scope**. Still
+  sandboxed, non-gating, cuttable.
 - **P7 — Adoption.** Consumer PRs in so101 + i3mega; rewrite so101 roadmap to point here.
 
 ## 10. Verification strategy
@@ -364,8 +437,12 @@ Each phase independently shippable.
 2. **Wedge not validated.** Run `adversarial-distillation` on "TDD for CAD" before P1.
    `cad-agent` and `openscad-agent` (§6.4) already do generate-render-self-correct. Cheap
    to falsify now, expensive after P3.
-3. **P6 is the weakest leg.** No vendor claims unattended reliability; 47-82% OSWorld.
-   Sandboxed, non-gating, cuttable.
+3. **P6 downgraded from "weakest leg" to "plausible".** Originally scoped as desktop-GUI
+   computer-use, where no vendor claims unattended reliability and OSWorld sits at 47-82%.
+   Retargeting to browser-based CAD via `polyfetch`/Patchright DOM selectors (§9, P6)
+   removes the pixel-guessing failure mode entirely. Residual risk is Onshape's DOM
+   stability and ToS on automated access — **check their terms before building against
+   it.** Still non-gating and cuttable.
 4. **AHA check.** The CAD-build/slicer pattern appears twice. Generalizing it *inside*
    this repo is fine; extracting a separate shared package consumed by all three is
    deliberately **not** in scope until the pattern proves stable here.
@@ -379,6 +456,35 @@ Each phase independently shippable.
    direct competitor. Treat §6.4 as provisional and re-sweep before committing to
    positioning — in particular search agent-skill/plugin marketplaces, not just arXiv and
    MCP registries.
+
+## 12. Upstream contribution stance
+
+**Decided 2026-07-20: issue-first probe, commit no code yet.** Ask
+`earthtojake/text-to-cad` what would actually help before writing anything. Rationale:
+solo maintainer already carrying 12 open PRs, so unsolicited large PRs likely stall; their
+answer informs scope; costs nothing.
+
+**Offerable today (exists, battle-tested):**
+
+| Asset | Source | Their gap |
+|---|---|---|
+| Headless slicer printability gate | `../so101-biolab-automation/src/hardware/slicer/validate.py:1-275`, `../i3mega-pipettebot/tools/slicer/validate.py:77-132` | Their `gcode` skill has only a diagnostic `--dry-run`, explicitly not wired as a gate |
+| ~20 real parametric parts with engineering constraints (payload budget, Z-envelope) | `../so101-biolab-automation/src/hardware/parts.json`, `../i3mega-pipettebot/tools/cad/parts.json` | Their `benchmarks/` are 10 synthetic prompts |
+| Coordinate-frame inversion writeup (CAD `+Y` vs machine `+Y`) | `../i3mega-pipettebot/.claude/rules/cad-script-conventions.md`, `AGENT_LEARNINGS.md:7-18` | Relevant to their URDF/robotics output |
+
+**Deliberately withheld: the benchmark grader.** Their `benchmarks/*.md` carry test-case
+checklists ("exactly one watertight solid") with no grading script, and the author has
+publicly said benchmarks are in progress. Building that grader for them would close the
+incumbent's weakest gap using this project's own differentiator. Reconsider only as a
+deliberate strategic choice, not as incidental goodwill.
+
+**Not contributable:** the qte77 operating model, governance scaffolding, and `gha-*`
+actions. Pushing estate governance into a third-party OSS project reads as
+self-promotion, not help.
+
+**License note:** estate repos are Apache-2.0; `text-to-cad` is MIT. Any contribution
+means relicensing our own code to MIT. Permissible as copyright holder, but must be
+deliberate and stated in the PR.
 
 ## Sources
 
