@@ -39,34 +39,31 @@ Phase P0a is complete. Nothing else has been started.
 
 ## Next actions, in order
 
-1. **DONE — wedge red-team run 2026-07-20, verdict KILL-as-scoped.** See
-   [`../reviews/001-wedge-red-team.md`](../reviews/001-wedge-red-team.md). The deterministic
-   verifier survives only for global/static/foreseen properties (~1/3 of real defects) and
-   is structurally blind to the dominant defect class (local/unforeseen/sequential/
-   fidelity). Independence is fiction when the same intelligence authors spec + geometry.
-   The deterministic-authoritative / VLM-subordinate ordering is **backwards** for the
-   blind-spot defects, and revert-on-break selects for gaming. **A reframe is recommended
-   (render-first human gate; cheap preflight; VLM-as-assist; reactive checks; spec only in
-   regression framing) but NOT yet decided by the human. Do not build P1 as originally
-   scoped until that decision lands.**
-3. **P0b — scaffold.** `pyproject.toml` (Python 3.12 exactly — hard constraint, see plan
-   §2), `Makefile`, CI, quality gates, governance files copied *in structure* from
+1. **DONE — wedge red-teamed 2026-07-20 (KILL-as-scoped) and reframed by the human.** See
+   [`../reviews/001-wedge-red-team.md`](../reviews/001-wedge-red-team.md). Plan 001 §3-§5,
+   §9, §10 have been rewritten to the render-first design. The pre-declared-oracle wedge is
+   gone; do not resurrect it.
+2. **P0b — scaffold.** `pyproject.toml` (Python 3.12 exactly — hard constraint, plan §2),
+   `Makefile`, CI, quality gates, governance files copied *in structure* from
    `../so101-biolab-automation`.
-4. **P1 — `spec.py` + `verify/geometry.py`, test-first.** This is the load-bearing
-   contribution. Build it before anything agentic; it is testable with fixture STLs and no
-   LLM at all.
+3. **P1 — cheap preflight + viewer + browser-load check, test-first** (`verify/preflight.py`,
+   `viewer/index.html`, `verify/browser.py`). The load-bearing survivor. No agent, no VLM;
+   fixture STLs only. Must catch silent boolean-fusion feature loss.
 
-Do not start at P3 because it is the interesting part. The verifier is what makes the rest
-meaningful.
+Do not resurrect the killed design. Specifically: no bounded auto-critique loop with
+revert-on-break (it selects for gaming); the VLM annotates, it never gates; green is
+*necessary, not sufficient* and the system must never emit a "verified/correct" verdict
+from deterministic checks alone. The render seen by a human is the real gate.
 
 ## How to handle the plan
 
 - **Phases are independently shippable.** Stop after any one and the repo still has value.
-- **Deterministic before agentic.** P1 needs no LLM. If you are wiring an agent loop before
-  the geometry asserts work, you are out of order.
-- **Do not build a second VLM integration.** P5 is a thin adapter over `../vlm-toolkit`,
-  which already exists and already names this estate's repos as consumers. Pin it — it is
-  pre-`v0.1.0` with an unstable API.
+- **Preflight and render before agentic.** P1 and P2 need no LLM and no generation. If you
+  are wiring an agent loop before the preflight + render gate works, you are out of order.
+- **The VLM annotates, never gates.** The `annotate/` backend (P5) is a thin adapter over
+  `../vlm-toolkit` (via the OpenAI-spec route — its `llama-server` mode already speaks it).
+  Advisory only; "no model" is a first-class, fully-functional mode. Do not build a second
+  VLM integration, and do not give the VLM a green-light or an auto-loop.
 - **Do not extract a shared CAD package** across so101/i3mega/this repo yet. The pattern
   has two instances; AHA says wait until it is stable here first (plan §11.4).
 - **Stub-mode is mandatory, not optional.** Every backend and external-tool wrapper must

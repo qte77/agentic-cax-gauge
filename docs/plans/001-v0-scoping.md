@@ -7,13 +7,14 @@ validated_links: 2026-07-20
 status: approved
 ---
 
-**Status**: Approved, not yet implemented — **but the core wedge failed its red-team
-2026-07-20 (KILL-as-scoped).** See [`../reviews/001-wedge-red-team.md`](../reviews/001-wedge-red-team.md).
-Do not build §3-§5 as written until the reframe decision is made. The deterministic
-verifier survives in narrow form; the "pre-declared full DesignSpec as authoritative
-correctness oracle, VLM strictly subordinate" framing does not. Recommended reframe:
-cheap preflight + render-first human gate + VLM-as-assist + reactive checks + spec only
-in regression framing. Human decision pending; nothing below has been rewritten.
+**Status**: Reframed 2026-07-20 and approved, not yet implemented. The original wedge
+(pre-declared full `DesignSpec` as authoritative correctness oracle, VLM strictly
+subordinate) **failed its red-team** ([`../reviews/001-wedge-red-team.md`](../reviews/001-wedge-red-team.md));
+the human adopted the reframe. §3-§5, §9, §10 below are the corrected **render-first**
+design: cheap preflight (necessary-not-sufficient) + auto multi-view render as the primary
+human gate + VLM-as-assist (advisory, never gates) + reactive checks + `DesignSpec` only in
+regression framing + two-sided clearances. §6-§8 (research, source map, estate reuse) and
+§12 (contribution stance) are unchanged and still valid.
 
 ## 1. Context
 
@@ -47,43 +48,78 @@ closes the full loop.
 | Testing | Strict TDD, behavior-level, no Gherkin/BDD | Estate standard; legacy `RAPID-spec-forge` BDD guidance explicitly rejected |
 | Python | 3.12 exactly | Hard constraint: `build123d -> cadquery-ocp -> VTK` has no cp313 wheels |
 
-## 3. The wedge
+## 3. The approach (reframed 2026-07-20 after red-team)
 
-Comparable projects do `prompt -> CAD -> eyeball the render`. The missing primitive is a
-**declarative, machine-checkable acceptance spec that exists before generation**, making
-red-green-refactor possible on geometry.
+> The original wedge — a pre-declared full `DesignSpec` as an authoritative correctness
+> oracle with the VLM strictly subordinate — **failed its red-team**
+> ([`../reviews/001-wedge-red-team.md`](../reviews/001-wedge-red-team.md)). The
+> deterministic layer catches only global/static/foreseen properties (~1/3 of real
+> defects) and is blind to the dominant class (local/unforeseen/sequential/fidelity); the
+> "independent spec" is fiction when the same intelligence authors spec + geometry; and a
+> deterministic gate that is authoritative-but-blind, with revert-on-break, *selects for
+> gaming*. What follows is the corrected, human-decided reframe.
 
-`DesignSpec` declares checkable intent: envelope, named feature dimensions + tolerances,
-required clearances between mating parts, mass/volume bounds, material, manufacturability
-constraints. The verifier turns each into a pass/fail assertion. The agent iterates until
-green, not until it looks right.
+The honest primitive is not a machine oracle. It is **making the part cheap and fast to
+judge, and honest about what it does not know.** Three layers, in this order of trust:
 
-**Unvalidated.** This wedge has not been red-teamed against the incumbents in §6.4. Do
-this before P1 (§7.2).
+1. **Cheap deterministic preflight (necessary, not sufficient).** build-succeeds +
+   manifold/watertight + bbox + mass, plus a browser-load check. These are trustworthy and
+   catch real *global/static* failures — including silent boolean-fusion feature loss,
+   which is otherwise invisible. They are a gate against the obviously-broken, never a
+   certificate of correctness.
+2. **Auto-generated multi-view render as the PRIMARY gate.** For the defect classes the
+   deterministic layer is blind to (a gusset over a hole, a hole that isn't through, a
+   datum-offset mating feature), the real gate is a human looking at a fast, automatic
+   3-view render. The harness's job is to make that glance instant, not to replace it.
+3. **VLM as an assist, not an authority.** The VLM annotates the render to draw the human's
+   eye ("this hole looks occluded") — advisory only. It never gates, never auto-loops to
+   "green", and cannot suppress the human review. This is consistent with the BLINK/
+   VSI-Bench evidence that the VLM is an unreliable judge: it advises, the human decides.
+
+**`DesignSpec` survives only in a regression framing.** Small and cheap (envelope, mass, a
+few genuinely-mated clearances as two-sided fit *windows*), authored once and **reused
+across many regenerations** — the case where pre-declaration actually earns its cost
+(re-run after a build123d/OCCT bump; a component reused across assemblies). New checks are
+added **reactively** per the estate compound-learning rule (2nd/3rd recurrence), never as a
+speculative tolerance/manufacturability DSL. Green is always documented as *necessary, not
+sufficient*.
+
+This dissolves most of the differentiation claim — fine, since positioning is already
+estate-first (§2) and we are not competing with text-to-cad. The value is a correct,
+honest internal instrument, not a moat.
 
 ## 4. Architecture
 
 ```text
-DesignSpec (YAML)  ->  Generate (agent writes parametric code)
-                            |
-                            v
-                    Backend dispatch (build123d | OpenSCAD | stub)
-                            |
-                            v
-              Deterministic verify  <-- load-bearing, gates everything
-              (build ok, manifold, bbox/volume, clearance, printability)
-                            |
-                      green |  red -> feed failures back, regenerate
-                            v
-              Bounded VLM critique (multi-view renders, max 3, revert-on-break)
-                            |
-                            v
-                   Escalate to human past the cap
+DesignSpec (YAML, small)  ->  Generate (agent writes parametric code)
+                                   |
+                                   v
+                           Backend dispatch (build123d | OpenSCAD | stub)
+                                   |
+                                   v
+                 Cheap preflight gate  (build ok, manifold, bbox, mass, browser-load)
+                 necessary-not-sufficient  |
+                            fail -> feed structured failure back, regenerate
+                                   |
+                              pass |
+                                   v
+                 Auto multi-view render  <-- the PRIMARY gate
+                                   |
+                        VLM annotates the render (advisory, never gates)
+                                   |
+                                   v
+                 Human reviews render + annotations  (the real decision)
+                                   |
+                 Regression mode: re-run preflight + named spec asserts on later
+                 regenerations; diff against last-good; surface changes to the human
 ```
 
-Layer order is deliberate. Deterministic checks run first and are **authoritative**. The
-VLM never overrides a deterministic failure; it only catches wrongness the assertions did
-not encode (proportion, orientation, obvious nonsense).
+Ordering rationale, corrected: the deterministic preflight runs first because it is cheap
+and trustworthy for what it *can* see, but it is explicitly **not** authoritative over
+correctness — it cannot be, being blind to most real defects. The render is the primary
+gate; the human is the decision. The VLM never holds a veto or a green-light. There is no
+bounded auto-critique loop that reverts on break (it selected for gaming); iteration is
+human-driven.
 
 ## 5. Code map — what to build
 
@@ -91,23 +127,31 @@ Nothing below exists yet. All paths relative to repo root.
 
 | Path | Responsibility | Phase |
 |---|---|---|
-| `src/caxgauge/spec.py` | `DesignSpec` pydantic-settings model, `from_yaml`. The acceptance contract. | P1 |
-| `src/caxgauge/verify/geometry.py` | Manifold/watertight, bbox, volume, clearance/interference asserts. **Load-bearing.** | P1 |
-| `src/caxgauge/backends/__init__.py` | `Backend` Protocol, auto-detection, stub fallback | P2 |
-| `src/caxgauge/backends/build123d.py` | Primary backend | P2 |
-| `src/caxgauge/backends/openscad.py` | Fallback backend | P2 |
-| `src/caxgauge/loop.py` | Orchestrator: generate -> verify -> critique -> escalate | P3 |
-| `src/caxgauge/generate.py` | Spec -> prompt; sandboxed execution of returned code | P3 |
-| `src/caxgauge/verify/slicer.py` | Printability gate, CLI wrap, PASS/WARN/FAIL/SKIP | P4 |
-| `src/caxgauge/verify/render.py` | Multi-view PNG/video capture, driven through `polyfetch-scrape` against the local viewer | P5 |
-| `viewer/index.html` | Minimal static three.js + STLLoader page; loads a mesh by query param, exposes named camera presets. Deliberately ~100 lines of static HTML, **not** a React app | P5 |
-| `src/caxgauge/verify/browser.py` | **Deterministic** browser-side checks: `pageerror` / `requestfailed` / non-200 `response` capture. A mesh that fails to parse in the viewer is a hard failure, not a VLM judgement | P5 |
-| `src/caxgauge/critique/loop.py` | Bounded critique orchestration; cap 3, revert-on-break. Backend-agnostic | P5 |
-| `src/caxgauge/critique/backends/` | `CritiqueBackend` Protocol + stub. **OpenAI-spec chat-completions-with-images is the primary wire format** (see §5.1) | P5 |
+| `src/caxgauge/verify/preflight.py` | Cheap deterministic gate: build-ok, manifold/watertight, bbox, mass. **Load-bearing, ships first.** Necessary-not-sufficient; catches silent boolean-fusion loss | P1 |
+| `src/caxgauge/verify/browser.py` | Browser-load check via `polyfetch` against the viewer: `pageerror` / `requestfailed` / non-200 `response`. A mesh that won't parse is a hard failure | P1 |
+| `viewer/index.html` | Minimal static three.js + STLLoader page; loads a mesh by query param, named camera presets. ~100 lines static HTML, **not** a React app | P1 |
+| `src/caxgauge/verify/render.py` | Auto multi-view PNG/video capture through `polyfetch`. **The primary gate** — makes the human glance instant | P2 |
+| `src/caxgauge/report.py` | Assemble render + preflight verdict + any VLM annotations into a human review artifact. Green shown as *necessary, not sufficient* | P2 |
+| `src/caxgauge/backends/__init__.py` | `Backend` Protocol, auto-detection, stub fallback | P3 |
+| `src/caxgauge/backends/build123d.py` | Primary backend | P3 |
+| `src/caxgauge/backends/openscad.py` | Fallback backend | P3 |
+| `src/caxgauge/generate.py` | Spec -> prompt; sandboxed execution of agent-returned code; structured failure feedback | P4 |
+| `src/caxgauge/loop.py` | **Human-driven** orchestration: generate -> preflight -> render -> human review. No auto-revert-on-break loop | P4 |
+| `src/caxgauge/spec.py` | `DesignSpec` pydantic-settings model, `from_yaml`. **Small, regression-framed**: envelope, mass, two-sided clearance windows. Progressive — minimal required core, expands only as reuse demands | P4 |
+| `src/caxgauge/verify/regression.py` | Re-run preflight + named spec asserts on later regenerations; diff vs last-good; surface changes. This is where the spec earns its cost | P4 |
+| `src/caxgauge/verify/slicer.py` | Printability gate, CLI wrap, PASS/WARN/FAIL/SKIP | P5 |
+| `src/caxgauge/annotate/` | VLM-as-assist: annotate the render to draw the eye. `AnnotateBackend` Protocol + stub. **Advisory only — never gates, never auto-loops.** OpenAI-spec wire format (§5.2) | P5 |
 | `src/caxgauge/verify/sim.py` | CAE acceptance asserts — **seam only, empty in v0** | deferred |
 | `src/caxgauge/gui/` | Browser-based CAD driving via `polyfetch` `render_session` + DOM selectors; must not gate CI | P6 |
 | `tests/` | Mirrors `src/` 1:1 | all |
-| `configs/` | Example `DesignSpec` files | P1 |
+| `configs/` | Example `DesignSpec` files (small, regression-framed) | P4 |
+
+**Reframe deltas from the pre-red-team code map:** `verify/geometry.py`'s speculative
+clearance/interference DSL is gone; the cheap `preflight.py` ships first instead.
+`critique/` (bounded auto-loop, cap 3, revert-on-break) is deleted — it selected for gaming
+— and replaced by advisory `annotate/`. `spec.py` moves late and shrinks to a
+regression-framed core. `render.py` is promoted from a P5 afterthought to the P2 primary
+gate. `report.py` and `regression.py` are new.
 
 **Why `verify/sim.py` is reserved now:** a CAE acceptance check ("peak stress under
 yield") is structurally identical to a geometry check ("bbox under 80mm") — a bound on a
@@ -132,8 +176,8 @@ What that buys, all from the existing engine surface:
   `page.set_viewport_size(...)`.
 - **A deterministic browser-side gate** — `page.on("pageerror" | "requestfailed" |
   "response" | "console")`. If a mesh fails to parse in the loader, that is a **hard
-  failure signal**, not a VLM opinion. This belongs in `verify/`, not `critique/`.
-- **E2E UI testing** of any caxgauge report UI — clicks, dropdowns, `aria_snapshot()`.
+  failure signal** (part of the preflight), not a VLM opinion. Lives in `verify/`.
+- **E2E UI testing** of the caxgauge report UI — clicks, dropdowns, `aria_snapshot()`.
 
 **Non-negotiable constraints, taken from `polyfetch-scrape/AGENT_LEARNINGS.md` — adopt
 from day one rather than rediscovering them:**
@@ -154,21 +198,23 @@ from day one rather than rediscovering them:**
 `USING.md`) — no venv poisoning. `make doctor` is idempotent and reinstalls the Chromium
 cache when borrowing.
 
-### 5.2 Critique backends — pluggable, OpenAI-spec first
+### 5.2 Annotation backends — pluggable, OpenAI-spec first, advisory only
 
-Do not hardcode a single VLM. `CritiqueBackend` is a Protocol; the **OpenAI-spec
-chat-completions-with-images format is the primary wire protocol** because it is what most
-serving stacks already speak:
+The VLM **annotates** the render to draw the human's eye. It is not a critique authority
+and never gates — post-red-team, a VLM that could loop to "green" selected for gaming.
+`AnnotateBackend` is a Protocol; the **OpenAI-spec chat-completions-with-images format is
+the primary wire protocol** because it is what most serving stacks already speak:
 
 | Backend | Route | Note |
 |---|---|---|
 | **OpenAI-spec endpoint** | Default | Covers `llama-server`, vLLM, LM Studio, OpenRouter, and hosted APIs with one adapter. Base-URL + model configurable |
 | `../vlm-toolkit` | In-process or HTTP | Estate-owned local GGUF VLM + YOLO26 detector. Its HTTP mode is `llama-server`, which **already speaks the OpenAI spec** — so it is a provider behind the default adapter, not a separate integration |
 | landing.ai | Adapter | Different API shape, specialised detection. Estate prior art in `../VisAgent-Proto` (v0.0.0 draft — treat as reference, not a dependency) |
-| stub | Always available | Returns a fixed verdict; keeps CI green with no model configured |
+| stub / none | Always available | No annotation; the render + preflight verdict still stand. The system is fully useful with no model configured |
 
-This keeps the local/offline path (vlm-toolkit) and the hosted path behind one interface,
-and means a model swap is config, not code.
+One interface for local/offline (vlm-toolkit) and hosted; a model swap is config, not code.
+Because annotation is advisory, "no model" is a first-class, fully-functional mode — the
+human still reviews the render.
 
 ## 6. Source map
 
@@ -393,44 +439,58 @@ Consequence for this repo:
 
 Each phase independently shippable.
 
-- **P0a — DONE (this session).** Wire `origin`, write this plan + handoff.
+Reordered post-reframe so the surviving-value pieces (cheap preflight + render-first gate)
+ship first and the killed pieces are gone. Each phase independently shippable.
+
+- **P0a — DONE (this session).** Wire `origin`, write plan + handoff; red-team the wedge;
+  reframe.
 - **P0b — Scaffold.** Governance files, `.claude/rules/`, `Makefile`, CI, quality gates,
   `pyproject.toml`. No product code.
-- **P1 — Spec + deterministic verifier.** `spec.py`, `verify/geometry.py`, test-first.
-  Fed by fixture STLs, no agent involved. **Build this before anything agentic.**
-- **P2 — Backend dispatch.** Generalize the two existing dispatchers; do not write a third.
-- **P3 — Loop orchestrator + generation.** Sandboxed execution; failures feed back as
-  structured text.
-- **P4 — Manufacturability gate.** Port `verify/slicer.py` from the two validators.
-- **P5 — Render, browser gate, bounded critique.** Three separable pieces, in order:
-  (1) `viewer/index.html`, a boring static three.js + STLLoader page with named camera
-  presets; (2) `verify/browser.py` — **deterministic, ships before any VLM work**: load
-  the mesh via `polyfetch`, capture `pageerror` / `requestfailed` / non-200 `response`;
-  a mesh that will not parse is a hard failure, and this has value with no model
-  configured at all; (3) `verify/render.py` + `critique/` — multi-view PNG and turntable
-  video, then bounded critique behind the `CritiqueBackend` Protocol (§5.2), cap 3,
-  revert-on-break, escalate past the cap.
-- **P6 — GUI-driven CAD (experimental). Reframed.** Target *browser-based* CAD (Onshape
-  first) driven through `polyfetch` `render_session()` using **DOM selectors and
-  `aria_snapshot()`**, not desktop CAD via pixel-level computer-use. Materially better
-  risk profile — real selectors instead of screenshot guessing — and it reuses tooling
-  P5 already depends on. Desktop-GUI computer-use is now **out of scope**. Still
-  sandboxed, non-gating, cuttable.
+- **P1 — Cheap preflight + viewer + browser-load check.** `verify/preflight.py`
+  (build-ok/manifold/bbox/mass), `viewer/index.html`, `verify/browser.py`. Test-first,
+  fed by fixture STLs, no agent and no VLM involved. **The load-bearing survivor** — build
+  first. Value even standalone: catches silent boolean-fusion loss.
+- **P2 — Auto multi-view render + report (the primary gate).** `verify/render.py` via
+  `polyfetch`, `report.py` assembling render + preflight verdict for a human, green shown
+  as *necessary-not-sufficient*. Delivers the real gate with no model configured.
+- **P3 — Backend dispatch.** Generalize the two existing dispatchers; do not write a third.
+- **P4 — Generation + regression spec.** `generate.py` (sandboxed exec, structured failure
+  feedback), `loop.py` (**human-driven**, no auto-revert-on-break), `spec.py` (small,
+  regression-framed), `verify/regression.py` (diff vs last-good across regenerations). This
+  is where `DesignSpec` earns its cost.
+- **P5 — Manufacturability + VLM annotation.** Port `verify/slicer.py`; add `annotate/`
+  (VLM-as-assist, advisory only, OpenAI-spec backend, never gates). Stub/none is a
+  first-class mode.
+- **P6 — GUI-driven CAD (experimental).** Browser-based CAD (Onshape first) via `polyfetch`
+  `render_session()` with **DOM selectors and `aria_snapshot()`**, not desktop pixel-level
+  computer-use (out of scope). Sandboxed, non-gating, cuttable. Check Onshape ToS first.
 - **P7 — Adoption.** Consumer PRs in so101 + i3mega; rewrite so101 roadmap to point here.
 
 ## 10. Verification strategy
 
-- **P1/P2 property tests.** Hypothesis over spec dimensions: a spec generating a box of
-  size X must pass its own bbox assertion and fail a deliberately perturbed one. Fixture
-  STLs with known-bad topology must fail the manifold check.
-- **Stub-mode CI (primary gate).** Full loop runs end-to-end with no build123d, no
-  OpenSCAD, no slicer installed; asserts the command log matches expected sequence.
-- **Golden-path integration (marker-gated).** One real part, real build123d, real slicer.
-- **Loop honesty test.** Feed a spec the agent cannot satisfy; assert the loop terminates
-  at the cap and escalates rather than declaring success. **Guards the failure mode that
-  matters most.**
+- **P1 property tests.** Fixture STLs with known-bad topology must fail the manifold
+  check; a fixture where boolean fusion silently absorbs a feature must be caught (the
+  headline preflight value). Bbox/mass asserts pass on good fixtures, fail on perturbed.
+- **Goodhart tests (new, from the red-team).** Assert the known gaming paths are *not*
+  scored green: a part shrunk uniformly must fail a two-sided clearance window; a part with
+  the offending feature deleted must not score better than the broken original on the
+  human-facing report (i.e. the report must surface the deletion, not hide it).
+- **Necessary-not-sufficient honesty test (replaces the loop-honesty test).** Feed a part
+  the preflight passes but that is visibly wrong (datum-offset hole). Assert the system
+  **does not** report success — it presents the render for human decision and never emits a
+  "verified/correct" verdict from preflight alone. Guards the false-confidence failure the
+  red-team called worse-than-no-gauge.
+- **Stub-mode CI (primary gate).** Runs end-to-end with no build123d, no OpenSCAD, no
+  slicer, **no VLM**; asserts the report is produced and green is labelled necessary-not-
+  sufficient. Annotation absent must not degrade the verdict.
+- **Regression test.** Same part regenerated across a simulated kernel/tolerance shift:
+  assert `verify/regression.py` surfaces the drift rather than silently passing or throwing
+  a false failure (the rot risk).
+- **Golden-path integration (marker-gated).** One real part, real build123d, real slicer,
+  real render capture.
 - **Real acceptance test.** Harness reproduces an existing part from
-  `so101/src/hardware/parts.json` or `i3mega/tools/cad/parts.json` and passes its spec.
+  `so101/src/hardware/parts.json` or `i3mega/tools/cad/parts.json`, produces a clean
+  preflight + render, and its small regression spec catches a deliberately injected change.
 
 ## 11. Open questions and risks
 
@@ -440,9 +500,13 @@ Each phase independently shippable.
    unaffected. Topics owed: OpenFOAM/CalculiX/code_aster/FEniCS/Elmer/SU2/Gmsh/PyMAPDL
    scriptability; MetaOpenFOAM / OpenFOAMGPT / FoamGPT and LLM-FEA papers; simulation
    MCP servers; topology optimization + DoE loops; guardrails for units/BCs/convergence.
-2. **Wedge not validated.** Run `adversarial-distillation` on "TDD for CAD" before P1.
-   `cad-agent` and `openscad-agent` (§6.4) already do generate-render-self-correct. Cheap
-   to falsify now, expensive after P3.
+2. **Wedge red-teamed 2026-07-20 — KILL-as-scoped, reframed.** See
+   [`../reviews/001-wedge-red-team.md`](../reviews/001-wedge-red-team.md). §3-§5, §9, §10
+   above are the corrected render-first design. Live kill conditions to keep watching (from
+   the review's LOSES-IFF): the spec rots to a bbox+volume stub; green gets treated as
+   sufficient; clearance goes back to min-only; tolerance bands throw false failures across
+   kernel bumps and the gate is disabled. The Goodhart + honesty tests in §10 exist to hold
+   these off.
 3. **P6 downgraded from "weakest leg" to "plausible".** Originally scoped as desktop-GUI
    computer-use, where no vendor claims unattended reliability and OSWorld sits at 47-82%.
    Retargeting to browser-based CAD via `polyfetch`/Patchright DOM selectors (§9, P6)
