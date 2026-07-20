@@ -39,12 +39,16 @@ Phase P0a is complete. Nothing else has been started.
 
 ## Next actions, in order
 
-1. **Run `adversarial-distillation` on the wedge.** Partial validation is done — the
-   teardown of [`earthtojake/text-to-cad`](https://github.com/earthtojake/text-to-cad)
-   (plan §6.4.1) confirmed it has no pre-declared machine-checkable spec, no
-   manifold/volume/interference checks, and no deterministic-gate-over-VLM ordering. But
-   that is one competitor, not a red-team. If the wedge does not survive a proper
-   adversarial pass, rescope before P1 rather than after P3.
+1. **DONE — wedge red-team run 2026-07-20, verdict KILL-as-scoped.** See
+   [`../reviews/001-wedge-red-team.md`](../reviews/001-wedge-red-team.md). The deterministic
+   verifier survives only for global/static/foreseen properties (~1/3 of real defects) and
+   is structurally blind to the dominant defect class (local/unforeseen/sequential/
+   fidelity). Independence is fiction when the same intelligence authors spec + geometry.
+   The deterministic-authoritative / VLM-subordinate ordering is **backwards** for the
+   blind-spot defects, and revert-on-break selects for gaming. **A reframe is recommended
+   (render-first human gate; cheap preflight; VLM-as-assist; reactive checks; spec only in
+   regression framing) but NOT yet decided by the human. Do not build P1 as originally
+   scoped until that decision lands.**
 3. **P0b — scaffold.** `pyproject.toml` (Python 3.12 exactly — hard constraint, see plan
    §2), `Makefile`, CI, quality gates, governance files copied *in structure* from
    `../so101-biolab-automation`.

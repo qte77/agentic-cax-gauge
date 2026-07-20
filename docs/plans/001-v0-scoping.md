@@ -7,7 +7,13 @@ validated_links: 2026-07-20
 status: approved
 ---
 
-**Status**: Approved, not yet implemented. Only this plan and its handoff exist.
+**Status**: Approved, not yet implemented — **but the core wedge failed its red-team
+2026-07-20 (KILL-as-scoped).** See [`../reviews/001-wedge-red-team.md`](../reviews/001-wedge-red-team.md).
+Do not build §3-§5 as written until the reframe decision is made. The deterministic
+verifier survives in narrow form; the "pre-declared full DesignSpec as authoritative
+correctness oracle, VLM strictly subordinate" framing does not. Recommended reframe:
+cheap preflight + render-first human gate + VLM-as-assist + reactive checks + spec only
+in regression framing. Human decision pending; nothing below has been rewritten.
 
 ## 1. Context
 
