@@ -39,15 +39,22 @@ Phase P0a is complete. Nothing else has been started.
 
 ## Next actions, in order
 
-1. **Run `adversarial-distillation` on the wedge before writing code.** The claimed
-   differentiator is the pre-declared machine-checkable spec plus deterministic gate
-   ordering — *not* the generate-render-correct loop, which `cad-agent` and
-   `openscad-agent` already do (plan §6.4). If the wedge does not survive, rescope before
-   P1 rather than after P3. This is the single highest-value next step.
-2. **P0b — scaffold.** `pyproject.toml` (Python 3.12 exactly — hard constraint, see plan
+1. **Settle complement-vs-compete first — human decision, blocks P0b.** Analysis of
+   [`earthtojake/text-to-cad`](https://github.com/earthtojake/text-to-cad) (plan §6.4.1)
+   found an 8.6k-star, actively developed agent-skill package on the *same* build123d
+   backend. The wedge survives — it has no pre-declared machine-checkable spec, no
+   manifold/volume/interference checks, and no deterministic-gate-over-VLM ordering — but
+   verification is its weakest area, the author has publicly said benchmarks are in
+   progress, and that is the most plausible thing they ship next. Decide whether this repo
+   is a rival harness, a verification layer that plugs into their pipeline, or an upstream
+   contribution. This changes P3/P6 scope substantially.
+2. **Then run `adversarial-distillation` on the surviving wedge.** Partial validation is
+   done (§6.4.1) but not a full red-team. If it does not survive, rescope before P1 rather
+   than after P3.
+3. **P0b — scaffold.** `pyproject.toml` (Python 3.12 exactly — hard constraint, see plan
    §2), `Makefile`, CI, quality gates, governance files copied *in structure* from
    `../so101-biolab-automation`.
-3. **P1 — `spec.py` + `verify/geometry.py`, test-first.** This is the load-bearing
+4. **P1 — `spec.py` + `verify/geometry.py`, test-first.** This is the load-bearing
    contribution. Build it before anything agentic; it is testable with fixture STLs and no
    LLM at all.
 

@@ -166,6 +166,72 @@ Sources: [CadQuery][cadquery], [build123d][build123d], [OpenSCAD][openscad],
 The claimed differentiator is the *pre-declared machine-checkable spec* and deterministic
 gate ordering, not the loop itself. Verify this holds (§7.2).
 
+#### 6.4.1 `earthtojake/text-to-cad` — the real incumbent
+
+Analysed 2026-07-20. **This is the closest existing project and the initial research sweep
+missed it.** Treat it as the primary competitive reference.
+
+| Attribute | Value |
+|---|---|
+| Scale | 8.6k stars, 984 forks, 314 commits, MIT, release 0.3.9 on 2026-07-10 |
+| Form | A **Claude Code / Codex agent-skill package**, not an app or MCP server (`npx skills install earthtojake/text-to-cad`) |
+| Backend | **build123d over OpenCascade** — real B-rep, same primary backend this plan chose |
+| Scope | CAD + DXF drawings + URDF/SDF/SRDF robotics + part sourcing (`step.parts`, 12k+ STEP catalog) + G-code slicing + SendCutSend fabrication upload + local `cad-viewer` |
+| Trajectory | ~1.1k stars April 2026 to 8.6k July 2026. Solo-authored, actively developed |
+
+Its SKILL.md mandates a 10-step workflow including a prose "CAD brief" (dims, units,
+coordinate convention, validation targets), source-of-truth discipline (edit Python, never
+exported artifacts), geometric validation via `scripts/inspect`, and a mandatory PNG/GIF
+snapshot after every STEP change.
+
+**What it already has deterministically** (`cadpy/analysis.py`, `cadpy/validators.py`):
+`assert_close(actual, expected, tol, label)`, `assert_bbox_coordinate`, `assert_bbox_span`,
+`assert_selector_count` (face/edge/shape counts), axis-alignment facts, and
+`selector_manifest_diff` for topology drift between versions. This is genuine non-LLM
+geometric checking.
+
+**What it does not have — the surviving gap:**
+
+| Our claim | Status in text-to-cad |
+|---|---|
+| Pre-declared machine-checkable `DesignSpec` | **Absent.** The "CAD brief" is unstructured prose written by the *same agent* immediately before coding. No schema, no clearance/mass/volume/manufacturability fields, no independence between spec-author and generator |
+| Deterministic gate authoritative over VLM | **Absent as a formal gate.** Snapshot review is "review the output" by the calling agent. No cap, no revert-on-break, no veto ordering |
+| Manifold/watertight check | **Absent in code.** "Watertight" appears only as ungraded checklist prose in `benchmarks/*.md` — there is no grading script in `benchmarks/` |
+| Volume/mass bounds | Absent |
+| Interference/collision between bodies | Absent |
+| Slicer printability as blocking gate | Only an isolated manual `--dry-run` in a separate `gcode` skill, explicitly "diagnostic only", not wired to CAD generation |
+
+**External corroboration of the gap:** an HN commenter reported generated parts where
+"gussets overlap the holes and make a part that cannot be used" and questioned whether
+through-holes actually pass through — precisely the interference class no current check
+catches. Author's reply: *"Working on benchmarks at the moment!"* ([HN][hn]).
+
+**Strategic read.** The wedge survives, but narrowly and on a shot clock. Verification is
+this project's weakest area, it is self-acknowledged as unfinished, and it is the most
+plausible next thing they ship. Two implications:
+
+1. Do not assume the gap stays open. If P1 is not built soon, it may be closed by the
+   incumbent.
+2. **Complement-vs-compete is now an open strategic question** (§11.6). Their form factor
+   is an agent skill on build123d; ours is a verification harness on build123d. A gate that
+   plugs into their pipeline may be higher leverage than a rival end-to-end harness.
+
+**Adopt from it:**
+
+- `selector_manifest_diff` — cheap deterministic regression check for unintended topology
+  change between edit iterations. Directly reusable.
+- `assert_close` / `assert_bbox_coordinate` / `assert_bbox_span` — clean tolerance-assertion
+  shape to mirror in `verify/geometry.py`.
+- "Edit source, never exported artifacts" — single-source-of-truth discipline.
+- Catalog-check-before-generate (`step.parts`) — maps to a manufacturability field in
+  `DesignSpec`; do not model what you can buy.
+- Their `benchmarks/*.md` format (prose prompt + explicit test-case checklist with dims,
+  counts, "exactly one watertight solid", "imports successfully") is a good template for
+  authoring `DesignSpec` files — and the fact that it is **ungraded by code** is exactly
+  the gap to fill.
+- The HN failure modes (hole/gusset overlap, unverified through-holes) are concrete target
+  cases for the interference and clearance checks.
+
 ### 6.5 CAD MCP servers
 
 | Server | Stars | Note |
@@ -211,6 +277,32 @@ Exact paths verified this session. Do not re-search for these.
 | Config-over-code | Pydantic `BaseSettings.from_yaml()` throughout both repos | Keeps agent-generated parameters auditable/version-controlled, not baked into generated code. |
 | Governance scaffold | `AGENTS.md` + `.claude/rules/` + `AGENT_LEARNINGS.md` + `AGENT_REQUESTS.md` + compound-learning promotion path | Estate standard. Copy structure, not content. |
 | **VLM critique backend** | **`../vlm-toolkit`** | Local GGUF VLM + YOLO26 detector, in-process (`llama-cpp-python`) or HTTP (`llama-server`), Python `>=3.11,<3.13`, Apache-2.0. Already names so101 + i3mega as planned consumers. **P5 consumes this — do not build a second VLM integration.** Pre-`v0.1.0`, API unstable: pin it, keep the adapter thin. See its `docs/architecture.md`, `docs/consumers.md`. |
+
+### Research-hub relationship — `../ai-agents-research`
+
+Verified by direct read, not by subagent sweep. That repo is a catalog for making
+**adopt / defer / skip** decisions about *AI coding agents and their ecosystems* —
+Claude Code internals, sandboxing, orchestration, plugins, MCP connectors, SDLC patterns.
+It is **not** a domain-knowledge hub.
+
+Consequence for this repo:
+
+- **CAD/CAE domain research does not belong there.** The landscape in §6 lives here.
+- **Harness-level findings do belong there** — e.g. what we learn about bounded
+  self-critique loops, sandboxed code execution, or subagent reliability. Contribute via
+  its `adding-research-source` skill; the estate also has a `research-cross-check` skill
+  for bidirectional sync.
+- Its doc conventions are the estate standard and are what §1 frontmatter here follows:
+  frontmatter with `validated_links`, a Technology-Radar status badge
+  (Adopt/Trial/Assess/Hold), reference-style links (no bare URLs in prose), and a
+  mandatory `## Sources` table. See `../ai-agents-research/CONTRIBUTING.md`.
+- Its `docs/research/rxiv-agentic-papers.md` is an auto-generated cumulative arXiv index —
+  a possible feed for keeping §6.1/§6.2 current, but note `triage/` is machine-generated
+  and explicitly **not** a content source.
+- Relevant standing rule there: *"Verify subagent findings before acting"* — its
+  `AGENT_LEARNINGS.md` records repeated false negatives from subagent sweeps. This session
+  reproduced that failure mode (one agent returned off-task meta-text that superficially
+  looked like a result). Apply the same skepticism here.
 
 ### Ruled out — do not re-investigate
 
@@ -277,6 +369,16 @@ Each phase independently shippable.
    this repo is fine; extracting a separate shared package consumed by all three is
    deliberately **not** in scope until the pattern proves stable here.
 5. **"agentic" is a crowded prefix.** Accepted knowingly.
+6. **Complement vs compete — OPEN, decide before P0b.** `earthtojake/text-to-cad` (§6.4.1)
+   is at 8.6k stars on the same build123d backend, with verification as its weakest and
+   self-acknowledged-unfinished area. Options: (a) standalone rival harness as this plan
+   currently assumes; (b) position as the verification layer that plugs into their skill
+   pipeline; (c) contribute the gate upstream to them. Option (b)/(c) may be far higher
+   leverage than (a) and would change P3/P6 scope substantially. Human decision required.
+7. **Research sweep was incomplete.** The initial landscape pass missed an 8.6k-star
+   direct competitor. Treat §6.4 as provisional and re-sweep before committing to
+   positioning — in particular search agent-skill/plugin marketplaces, not just arXiv and
+   MCP registries.
 
 ## Sources
 
@@ -304,6 +406,8 @@ Each phase independently shippable.
 | [arXiv:2412.19663][cadgpt] | CAD-GPT — spatial-reasoning-enhanced MLLM |
 | [arXiv:2105.09492][deepcad] | DeepCAD — foundational dataset |
 | [arXiv:2411.04954][cadmllm] | CAD-MLLM — multimodal to CAD |
+| [earthtojake/text-to-cad][texttocad] | **Primary incumbent** — 8.6k-star build123d agent-skill package; verification is its weakest area |
+| [HN discussion][hn] | User-reported geometry failures (gusset/hole overlap); author confirms benchmarks unfinished |
 | [zoo.dev][zoo] | Most mature commercial text-to-CAD |
 | [cad-agent][cadagent] | build123d + MCP render self-correction |
 | [openscad-agent][openscadagent] | Claude-Code generate/render/correct + manifold check |
@@ -333,6 +437,8 @@ Each phase independently shippable.
 [cadgpt]: https://arxiv.org/abs/2412.19663
 [deepcad]: https://arxiv.org/abs/2105.09492
 [cadmllm]: https://arxiv.org/abs/2411.04954
+[texttocad]: https://github.com/earthtojake/text-to-cad
+[hn]: https://news.ycombinator.com/item?id=47970497
 [cadquery]: https://github.com/CadQuery/cadquery
 [build123d]: https://github.com/gumyr/build123d
 [openscad]: https://github.com/openscad/openscad
