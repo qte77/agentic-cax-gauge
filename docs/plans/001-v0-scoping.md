@@ -37,6 +37,7 @@ closes the full loop.
 | v0 scope | CAD + deterministic verification + bounded VLM critique | User-selected |
 | CAE | Documented only, not built | User-selected; research still owed (§7.1) |
 | GUI leg | Minimal experimental fallback, included | User-selected; weakest leg (§7.3) |
+| Positioning | **Estate-first.** Build for so101 + i3mega as the real consumers; treat `text-to-cad` interop as a later, separate question | Guaranteed users on day one, asset stays owned, avoids betting the project on out-executing a faster-moving 8.6k-star incumbent (§6.4.1). P1 is identical under every positioning option, so this constrains nothing structural |
 | Testing | Strict TDD, behavior-level, no Gherkin/BDD | Estate standard; legacy `RAPID-spec-forge` BDD guidance explicitly rejected |
 | Python | 3.12 exactly | Hard constraint: `build123d -> cadquery-ocp -> VTK` has no cp313 wheels |
 
@@ -369,12 +370,11 @@ Each phase independently shippable.
    this repo is fine; extracting a separate shared package consumed by all three is
    deliberately **not** in scope until the pattern proves stable here.
 5. **"agentic" is a crowded prefix.** Accepted knowingly.
-6. **Complement vs compete — OPEN, decide before P0b.** `earthtojake/text-to-cad` (§6.4.1)
-   is at 8.6k stars on the same build123d backend, with verification as its weakest and
-   self-acknowledged-unfinished area. Options: (a) standalone rival harness as this plan
-   currently assumes; (b) position as the verification layer that plugs into their skill
-   pipeline; (c) contribute the gate upstream to them. Option (b)/(c) may be far higher
-   leverage than (a) and would change P3/P6 scope substantially. Human decision required.
+6. **Complement vs compete — DECIDED 2026-07-20: estate-first.** Build for so101 and
+   i3mega as the real consumers. `text-to-cad` interop (a gate consumable by their skill
+   pipeline, or an upstream contribution) is deliberately deferred until the verifier
+   works and has proven itself on a real estate part. Do not design for their skill format
+   now — it is young and unstable, and P1 is identical either way. Revisit at P7.
 7. **Research sweep was incomplete.** The initial landscape pass missed an 8.6k-star
    direct competitor. Treat §6.4 as provisional and re-sweep before committing to
    positioning — in particular search agent-skill/plugin marketplaces, not just arXiv and

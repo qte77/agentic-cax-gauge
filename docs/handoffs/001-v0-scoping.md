@@ -39,18 +39,12 @@ Phase P0a is complete. Nothing else has been started.
 
 ## Next actions, in order
 
-1. **Settle complement-vs-compete first — human decision, blocks P0b.** Analysis of
-   [`earthtojake/text-to-cad`](https://github.com/earthtojake/text-to-cad) (plan §6.4.1)
-   found an 8.6k-star, actively developed agent-skill package on the *same* build123d
-   backend. The wedge survives — it has no pre-declared machine-checkable spec, no
-   manifold/volume/interference checks, and no deterministic-gate-over-VLM ordering — but
-   verification is its weakest area, the author has publicly said benchmarks are in
-   progress, and that is the most plausible thing they ship next. Decide whether this repo
-   is a rival harness, a verification layer that plugs into their pipeline, or an upstream
-   contribution. This changes P3/P6 scope substantially.
-2. **Then run `adversarial-distillation` on the surviving wedge.** Partial validation is
-   done (§6.4.1) but not a full red-team. If it does not survive, rescope before P1 rather
-   than after P3.
+1. **Run `adversarial-distillation` on the wedge.** Partial validation is done — the
+   teardown of [`earthtojake/text-to-cad`](https://github.com/earthtojake/text-to-cad)
+   (plan §6.4.1) confirmed it has no pre-declared machine-checkable spec, no
+   manifold/volume/interference checks, and no deterministic-gate-over-VLM ordering. But
+   that is one competitor, not a red-team. If the wedge does not survive a proper
+   adversarial pass, rescope before P1 rather than after P3.
 3. **P0b — scaffold.** `pyproject.toml` (Python 3.12 exactly — hard constraint, see plan
    §2), `Makefile`, CI, quality gates, governance files copied *in structure* from
    `../so101-biolab-automation`.
@@ -97,8 +91,13 @@ meaningful.
 
 Name (`agentic-cax-gauge` / `caxgauge`), standalone-repo relationship to the estate, v0
 scope (CAD + deterministic + bounded VLM critique), CAE documented-only, GUI leg included
-as experimental, Python 3.12, strict TDD. Rationale for each is in plan §2. Reopen only
-with a concrete reason.
+as experimental, Python 3.12, strict TDD, and **estate-first positioning** (build for
+so101 + i3mega; `text-to-cad` interop deferred to P7). Rationale for each is in plan §2.
+Reopen only with a concrete reason.
+
+**Shot clock, not a blocker:** `text-to-cad`'s author has publicly said benchmarks are in
+progress, and verification is the most plausible thing they ship next. That argues for
+getting P1 built rather than for changing positioning.
 
 ## Open question for the human
 
