@@ -1,0 +1,99 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg
+*.egg-info/
+build/
+dist/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# uv lockfile (library project — let consumers resolve; see docs/plans/003)
+uv.lock
+
+# Lint / type / test caches
+.ruff_cache/
+.mypy_cache/
+.pyright/
+.pytest_cache/
+.complexipy_cache/
+.hypothesis/
+.coverage
+coverage.xml
+htmlcov/
+
+# --- CAx artifacts -------------------------------------------------------
+# Source of truth is the parametric source, never the export (estate rule,
+# docs/reference/landscape.md §12). Regenerate; do not commit.
+*.stl
+*.step
+*.stp
+*.3mf
+*.amf
+*.ply
+*.off
+*.dxf
+*.gcode
+
+# ...except test fixtures, which are small, deliberate and version-controlled
+# (the preflight test set — docs/plans/003-scaffold-and-preflight.md).
+!tests/fixtures/**
+
+# Render + report output (multi-view captures, turntable video, review artifacts)
+renders/
+reports/
+out/
+*.webm
+
+# Patchright / Chromium browser cache (owned by polyfetch via env-borrow)
+.cache/ms-playwright/
+
+# Per-session Claude / agent artifacts (host-local; not project content)
+.claude/agents
+.claude/commands
+.claude/skills
+.claude/scripts/
+.claude/worktrees/
+.claude/settings.local.json
+.mcp.json
+MEMORY.md
+
+# Secrets / local config
+.env
+.env.*
+!.env.example
+config.local/
+
+# Claude Code sandbox bwrap phantom files.
+# Zero-length placeholders created when the sandbox mounts /dev/null onto
+# deny-rule paths that do not exist. Upstream bug still open as of 2026-07-23:
+# https://github.com/anthropics/claude-code/issues/17727
+# Fires only under some sandbox settings; harmless here either way — the real
+# git internals live in .git/, and this repo's config dir is configs/ (plural).
+# Revisit once the upstream issue closes.
+/HEAD
+/config
+/hooks
+/objects
+/refs
+/.bash_profile
+/.bashrc
+/.profile
+/.zprofile
+/.zshrc
+/.gitconfig
+/.gitmodules
+/.ripgreprc
+
+# IDE / OS
+/.idea
+/.vscode
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
