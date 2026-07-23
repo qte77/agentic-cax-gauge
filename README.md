@@ -6,10 +6,10 @@
 > broken," never "correct."**
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/status-planning-blue.svg)](docs/plans/001-v0-scoping.md)
+[![Status](https://img.shields.io/badge/status-planning-blue.svg)](docs/plans/001-v0.md)
 
 **Status:** planning — the design is committed and red-teamed; code has not started.
-Start here: [`docs/plans/001-v0-scoping.md`](docs/plans/001-v0-scoping.md).
+Start here: [`docs/README.md`](docs/README.md), the map of what to read and in what order.
 
 ## What
 
@@ -24,26 +24,28 @@ A verification harness for agent-generated CAD (CAE later). Three layers, in ord
 3. **VLM as an assist** — annotates the render to draw the eye. Advisory only: it never
    gates and never auto-loops, and the system works fully with no model configured.
 
-A small, regression-framed **`DesignSpec`** (envelope, mass, two-sided clearance windows)
-catches drift when a part is regenerated — e.g. after a build123d/OCCT upgrade.
+**v0 is layers 1 and 2 only.** The VLM assist is deferred precisely because the system is
+designed to work without it. Also deferred until a real trigger: the regression-framed
+`DesignSpec` (envelope, mass, two-sided clearance windows, for catching drift across
+regenerations), CAD-backend dispatch, generation, slicer printability, and CAE.
 
 ## How
 
-Not yet implemented — this is the intended shape (phases in the [plan](docs/plans/001-v0-scoping.md)):
+Not yet implemented. v0 takes an **exported mesh**, not a build script — the consumer repos
+already export STL, so the gauge reaches a real user without owning generation or CAD
+backends ([milestones](docs/plans/001-v0.md#5-milestones)):
 
 ```text
-agent writes build123d code  ->  cheap preflight (build/watertight/bbox/mass)
-                                      |  pass
-                                      v
-                          auto multi-view render  ->  human reviews (VLM may annotate)
-                                      |
-                     regression mode: re-check a small spec across regenerations
+exported STL  ->  cheap preflight (build/watertight/bbox/mass)
+                        |  pass or fail — both are reported, neither is "verified"
+                        v
+              auto multi-view render  ->  human decides
 ```
 
-Built on **build123d** (primary) / OpenSCAD, Python 3.12 + `uv`. Rendering and browser-side
-checks run through [`qte77/polyfetch-scrape`](https://github.com/qte77/polyfetch-scrape);
-optional VLM annotation via [`qte77/vlm-toolkit`](https://github.com/qte77/vlm-toolkit) or
-any OpenAI-spec endpoint.
+Python 3.12 + `uv`. Rendering and browser-side checks run through
+[`qte77/polyfetch-scrape`](https://github.com/qte77/polyfetch-scrape). Later milestones add
+regression checks, then **build123d**/OpenSCAD backends; optional VLM annotation via
+[`qte77/vlm-toolkit`](https://github.com/qte77/vlm-toolkit) or any OpenAI-spec endpoint.
 
 ## Why
 
@@ -51,12 +53,13 @@ Frontier VLMs are near chance on 3D spatial tasks (BLINK: humans 95.7% vs best V
 VSI-Bench), and generic chain-of-thought does not fix it. So do not ask a model to eyeball
 whether a part is right. Make the geometry assert what it cheaply can, render the rest fast
 for a human, and keep the model advisory — an honest instrument, not a false-confidence
-oracle. The original "authoritative oracle" framing was red-teamed and dropped; see
-[`docs/reviews/001-wedge-red-team.md`](docs/reviews/001-wedge-red-team.md).
+oracle. The original "authoritative oracle" framing was red-teamed and dropped; the
+distilled kill case, the Goodhart paths it exposed, and the conditions that would kill this
+design too are in [`docs/plans/001-v0.md`](docs/plans/001-v0.md) §3.1.
 
 ## Refs
 
-- [v0 plan](docs/plans/001-v0-scoping.md) · [wedge red-team](docs/reviews/001-wedge-red-team.md)
+- [Docs map](docs/README.md) · [v0 plan](docs/plans/001-v0.md) · [landscape + evidence](docs/reference/landscape.md)
 - First consumers: [so101-biolab-automation](https://github.com/qte77/so101-biolab-automation) · [i3mega-pipettebot](https://github.com/qte77/i3mega-pipettebot)
 - Substrate: [polyfetch-scrape](https://github.com/qte77/polyfetch-scrape) (render/browser) · [vlm-toolkit](https://github.com/qte77/vlm-toolkit) (VLM)
 
