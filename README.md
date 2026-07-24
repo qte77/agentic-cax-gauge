@@ -36,11 +36,16 @@ already export STL, so the gauge reaches a real user without owning generation o
 backends:
 
 ```text
+$ caxgauge check part.stl --envelope 80,80,40
+
 exported STL  ->  cheap preflight (build/watertight/bbox/mass)
                         |  pass or fail — both are reported, neither is "verified"
                         v
               auto multi-view render  ->  human decides
 ```
+
+Bounds are optional and an unsupplied bound reports `SKIP`, never `PASS` — a bbox check with
+no envelope has not checked anything, and the report says so.
 
 Python 3.12 + `uv`. Rendering and browser-side checks run through
 [`qte77/polyfetch-scrape`](https://github.com/qte77/polyfetch-scrape). Later milestones add
