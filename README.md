@@ -33,7 +33,7 @@ regenerations), CAD-backend dispatch, generation, slicer printability, and CAE.
 
 Not yet implemented. v0 takes an **exported mesh**, not a build script — the consumer repos
 already export STL, so the gauge reaches a real user without owning generation or CAD
-backends ([milestones](docs/plans/001-v0.md#5-milestones)):
+backends:
 
 ```text
 exported STL  ->  cheap preflight (build/watertight/bbox/mass)
@@ -46,6 +46,22 @@ Python 3.12 + `uv`. Rendering and browser-side checks run through
 [`qte77/polyfetch-scrape`](https://github.com/qte77/polyfetch-scrape). Later milestones add
 regression checks, then **build123d**/OpenSCAD backends; optional VLM annotation via
 [`qte77/vlm-toolkit`](https://github.com/qte77/vlm-toolkit) or any OpenAI-spec endpoint.
+
+## Where it's going
+
+v0 is three milestones, each independently shippable
+([detail](docs/plans/001-v0.md#5-roadmap)):
+
+| | | Done when |
+|---|---|---|
+| **M1** | Scaffold | `make validate` passes green on an empty package |
+| **M2** | The honest gate | A human looks at a real part's render + verdict and decides |
+| **M3** | Adoption | A consumer repo runs the gauge on its real parts |
+
+After that, nothing starts without a stated trigger: a regression spec when a real part is
+regenerated against a kernel bump, backend dispatch only if exported STLs prove
+insufficient, and the deferred items above when someone is actually blocked. That list is
+the whole outlook — there is no backlog hiding elsewhere.
 
 ## Why
 
