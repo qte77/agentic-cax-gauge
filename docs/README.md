@@ -37,27 +37,15 @@ plan Part II for the milestone you are on. Start on M1.
 
 ## Removed, and where to find it
 
-Consolidated 2026-07-23. Plans 002 and 003 and handoffs 001-003 were folded into the single
-`001-v0` pair — they described the same unstarted v0, split by when they were written rather
-than by what shipped. All recoverable from git history:
+Superseded docs are deleted, not archived — this table is just the index back into git. It
+lists **deleted files and relocated content only.** Renumbering and compression *within* a
+live doc are not tracked: the current section is the answer, and git has the rest.
 
 | Was | Now | Recover with |
 |---|---|---|
-| `reviews/001-wedge-red-team.md` | `plans/001-v0.md` §3.1 — bedrock, Goodhart paths, WINS/LOSES-IFF | `git show 2731ae3:docs/reviews/001-wedge-red-team.md` |
-| `plans/002-polyfetch-integration.md` | `plans/001-v0.md` §9 — substrate, SSRF finding, upstream issue status | `git show f3a84b0:docs/plans/002-polyfetch-integration.md` |
-| `plans/003-scaffold-and-preflight.md` | `plans/001-v0.md` §6-§7 — scaffold table, gate modules, fixtures | `git show f3a84b0:docs/plans/003-scaffold-and-preflight.md` |
+| `reviews/001-wedge-red-team.md` | `plans/001-v0.md` §3.1 | `git show 2731ae3:docs/reviews/001-wedge-red-team.md` |
+| `plans/002-polyfetch-integration.md` | `plans/001-v0.md` §9 | `git show f3a84b0:docs/plans/002-polyfetch-integration.md` |
+| `plans/003-scaffold-and-preflight.md` | `plans/001-v0.md` §6-§7 | `git show f3a84b0:docs/plans/003-scaffold-and-preflight.md` |
 | `handoffs/001`, `002`, `003` | `handoffs/001-v0.md` | `git show f3a84b0:docs/handoffs/<name>.md` |
-| `plans/001` §6 landscape, §12 contribution stance | `reference/landscape.md`, with post-red-team verdicts corrected | — |
-
-Compressed 2026-07-24 to cut onboarding cost: the plan was one 502-line file mixing durable
-*why* with volatile *how to build it*, so a newcomer could not tell what they had to read.
-It is now split at a divider into Part I (understand) and Part II (build), and content git
-already archives was dropped rather than restated:
-
-| Was | Now | Recover with |
-|---|---|---|
-| §10 code map (standalone) | Merged into §4 as the projected file layout — architecture in one place | — |
-| §12 verification strategy, §13 risks | Renumbered §10, §11 — no content change | — |
-| §9.3 upstream issue log (5-row status table) | §9, three sentences: the open question, why it does not block M2, two issue links | `git show c9c5d1a:docs/plans/001-v0.md` |
-| §14.1 annotation backends, §14.2 tech stack, §14.3 contribution stance | §5 outlook row (VLM), §6 scaffold table (stack), `reference/landscape.md` §4 (stance) | `git show c9c5d1a:docs/plans/001-v0.md` |
-| §11 estate-reuse 3-column table | §11, 2 columns — need + source, prose folded in | `git show c9c5d1a:docs/plans/001-v0.md` |
+| `plans/001` landscape + contribution stance | `reference/landscape.md` | — |
+| `plans/001` upstream issue log, deferred-design essays | `plans/001-v0.md` §9 · §5 and §6 · `reference/landscape.md` §4 | `git show c9c5d1a:docs/plans/001-v0.md` |
