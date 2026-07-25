@@ -1,13 +1,15 @@
 # Docs map
 
-No code exists yet. These docs are the project. There are four of them.
+No code exists yet. These docs are the project. There are five of them — two are reference
+material you do not need to build.
 
 | Document | Status | Use it for |
 |---|---|---|
 | [`../README.md`](../README.md) | Live | What this is and why, in one screen |
 | [`plans/001-v0.md`](plans/001-v0.md) | **Live** | The plan of record, split by lifetime. **Part I (§1-§5)** = goal, locked decisions, approach, architecture, roadmap. **Part II (§6-§12)** = executable detail, substrate traps, tests, reuse, risks |
 | [`handoffs/001-v0.md`](handoffs/001-v0.md) | **Live** | Where things stand, build order, non-negotiables, traps, owner gates. Read this to start working |
-| [`reference/landscape.md`](reference/landscape.md) | Reference | Research evidence, competitors, backend choice, contribution stance. Dated 2026-07-20; not needed to build |
+| [`reference/landscape.md`](reference/landscape.md) | Reference | Research evidence, competitors, backend choice, contribution stance. Re-swept 2026-07-25; not needed to build |
+| [`reference/cae.md`](reference/cae.md) | Reference | The owed CAE research. Read §1 before touching `verify/sim.py` — it disproved the plan's own reason for reserving that seam. Not needed to build v0 |
 
 ## Start here
 
