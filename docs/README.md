@@ -1,21 +1,27 @@
 # Docs map
 
-No code exists yet. These docs are the project. There are four of them.
+No code exists yet. These docs are the project. There are five of them — two are reference
+material you do not need to build.
 
 | Document | Status | Use it for |
 |---|---|---|
-| [`plans/001-v0.md`](plans/001-v0.md) | **Live** | The plan of record. Design, why it looks like this (§3.1), the three v0 milestones, executable detail, substrate constraints, risks |
-| [`handoffs/001-v0.md`](handoffs/001-v0.md) | **Live** | Where things stand, build order, non-negotiables, traps, owner gates. Read this to start working |
-| [`reference/landscape.md`](reference/landscape.md) | Reference | Research evidence, competitors, backend choice, contribution stance. Dated 2026-07-20; not needed to build |
 | [`../README.md`](../README.md) | Live | What this is and why, in one screen |
+| [`plans/001-v0.md`](plans/001-v0.md) | **Live** | The plan of record, split by lifetime. **Part I (§1-§5)** = goal, locked decisions, approach, architecture, roadmap. **Part II (§6-§12)** = executable detail, substrate traps, tests, reuse, risks |
+| [`handoffs/001-v0.md`](handoffs/001-v0.md) | **Live** | Where things stand, build order, non-negotiables, traps, owner gates. Read this to start working |
+| [`reference/landscape.md`](reference/landscape.md) | Reference | Research evidence, competitors, backend choice, contribution stance. Re-swept 2026-07-25; not needed to build |
+| [`reference/cae.md`](reference/cae.md) | Reference | The owed CAE research. Read §1 before touching `verify/sim.py` — it disproved the plan's own reason for reserving that seam. Not needed to build v0 |
 
 ## Start here
 
+To **understand the project** — about 6 minutes, and you are done:
+
 1. [`../README.md`](../README.md) — the pitch, one screen.
-2. [`plans/001-v0.md`](plans/001-v0.md) **§3.1** — the distilled red-team. It killed the
-   original "spec as authoritative oracle" design; everything else is downstream of it. If
-   you read one section, read this one.
-3. [`handoffs/001-v0.md`](handoffs/001-v0.md) — then start on M1.
+2. [`plans/001-v0.md`](plans/001-v0.md) **Part I** — stop at the divider. Within it, §3.1 is
+   the distilled red-team: it killed the original "spec as authoritative oracle" design and
+   everything else is downstream of it. If you read one section, read that one.
+
+To **build**, continue: [`handoffs/001-v0.md`](handoffs/001-v0.md) for current state, then
+plan Part II for the milestone you are on. Start on M1.
 
 ## Conventions
 
@@ -31,14 +37,15 @@ No code exists yet. These docs are the project. There are four of them.
 
 ## Removed, and where to find it
 
-Consolidated 2026-07-23. Plans 002 and 003 and handoffs 001-003 were folded into the single
-`001-v0` pair — they described the same unstarted v0, split by when they were written rather
-than by what shipped. All recoverable from git history:
+Superseded docs are deleted, not archived — this table is just the index back into git. It
+lists **deleted files and relocated content only.** Renumbering and compression *within* a
+live doc are not tracked: the current section is the answer, and git has the rest.
 
 | Was | Now | Recover with |
 |---|---|---|
-| `reviews/001-wedge-red-team.md` | `plans/001-v0.md` §3.1 — bedrock, Goodhart paths, WINS/LOSES-IFF | `git show 2731ae3:docs/reviews/001-wedge-red-team.md` |
-| `plans/002-polyfetch-integration.md` | `plans/001-v0.md` §9 — substrate, SSRF finding, upstream issue status | `git show f3a84b0:docs/plans/002-polyfetch-integration.md` |
-| `plans/003-scaffold-and-preflight.md` | `plans/001-v0.md` §6-§7 — scaffold table, gate modules, fixtures | `git show f3a84b0:docs/plans/003-scaffold-and-preflight.md` |
+| `reviews/001-wedge-red-team.md` | `plans/001-v0.md` §3.1 | `git show 2731ae3:docs/reviews/001-wedge-red-team.md` |
+| `plans/002-polyfetch-integration.md` | `plans/001-v0.md` §9 | `git show f3a84b0:docs/plans/002-polyfetch-integration.md` |
+| `plans/003-scaffold-and-preflight.md` | `plans/001-v0.md` §6-§7 | `git show f3a84b0:docs/plans/003-scaffold-and-preflight.md` |
 | `handoffs/001`, `002`, `003` | `handoffs/001-v0.md` | `git show f3a84b0:docs/handoffs/<name>.md` |
-| `plans/001` §6 landscape, §12 contribution stance | `reference/landscape.md`, with post-red-team verdicts corrected | — |
+| `plans/001` landscape + contribution stance | `reference/landscape.md` | — |
+| `plans/001` upstream issue log, deferred-design essays | `plans/001-v0.md` §9 · §5 and §6 · `reference/landscape.md` §4 | `git show c9c5d1a:docs/plans/001-v0.md` |

@@ -2,8 +2,8 @@
 title: Landscape — evidence, competitors, backend choice, contribution stance
 purpose: The research behind the design decisions, split out of plan 001 so the plan stays a plan
 created: 2026-07-20
-updated: 2026-07-23
-validated_links: 2026-07-20
+updated: 2026-07-25
+validated_links: 2026-07-25
 status: reference — dated, not needed to build
 ---
 
@@ -13,8 +13,10 @@ Extracted from [`../plans/001-v0.md`](../plans/001-v0.md) (§6, §12) on
 adoptions that the red-team (distilled in [`../plans/001-v0.md`](../plans/001-v0.md) §3.1)
 later killed. Where a source's technique was rejected, that is now stated.
 
-Landscape sweeps are dated. Treat the competitive picture (§3) as provisional — the
-original sweep missed an 8.6k-star direct competitor.
+Landscape sweeps are dated. The competitive picture (§3) was **re-swept 2026-07-25** across
+agent-skill and plugin marketplaces — the channel the original sweep never searched, which
+is how it missed a then-8.6k-star direct competitor. That gap is now closed and §3.0 records
+what was searched. Star counts still rot; the verdicts are the durable part.
 
 ## 1. Why VLM spatial judgment cannot be trusted
 
@@ -52,6 +54,29 @@ a numerically-safe hack survives). See [`../plans/001-v0.md`](../plans/001-v0.md
 
 ## 3. Competitive landscape
 
+### 3.0 Sweep coverage — what was searched, and what was not
+
+Recorded so the next sweep does not redo the same ground. Re-swept 2026-07-25.
+
+**Searched, productive:** agent-skill and plugin marketplaces — skills registries (`npx
+skills`), `lobehub.com/skills`, `skillsmp.com`, `mcpmarket.com`, `claudemarketplaces.com`,
+`claudeskills.info`, `explainx.ai`, the OpenClaw skills registry, NVIDIA `skills`,
+`cursor.directory`, awesome-list aggregators, Product Hunt. This channel produced every new
+finding below. **It is the channel that matters** — parametric-CAD agent tooling now ships
+predominantly as agent skills, not as apps, libraries, or MCP servers, which is precisely
+why an arXiv+GitHub+MCP-registry sweep misses it.
+
+**Searched, empty:** `cursor.directory` (no CAD verification plugin); NVIDIA `skills` (only
+a format converter); no marketplace has a geometry-verification category distinct from the
+generate-and-render skills. `cadskills.xyz` is `text-to-cad`'s own marketing site, not a
+separate project.
+
+**Known gap:** `clawd-maf/cad-agent` on the OpenClaw registry could not be diffed against
+the already-catalogued `Svetlana-DAO-LLC/cad-agent` — it lives inside a monorepo with no
+standalone source. Assume duplicate until shown otherwise. Two entries below
+(`drawing-agent.com`, CADSmith) are recorded from marketing copy and an abstract
+respectively, not from source, and are labelled as such.
+
 ### 3.1 Backend decision
 
 | Tool | Verdict | Why |
@@ -84,25 +109,42 @@ Sources: [CadQuery][cadquery], [build123d][build123d], [OpenSCAD][openscad],
 | [ScadLM][scadlm] | Hackathon agentic text-to-OpenSCAD; authors report feedback approaches underperformed | Low, but a cautionary data point |
 | [MecAgent][mecagent] | NL to CAD macros for SolidWorks/CATIA/Fusion — API/macro, not vision | Medium |
 
-**Honest read, corrected 2026-07-23.** `cad-agent` and `openscad-agent` already do
-generate-render-self-correct. The pre-red-team version of this section claimed the
-differentiator was "the pre-declared machine-checkable spec and deterministic gate
-ordering" — **that claim is dead** (plan §3). What remains is not a moat: a correct,
-honest internal instrument that refuses to overclaim. That is fine, because positioning is
-estate-first (plan §2) and this is not competing with text-to-cad.
+Added by the 2026-07-25 marketplace sweep. All of these ship as agent skills:
 
-### 3.3 `earthtojake/text-to-cad` — the closest existing project
+| Project | What it does | Overlap |
+|---|---|---|
+| [jdilla1277/agentcad][agentcad] | build123d/CadQuery CLI + MCP. OCCT validity + free-edge count, four-view PNG every run, human-only review viewer | **Highest — see §3.4** |
+| [flowful-ai/cad-skill][cadskill] | CadQuery skill; `--strict` fails on non-watertight via trimesh; 4-6 view PNG shown to the user before finalising | High |
+| [drawing-agent.com][drawingagent] | 2D drawing/DXF to build123d; 8-angle + cross-section render, Gemini compares render to source drawing, up to 10 auto-iterations. No documented watertight/mass check. *Marketing copy only — no public source* | Medium |
+| [CADSmith][cadsmith] | Academic. OCCT bbox/volume/solid-validity checks **plus** an independent VLM "judge" for holistic assessment | Medium-high conceptually |
+| [rawwerks/VibeCAD][vibecad] · [mfranzon/render][mfrender] · [mitsuhiko/agent-stuff][mitsuhiko] | build123d/OpenSCAD skills with render-to-PNG visual verification; mitsuhiko's mandates human visual confirmation. None check watertight/volume | Medium |
+| [EdwinjJ1/3d-print-skill][printskill] | manifold3d watertight/normals/volume/degenerate/size checks — **and no render step at all**. The mirror image of the skills above | Low-medium |
 
-Analysed 2026-07-20. **The initial research sweep missed it.** Treat it as the primary
-competitive reference.
+**Honest read, corrected 2026-07-25.** The differentiator is now **one thing, and it is
+thin**: the epistemic framing. Generate-render-self-correct is commodity — `cad-agent`,
+`openscad-agent` and half the skills above do it. Deterministic geometry checking is
+commodity — `agentcad`, `cad-skill` and `3d-print-skill` do it. **Nobody found in two sweeps
+labels a passing check as necessary-but-not-sufficient, and nobody reports an unsupplied
+bound as `SKIP` rather than silently passing.** That is the whole remaining delta.
+
+Note the population splits cleanly into render-only skills and check-only skills, with
+`agentcad` and `cad-skill` the only two doing both. That combination — not the checks, not
+the render — is the thesis, and it is now occupied. The consequence is not "stop": it is
+that *the honesty is the product*, so weakening it (plan §3.1 LOSES-IFF) does not leave a
+weaker tool, it leaves a redundant one. Positioning stays estate-first (plan §2).
+
+### 3.3 `earthtojake/text-to-cad` — the largest adjacent project
+
+Analysed 2026-07-20, figures re-verified 2026-07-25. **The initial research sweep missed
+it.** Largest by adoption; see §3.4 for the one closest to this project's thesis.
 
 | Attribute | Value |
 |---|---|
-| Scale | 8.6k stars, 984 forks, 314 commits, MIT, release 0.3.9 on 2026-07-10 |
+| Scale | **10,319 stars, 1,125 forks** (was 8.6k / 984 on 2026-07-20), 314 commits, MIT, release 0.3.9 on 2026-07-10 |
 | Form | A **Claude Code / Codex agent-skill package**, not an app or MCP server (`npx skills install earthtojake/text-to-cad`) |
 | Backend | **build123d over OpenCascade** — real B-rep, same primary backend this plan chose |
 | Scope | CAD + DXF drawings + URDF/SDF/SRDF robotics + part sourcing (`step.parts`, 12k+ STEP catalog) + G-code slicing + SendCutSend fabrication upload + local `cad-viewer` |
-| Trajectory | ~1.1k stars April 2026 to 8.6k July 2026. Solo-authored, actively developed |
+| Trajectory | ~1.1k stars April 2026 to 10.3k July 2026 — but **no commits since 2026-07-11**. Stars are still climbing while the code has not moved for two weeks; do not read adoption as active development |
 
 Its SKILL.md mandates a 10-step workflow including a prose "CAD brief" (dims, units,
 coordinate convention, validation targets), source-of-truth discipline (edit Python, never
@@ -130,7 +172,12 @@ separate `gcode` skill, explicitly "diagnostic only").
 parts where "gussets overlap the holes and make a part that cannot be used" and questioned
 whether through-holes actually pass through — precisely the local/unforeseen class that
 *no* deterministic check catches, and the reason the render is the primary gate. Author's
-reply: *"Working on benchmarks at the moment!"* ([HN][hn]).
+reply: *"Working on benchmarks at the moment!"* ([HN][hn]). **Re-checked 2026-07-25: still
+no grader in the repo.** Two claims in this section were re-verified by grepping a fresh
+clone rather than trusting search — the absence of watertight/volume/interference checks
+holds, and the `gcode` skill's `--dry-run` is weaker than first recorded: it prints the
+planned slicer command without ever invoking the slicer, so it is not diagnostic of
+printability at all.
 
 **Adopt from it:**
 
@@ -146,7 +193,45 @@ reply: *"Working on benchmarks at the moment!"* ([HN][hn]).
   "exactly one watertight solid") is a good template for authoring regression specs.
 - The HN failure modes are concrete target cases — for the *render*, not the preflight.
 
-### 3.4 CAD MCP servers
+### 3.4 `jdilla1277/agentcad` — the closest on thesis
+
+Found by the 2026-07-25 marketplace sweep; stats and technical claims verified directly
+against the GitHub API and the repo's own README, not from search results.
+
+| Attribute | Value |
+|---|---|
+| Scale | 79 stars, 12 forks, Apache-2.0, Python. Created 2026-06-02, pushed 2026-07-24 — small but moving daily |
+| Form | CLI **and** MCP server, "CAD CLI and MCP server for AI agents" |
+| Backend | **build123d default, CadQuery optional** — the same primary backend this plan chose |
+
+**It already does the shape of this project's v0.** `agentcad inspect` is a topology
+deep-dive over shells, free edges and validity; `agentcad run` emits volume, dimensions,
+validity and face/edge counts; `--preview` produces a four-view PNG plus a turntable GIF;
+and successful runs open a `viewer.html` for human review, with A/B overlay against the
+previous version. Deterministic checks, automatic multi-view render, human decides — the
+same three moves in the same order.
+
+Two things it does differently, and one of them matters:
+
+- **OCCT `is_valid` / free-edge counting runs pre-mesh on the B-rep**, which is arguably a
+  stronger check than mesh-level watertightness. Worth adopting when build123d is present
+  (plan §7.2 already reaches for `is_valid()`; this confirms the instinct).
+- **No necessary-not-sufficient caveat anywhere.** Checked the README explicitly: there is
+  no statement that passing does not mean correct. It also has no volume/mass *band*, no
+  interference check, and no `SKIP` semantics for an unsupplied bound.
+
+**What this means, stated plainly.** The technical wedge is gone — someone else is on the
+same backend doing the same three moves, and doing them well. What is left is the framing
+this project treats as load-bearing and they do not state at all. That is a real difference
+in an instrument whose failure mode is false confidence, but it is a *thin* one, and it is
+worth being honest that it is thin. It does not change v0: the plan is estate-first, the
+consumers are real, and the §3.1 red-team already concluded there is no moat here. It does
+raise the cost of ever weakening the honesty rules — see §3.2.
+
+**Adopt from it:** the pre-mesh `is_valid` / free-edge check (M2), and the A/B-against-last-
+version viewer, which is a cheaper regression UX than the manifest diff planned for M4.
+
+### 3.5 CAD MCP servers
 
 | Server | Stars | Note |
 |---|---|---|
@@ -160,7 +245,7 @@ reply: *"Working on benchmarks at the moment!"* ([HN][hn]).
 No CAD servers exist in the official MCP servers repo — the ecosystem is entirely
 third-party.
 
-### 3.5 GUI automation state of the art (context for the deferred GUI leg)
+### 3.6 GUI automation state of the art (context for the deferred GUI leg)
 
 | System | Benchmark | ID |
 |---|---|---|
@@ -278,6 +363,14 @@ and stated in the PR.
 [blenderllm]: https://github.com/FreedomIntelligence/BlenderLLM
 [scadlm]: https://github.com/KrishKrosh/ScadLM
 [mecagent]: https://mecagent.com
+[agentcad]: https://github.com/jdilla1277/agentcad
+[cadskill]: https://github.com/flowful-ai/cad-skill
+[drawingagent]: https://drawing-agent.com/
+[cadsmith]: https://arxiv.org/abs/2603.26512
+[vibecad]: https://github.com/rawwerks/VibeCAD
+[mfrender]: https://github.com/mfranzon/render
+[mitsuhiko]: https://github.com/mitsuhiko/agent-stuff
+[printskill]: https://github.com/EdwinjJ1/3d-print-skill
 [blendermcp]: https://github.com/ahujasid/blender-mcp
 [freecadmcp]: https://github.com/neka-nat/freecad-mcp
 [openscadmcp]: https://github.com/quellant/openscad-mcp
