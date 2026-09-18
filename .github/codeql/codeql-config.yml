@@ -1,0 +1,4 @@
+name: agentic-cax-gauge CodeQL config
+
+queries:
+  - uses: security-and-quality
