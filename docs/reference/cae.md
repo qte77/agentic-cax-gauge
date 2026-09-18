@@ -2,8 +2,8 @@
 title: CAE outlook — feasibility, trust boundary, and why the seam stays empty
 purpose: The owed CAE research, so the deferred verify/sim.py seam rests on evidence rather than assumption
 created: 2026-07-25
-updated: 2026-07-25
-validated_links: 2026-07-25
+updated: 2026-09-10
+validated_links: 2026-09-10
 status: reference — research complete, no CAE work authorised
 ---
 
@@ -54,6 +54,17 @@ stress number carries far more unearned authority than a bounding box.
 **Consequence for the seam:** keep `verify/sim.py` reserved — it still costs nothing — but
 the rationale in plan §4 is corrected, and anything built there reports into the human
 review artifact, never into the pass/fail verdict.
+
+**Corroboration from an unrelated domain, 2026-09-10.** Investigating BIM as a scope
+question ([`landscape.md`](landscape.md) §3.7) surfaced the same pattern outside CAE
+entirely: structural footing/foundation design (base-pressure, stability, strength-design
+checks) looks bbox-shaped at first glance — a computed scalar compared against an allowable
+limit — but base pressure is compared against *allowable soil bearing pressure*, which
+depends on a geotechnical report's assumptions, the chosen load case, and a safety factor.
+Same chain-of-judgement problem as `peak_stress < yield`, in a completely different
+engineering discipline. Treat this section's verdict as a general principle — "a bound on a
+directly-measured artifact" vs. "a bound on a scalar at the end of assumptions" — not a
+CAE-specific one.
 
 ## 2. Solver feasibility — which are CI-viable
 
@@ -156,6 +167,13 @@ JAX-FEM sensitivity analysis), [TopOptAgents][topopt] (six-agent self-refinement
 [LLM-as-SIMP-controller][simp]. **No benchmark sizes or success rates were surfaced for any
 of the three** — abstracts only. Nothing here is decision-relevant yet.
 
+**Added 2026-09-10 — [PhysicsBench][physicsbench].** A new (Aug 2026) unified benchmark/live
+leaderboard ranking 66 generative and predictive models (diffusion/GAN/VAE vs. neural
+operators/transformers) on industrial CAD/CFD/FEA tasks — structural, aero, acoustic,
+porous-flow, modal. Same bucket as the cluster above: worth tracking as the closest thing to
+a manufacturability/physical-validity benchmark that exists, but it's a model-ranking
+leaderboard, not a CI-viable tool, and doesn't change §2's reliability verdict.
+
 ## 7. Unverified — do not cite these as settled
 
 - **FoamGPT**'s reported numbers — repo and title confirmed, paper content not fetched
@@ -196,3 +214,4 @@ of the three** — abstracts only. Nothing here is decision-relevant yet.
 [tomaster]: https://arxiv.org/pdf/2607.01812
 [topopt]: https://arxiv.org/abs/2605.23273
 [simp]: https://arxiv.org/html/2603.25099
+[physicsbench]: https://arxiv.org/html/2608.24056

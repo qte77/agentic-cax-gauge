@@ -2,8 +2,8 @@
 title: Landscape — evidence, competitors, backend choice, contribution stance
 purpose: The research behind the design decisions, split out of plan 001 so the plan stays a plan
 created: 2026-07-20
-updated: 2026-07-25
-validated_links: 2026-07-25
+updated: 2026-09-10
+validated_links: 2026-09-10
 status: reference — dated, not needed to build
 ---
 
@@ -17,6 +17,12 @@ Landscape sweeps are dated. The competitive picture (§3) was **re-swept 2026-07
 agent-skill and plugin marketplaces — the channel the original sweep never searched, which
 is how it missed a then-8.6k-star direct competitor. That gap is now closed and §3.0 records
 what was searched. Star counts still rot; the verdicts are the durable part.
+
+**Extended 2026-09-10** across four technique dimensions this plan had not surveyed —
+world models, specialized/fine-tuned LLMs, autoregressive generation, and VLM applications —
+each checked against both CAx and BIM. New CAx findings landed in §3.2 and §3.5. BIM had no
+prior coverage at all; §3.7 is the first pass and reframes "BIM" as three separate
+verification problems rather than one adjacent domain.
 
 ## 1. Why VLM spatial judgment cannot be trusted
 
@@ -52,6 +58,12 @@ a numerically-safe hack survives). See [`../plans/001-v0.md`](../plans/001-v0.md
 | Correction accuracy | CADReview/ReCAD 73% vs 41.5% raw GPT-4o | Reference — [arXiv:2505.22304][cadreview] |
 | Simulation in the loop | Physics-in-the-Loop embeds FEA in Generate-Simulate-Refine | Defer to CAE leg — [arXiv:2605.19717][physicsloop] |
 
+**Cross-domain corroboration, 2026-09-10.** Text2BIM (§3.7) — a different domain entirely,
+BIM generation checked by a deterministic rule engine, not a VLM — independently caps its
+automated Reviewer/Programmer fix loop at 3 iterations before falling back to a human. Same
+number, same reason, unrelated codebase. The iteration-cap finding is now corroborated
+twice, not a CAx-specific artifact.
+
 ## 3. Competitive landscape
 
 ### 3.0 Sweep coverage — what was searched, and what was not
@@ -76,6 +88,15 @@ the already-catalogued `Svetlana-DAO-LLC/cad-agent` — it lives inside a monore
 standalone source. Assume duplicate until shown otherwise. Two entries below
 (`drawing-agent.com`, CADSmith) are recorded from marketing copy and an abstract
 respectively, not from source, and are labelled as such.
+
+**2026-09-10 technique sweep.** Searched arXiv + GitHub (not marketplaces this time) across
+four dimensions — world models, specialized/fine-tuned LLMs, autoregressive generation,
+VLMs — each against both CAx and BIM, plus a direct check of the Autodesk/Fusion vendor
+ecosystem (official Claude connector + community MCP servers). **Searched, empty:** "world
+model" as a named technique inside any CAD or BIM verification pipeline — the term stays
+confined to robotics/embodied AI (Genie, NVIDIA Cosmos, per search results — not
+independently fetched from DeepMind's or NVIDIA's own pages this session); no CAD/BIM-specific
+instantiation found. New findings in §3.2, §3.5, §3.7.
 
 ### 3.1 Backend decision
 
@@ -132,6 +153,24 @@ Note the population splits cleanly into render-only skills and check-only skills
 the render — is the thesis, and it is now occupied. The consequence is not "stop": it is
 that *the honesty is the product*, so weakening it (plan §3.1 LOSES-IFF) does not leave a
 weaker tool, it leaves a redundant one. Positioning stays estate-first (plan §2).
+
+**Added by the 2026-09-10 technique sweep** (specialized/fine-tuned LLMs and autoregressive
+generation, verified live against arXiv/GitHub — see §3.0):
+
+| Project | What it does | Overlap |
+|---|---|---|
+| [microsoft/CADFusion][cadfusion] | ICML 2025. LLaMA3 SFT alternating with a visual-feedback model; text→CAD (`.step`/`.stl`/`.obj` + point clouds). MIT, 90★ | Generation-side. Its visual-feedback loop is train-time, same shape as the already-rejected CADCodeVerify/Query2CAD auto-loop pattern (§2) — a second data point, not a new consideration |
+| [CAD-Judge][cadjudge] | SFT + KTO preference-optimized model for *grading/verifying* text-to-CAD output, not generating it | **Highest relevance found this sweep** — first verification-side specialized model, i.e. this project's own lane. Code/weight availability unconfirmed from the abstract; check before relying on it |
+| [AutoBrep][autobrep] | SIGGRAPH Asia 2025. Autoregressive B-Rep generator — unified token sequence over geometry + topology, BFS over face-adjacency graph. Reports improved *watertightness* as a metric | Generation-side, not usable directly, but confirms the field is chasing the same defect class this project's preflight checks |
+| [CAD-Llama][cadllama] | LLM SFT on hierarchical-annotated parametric CAD sequences, text→CAD | Generation-side |
+| [CADmium][cadmium] (TMLR 2026) | Fine-tunes code-LLMs for text→sequential-CAD design | Generation-side |
+| [OpenECAD][openecad] | LoRA-tuned VLM (OpenELM-CLIP base) for CAD code generation from images | Generation-side; confirms LoRA is a proven technique here, but no LoRA model exists yet for CAD *verification* specifically |
+| [GeoCAD][geocad] | Local geometry-controllable CAD generation with LLMs | Generation-side |
+
+None of the above change the backend choice (§3.1) or reopen the rejected auto-loop verdict
+(§2) — they're additional confirmation that the field is generation-heavy and
+verification-thin, which is this project's actual differentiation (see the "Honest read"
+paragraph above).
 
 ### 3.3 `earthtojake/text-to-cad` — the largest adjacent project
 
@@ -243,7 +282,26 @@ version viewer, which is a cheaper regression UX than the manifest diff planned 
 | [daobataotie/CAD-MCP][cadmcp] | 451 | AutoCAD/GstarCAD/ZWCAD, Windows-only |
 
 No CAD servers exist in the official MCP servers repo — the ecosystem is entirely
-third-party.
+third-party — **except one, found 2026-09-10:** Autodesk itself shipped an official
+Anthropic↔Autodesk **Claude for Fusion** MCP connector on 2026-04-28, one of nine simultaneous
+creative-tool connectors — confirmed directly via [Anthropic's own announcement][claudecreative],
+which names all nine (Ableton, Adobe, Affinity by Canva, Autodesk Fusion, Blender, Resolume
+Arena, Resolume Wire, SketchUp, Splice). Mechanism confirmed via
+[Autodesk Platform Services' own blog][apsfusion]: natural language → Fusion design actions,
+iterative refinement, execution stays inside Fusion. No verification/validation capability is
+described in either announcement — generation and editing only. First-party status makes this
+the most significant CAD-MCP entry in this table, but it doesn't change the verdict: it's the
+same generation-only shape as everything else here.
+
+The same sweep found **8+ independent community Fusion-MCP servers**, all generation/
+control-only (e.g. [frankhommers/autodesk-fusion-mcp][fusionmcp1],
+[Joe-Spencer/fusion-mcp-server][fusionmcp2], [jaskirat1616/fusion360-mcp][fusionmcp3] — the
+last has trivial sanity checks like `dimensions_positive`/`units_valid`, nothing resembling a
+render-gate; all three repos fetched directly, but their creation dates were not confirmed —
+"2026" is an inference from the surrounding ecosystem, not a verified per-repo fact). This
+reinforces the existing Fusion 360 API "Hold" verdict (§3.1, desktop-app dependent) and the
+differentiation argument above: even Autodesk's own first-party AI tooling ships zero
+verification philosophy.
 
 ### 3.6 GUI automation state of the art (context for the deferred GUI leg)
 
@@ -259,6 +317,95 @@ third-party.
 Fusion or SolidWorks GUIs. Commercial CAD AI uses native API/macro hooks. This is why the GUI leg, if ever built,
 would target to *browser*-based CAD via DOM selectors, which removes the pixel-guessing
 failure mode entirely. The GUI leg is deferred outright — plan §5.
+
+### 3.7 BIM — evaluated, not adopted
+
+Raised 2026-09-10 as a scope question (broaden this project to Building Information
+Modeling for "synergies"). Investigated across two research passes rather than answered from
+intuition. Verdict: **BIM is not one verification problem, it is three, and they don't
+share this project's shape.**
+
+**Regime 1 — spatial clash detection** (walls/MEP/structural interference). Solved
+authoritatively by Solibri/Navisworks-style deterministic geometric-intersection checking
+directly on the IFC semantic model — industry-standard, ubiquitous, and treated as
+*sufficient*, not necessary-but-not-sufficient the way this project's mesh preflight is. Two
+research sweeps for a render+VLM advisory-gate analogue (the AEC equivalent of CADCodeVerify/
+`agentcad`) found **none**. The closest hits were all shaped differently: Sketch2BIM
+([arXiv:2510.20838][sketch2bim], verified directly) gates *input* parsing (hand-drawn
+floorplan → layout) with human correction each iteration, not output verification of a
+generated design; [Text2BIM][text2bim] checks a generated IFC model with a deterministic
+rule engine (Solibri), not a VLM, and independently caps its auto-fix loop at 3 iterations
+(§2 corroboration). **Why the gap exists:** the defect class your render step fills for CAx
+— local, unforeseen geometry a blind deterministic check can't see (a hole that isn't
+actually through) — doesn't obviously exist in BIM, because BIM's deterministic layer is
+already authoritative there. This regime needs nothing from this project.
+
+**Regime 2 — fabrication/CAM (design-build, DfMA, prefab, CNC-cut components).** Plausible,
+and if real it's your existing problem in disguise, not a new one — but this needs a caveat
+the first pass didn't carry. BIM workflows are widely described as exporting **LOD 400
+models to STEP/DXF for CAM toolpathing** (CNC G-code generation for sheet metal, precast,
+timber connections); this reflects general BIM/CAM industry practice, not a specific
+primary source independently fetched this session. Two supporting citations from the first
+pass did not survive a falsification check: the two ScienceDirect papers on "preassembly
+analysis"/assembly-deviation research 403'd on direct fetch and were only ever title-matched
+via search, and the MDPI paper (2071-1050/15/15/11990) also 403'd — what could be confirmed
+about it (Rhino/Grasshopper parametric structural generation, embodied-environmental-impact
+assessment) does not include the IFC-export claim originally attributed to it, so that
+detail is dropped rather than repeated unverified. **If the general premise holds** — a
+fabricable BIM component exported as STEP/mesh — it has the identical defect class (a hole
+that isn't actually through, a mating feature off its datum) that motivates this project's
+render-gate, and `build123d` already reads/writes STEP. If a BIM-driven fabrication consumer
+ever existed in the estate, v0's architecture plausibly applies with no new backend — but
+treat this whole regime as a plausibility argument, not a verified one, until a specific
+primary source is fetched. No such consumer currently exists (§4 lists only
+`so101`/`i3mega`), so this stays a landscape note, not a trigger.
+
+**Regime 3 — building code / regulatory compliance.** A third, distinct regime, and
+structurally **not** like a bbox check — it's the same shape [`cae.md`](cae.md) §1
+already named for `peak_stress < yield`: a scalar (or pass/fail) at the end of a chain of
+independent judgements (correct rule retrieval, correct interpretation of ambiguous code
+text, correct classification of building elements), any of which can be wrong while it
+returns a plausible pass. Every code-compliance paper found used **generic prompted LLMs**,
+none fine-tuned specifically for this (arXiv:2506.20551, arXiv:2407.21060, door-detection
+arXiv:2509.17283, [BIM-Edit benchmark][bimedit]) — no Solibri-equivalent authoritative gate
+exists for code compliance. Gating on "code-compliant" would be the CAE false-confidence
+failure with extra steps, not a safe preflight. The same caution `cae.md` applies to stress
+checks applies here without modification — and generalizes further: footing/foundation
+design checks (base pressure vs. allowable soil bearing, stability, strength design) are
+*also* CAE-shaped rather than bbox-shaped, since allowable bearing pressure depends on a
+geotechnical report's assumptions, not a direct measurement of the artifact.
+
+**Adjacent, checked and dismissed:**
+
+- **Specialized/fine-tuned LLMs for BIM** exist but cluster on generation/retrieval/
+  enrichment (Eplus-LLM — Jiang et al. 2024, and a Forth & Borrmann semantic-enrichment
+  paper — both found via search summary only, exact source not independently fetched this
+  session; domain-tuning-vs-prompting study arXiv:2508.05676) — nothing fine-tuned for
+  verification. [Qwen-BIM][qwenbim]
+  (generation) and [MCP4IFC][mcp4ifc] (a tool-use framework, not itself a fine-tune) round out
+  the generation side. [BIMScript][bimscript] is the closest real IFC bridge (validated Revit
+  add-in, IFC4 export end-to-end) — its "validity check" parses against deterministic entity
+  schemas, not a render, reinforcing Regime 1's conclusion.
+- **World models** — not a real category yet in CAD or BIM verification; confined to
+  robotics/embodied AI (§3.0). BIM has been reported to use applied ML for
+  clash-*prediction*/triage (ranking existing deterministic clashes rather than generating),
+  which would be prediction, not a generative world model — the specific source found for
+  this (Buildings 16(4):690) 403'd on direct fetch and did not survive independent
+  verification, so treat the clash-prediction sub-claim as unconfirmed rather than cited.
+- **LoRA fine-tuning** — proven technique (HF PEFT, [OpenECAD][openecad]/[GeoCAD][geocad]
+  above), but no BIM- or CAx-verification-specific LoRA model exists yet. Owning one means
+  owning training data, weights, and hosting — the opposite of this project's "works with no
+  model configured" design (plan §3).
+- **Agent-harness routers** (`joshuaboys/harness-router`, `HarnessRouter/harnessrouter`) —
+  checked directly, wrong problem domain. Both route full coding-agent CLI sessions/accounts;
+  this project's only model touchpoint is a single stateless call to "any OpenAI-spec
+  endpoint" for optional VLM annotation. No multi-harness problem to route.
+- **CSI MasterFormat** — a construction-spec classification standard, sits alongside
+  UniFormat/OmniClass (confirmed directly against CSI's own site, csiresources.org). The
+  commonly-cited "50 divisions, 6-digit codes" specifics are corroborated only by
+  third-party explainer sites, not CSI's own numbering document — likely accurate, not
+  independently confirmed this session. Documentation/metadata plumbing either way, not a
+  verification mechanism.
 
 ## 4. Upstream contribution stance
 
@@ -321,6 +468,19 @@ and stated in the PR.
 | [build123d-mcp][build123dmcp] | Closest MCP to our stack |
 | [UI-TARS-2][uitars2] | 47.5% OSWorld, screenshot-only |
 | [Claude computer use][ccu] | Vendor docs, sandboxing guidance |
+| [microsoft/CADFusion][cadfusion] | ICML 2025 — LLaMA3 + visual-feedback text-to-CAD |
+| [CAD-Judge][cadjudge] | Fine-tuned model for grading/verifying text-to-CAD (verification-side) |
+| [AutoBrep][autobrep] | SIGGRAPH Asia 2025 — autoregressive B-Rep gen, watertightness metric |
+| [CAD-Llama][cadllama] | LLM SFT on hierarchical parametric CAD sequences |
+| [CADmium][cadmium] | TMLR 2026 — fine-tuned code-LLMs, text-to-sequential-CAD |
+| [OpenECAD][openecad] | LoRA-tuned VLM, image-to-CAD-code |
+| [GeoCAD][geocad] | Local geometry-controllable CAD generation with LLMs |
+| [Sketch2BIM][sketch2bim] | Hand-drawn floorplan → BIM via multi-agent MLLM, human-gated |
+| [Text2BIM][text2bim] | BIM generation + Solibri rule-check, 3-iteration auto-fix cap |
+| [Qwen-BIM][qwenbim] | Fine-tuned LLM for BIM design + eval benchmark |
+| [MCP4IFC][mcp4ifc] | MCP tool-use framework for LLMs manipulating IFC |
+| [BIMScript][bimscript] | Structured BIM commands, validated Revit add-in + IFC4 export |
+| [BIM-Edit benchmark][bimedit] | Benchmark for LLMs editing IFC data |
 
 [blind]: https://arxiv.org/abs/2407.06581
 [blink]: https://arxiv.org/abs/2404.12390
@@ -382,3 +542,21 @@ and stated in the PR.
 [uitars2]: https://arxiv.org/abs/2509.02544
 [agents]: https://github.com/simular-ai/Agent-S
 [omniparser]: https://github.com/microsoft/OmniParser
+[cadfusion]: https://github.com/microsoft/CADFusion
+[cadjudge]: https://arxiv.org/abs/2508.04002
+[autobrep]: https://arxiv.org/abs/2512.03018
+[cadllama]: https://arxiv.org/abs/2505.04481
+[openecad]: https://arxiv.org/pdf/2406.09913
+[geocad]: https://arxiv.org/pdf/2506.10337
+[fusionmcp1]: https://github.com/frankhommers/autodesk-fusion-mcp
+[fusionmcp2]: https://github.com/Joe-Spencer/fusion-mcp-server
+[fusionmcp3]: https://github.com/jaskirat1616/fusion360-mcp
+[cadmium]: https://arxiv.org/abs/2507.09792
+[claudecreative]: https://www.anthropic.com/news/claude-for-creative-work
+[apsfusion]: https://aps.autodesk.com/blog/bringing-fusion-claude-creative-work
+[sketch2bim]: https://arxiv.org/abs/2510.20838
+[text2bim]: https://arxiv.org/html/2408.08054v1
+[qwenbim]: https://arxiv.org/abs/2602.20812
+[mcp4ifc]: https://arxiv.org/abs/2511.05533
+[bimscript]: https://arxiv.org/html/2608.21447
+[bimedit]: https://arxiv.org/abs/2606.20146
