@@ -1,14 +1,13 @@
 # Docs map
 
-No code exists yet. These docs are the project. There are five of them — two are reference
+No code exists yet. These docs are the project. There are four of them — two are reference
 material you do not need to build.
 
 | Document | Status | Use it for |
 |---|---|---|
 | [`../README.md`](../README.md) | Live | What this is and why, in one screen |
-| [`plans/001-v0.md`](plans/001-v0.md) | **Live** | The plan of record, split by lifetime. **Part I (§1-§5)** = goal, locked decisions, approach, architecture, roadmap. **Part II (§6-§12)** = executable detail, substrate traps, tests, reuse, risks |
-| [`handoffs/001-v0.md`](handoffs/001-v0.md) | **Live** | Where things stand, build order, non-negotiables, traps, owner gates. Read this to start working |
-| [`reference/landscape.md`](reference/landscape.md) | Reference | Research evidence, competitors, backend choice, contribution stance. Re-swept 2026-07-25; not needed to build |
+| [`plans/001-v0.md`](plans/001-v0.md) | **Live** | The plan **and** the handoff — one file. Opens with a Handoff section (state, execution model, commands, non-negotiables, owner gates, traps), then Part I (§1-§5: goal, locked decisions, approach, architecture, roadmap), then Part II (§6-§12: executable detail, substrate traps, tests, reuse, risks) |
+| [`reference/landscape.md`](reference/landscape.md) | Reference | Research evidence, competitors, backend choice, contribution stance. Re-swept 2026-09-10; not needed to build |
 | [`reference/cae.md`](reference/cae.md) | Reference | The owed CAE research. Read §1 before touching `verify/sim.py` — it disproved the plan's own reason for reserving that seam. Not needed to build v0 |
 
 ## Start here
@@ -20,14 +19,17 @@ To **understand the project** — about 6 minutes, and you are done:
    the distilled red-team: it killed the original "spec as authoritative oracle" design and
    everything else is downstream of it. If you read one section, read that one.
 
-To **build**, continue: [`handoffs/001-v0.md`](handoffs/001-v0.md) for current state, then
-plan Part II for the milestone you are on. Start on M1.
+To **build**, continue: the plan's opening **Handoff** section for current state and
+execution model, then Part II for the milestone you are on. Start on M1.
 
 ## Conventions
 
-- **One arc, one pair.** A plan (`plans/NNNN-slug.md`) and its handoff
-  (`handoffs/NNNN-slug.md`) share a number. The plan is the *what*; the handoff is the
-  *where we are*. A handoff without its plan, or a plan without its handoff, is a bug.
+- **One arc, one file.** A plan (`plans/NNNN-slug.md`) opens with its own handoff — current
+  state, what's next, execution model, commands, non-negotiables, owner gates, traps — then
+  the plan itself. No separate handoff file or ritual; a single file is easier to keep in
+  sync than two that can drift, and "read the plan" is easier to follow than "read the plan,
+  then also read its handoff." (Before 2026-09-18 this repo used a separate
+  `handoffs/NNNN-slug.md` per plan — see the table below for where that content went.)
 - **A new number means work shipped**, not "time passed" or "a new document got written".
   Closing an arc migrates the remainder forward — work is never stranded.
 - **Superseded documents are deleted, not archived in place.** A stale doc that still reads
@@ -49,3 +51,4 @@ live doc are not tracked: the current section is the answer, and git has the res
 | `handoffs/001`, `002`, `003` | `handoffs/001-v0.md` | `git show f3a84b0:docs/handoffs/<name>.md` |
 | `plans/001` landscape + contribution stance | `reference/landscape.md` | — |
 | `plans/001` upstream issue log, deferred-design essays | `plans/001-v0.md` §9 · §5 and §6 · `reference/landscape.md` §4 | `git show c9c5d1a:docs/plans/001-v0.md` |
+| `handoffs/001-v0.md` | `plans/001-v0.md`, opening "Handoff" section | `git show 4bac16d:docs/handoffs/001-v0.md` |
