@@ -196,6 +196,33 @@ None of the above change the backend choice (§3.1) or reopen the rejected auto-
 verification-thin, which is this project's actual differentiation (see the "Honest read"
 paragraph above).
 
+**Added 2026-09-19 — [LEAP71][leap71], re-verified after an initial pass was deliberately
+falsified against primary sources.** "Computational Engineering": algorithmic design of
+complex hardware (rocket engines, heat exchangers, electric motors) for advanced
+manufacturing. Their kernel **PicoGK** (C#, 1.1k★, 186 forks, Apache-2.0) plus an ecosystem —
+`LEAP71_ShapeKernel` (302★), `PicoGKRuntime` (132★), `LEAP71_HelixHeatX` (84★),
+`LEAP71_LatticeLibrary` (78★), a `leap71` meta-repo (57★, missing from the first pass) — all
+confirmed directly on re-fetch. Three repos named in the first pass (`PicoGKInstaller`,
+`LEAP71_QuasiCrystals`, `LEAP71_RoverWheel`) did **not** reappear on re-fetch of the org
+page — not cited here, treat as unconfirmed rather than repeated.
+
+**The one finding worth keeping past the "not a build candidate" filter.** PicoGK is
+**voxel-field/signed-distance-field based, not B-Rep** — confirmed by reading the actual
+source (`PicoGK_Voxels.cs`, `PicoGK_ScalarField.cs`), cross-checked against a founder blog
+post (Lissner & Kayser, jlk.ae). Surfaces come from marching-cubes-style extraction off the
+SDF zero-crossing — categorically different from build123d/OCCT's B-Rep. No built-in
+watertight/manifold validation API was found in source or discussions, but marching-cubes
+meshing is watertight-by-construction as a property of the representation itself, not a
+claim LEAP71 makes. **This doesn't make verification unnecessary — it changes what needs
+checking**: a voxel/SDF pipeline trades this project's headline defect (silent
+boolean-fusion non-manifold loss) for a different one (voxel-resolution/aliasing loss at the
+extraction step). STL export/import is confirmed working (`ExportVoxelsToSTLFile`,
+`mshFromStlFile()`, per GitHub Discussions #63/#19), so it's format-compatible with this
+project's input contract in principle — C# and this project's locked Python 3.12 constraint
+(§2) rule it out as an actual backend regardless. Kept as a landscape note: evidence that
+"watertight by construction" is representation-dependent, not a property this project can
+assume in general.
+
 ### 3.3 `earthtojake/text-to-cad` — the largest adjacent project
 
 Analysed 2026-07-20, figures re-verified 2026-07-25. **The initial research sweep missed
@@ -604,3 +631,4 @@ and stated in the PR.
 [bimscript]: https://arxiv.org/html/2608.21447
 [bimedit]: https://arxiv.org/abs/2606.20146
 [autoaero]: https://arxiv.org/pdf/2605.27968
+[leap71]: https://github.com/leap71
