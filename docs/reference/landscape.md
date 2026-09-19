@@ -2,8 +2,8 @@
 title: Landscape — evidence, competitors, backend choice, contribution stance
 purpose: The research behind the design decisions, split out of plan 001 so the plan stays a plan
 created: 2026-07-20
-updated: 2026-09-10
-validated_links: 2026-09-10
+updated: 2026-09-19
+validated_links: 2026-09-19
 status: reference — dated, not needed to build
 ---
 
@@ -97,6 +97,30 @@ model" as a named technique inside any CAD or BIM verification pipeline — the 
 confined to robotics/embodied AI (Genie, NVIDIA Cosmos, per search results — not
 independently fetched from DeepMind's or NVIDIA's own pages this session); no CAD/BIM-specific
 instantiation found. New findings in §3.2, §3.5, §3.7.
+
+**2026-09-19 — the technique exists, the CAD/BIM application still doesn't.** Asked
+separately: could PEFT/LoRA adapt an *open* physics-surrogate model into a manufacturability
+or structural-behavior predictor (the digital-twin instance of a "world model" named above)?
+Verified directly: yes, PEFT/LoRA-style adaptation of a physics surrogate is a real,
+demonstrated technique — [arXiv:2605.27968][autoaero] adapts a transformer/operator-learning
+aerodynamics surrogate to new vehicle families via parameter-efficient transfer learning,
+with less data than training from scratch. Fast, physically-consistent GNN-based structural
+surrogates are also real and active (steel-frame response, vehicle-panel crashworthiness
+papers, 2026) — but GNNs are encoder-processor-decoder architectures, not transformers, so
+classic LoRA (built for attention layers) does not directly transfer; an adapter-style PEFT
+analog would need to be built, not borrowed as-is. **Still true: nobody has applied any of
+this to CAD/BIM manufacturability or structural prediction specifically** — the aerodynamics
+paper is the closest real precedent, not an existing instance. A PDE-Transformer LoRA claim
+surfaced by search could not be independently verified (fetch exceeded size limits) —
+unconfirmed, not cited as fact.
+
+**Why this stays a landscape note, not a build candidate, even if built:** a learned
+surrogate is *more* CAE-shaped than a numerical solver, not less — [`cae.md`](cae.md) §1's
+chain-of-judgement argument (mesh density, boundary conditions, load-case assumptions can
+all be wrong while a solver exits 0) still applies in full, plus the surrogate's own
+training-distribution coverage on top, with no grid-convergence-index analog to sanity-check
+against. This would belong on the render/human-judged side of the trust boundary, same as
+CAE — never a gate — if it is ever built at all.
 
 ### 3.1 Backend decision
 
@@ -302,6 +326,25 @@ render-gate; all three repos fetched directly, but their creation dates were not
 reinforces the existing Fusion 360 API "Hold" verdict (§3.1, desktop-app dependent) and the
 differentiation argument above: even Autodesk's own first-party AI tooling ships zero
 verification philosophy.
+
+**Added 2026-09-19 — the same pattern recurring on Revit, not just Fusion.** Autodesk's own
+Revit 2026-2027 "what's new" blog (403'd on direct fetch, recovered via search + third-party
+corroboration — Hagerman, BARVEA, goto.archi — medium confidence, not directly fetched)
+reports Revit 2027 makes its **own MCP server publicly available** (six tool groups: model
+queries, sheets, rooms, schedules, exports, element ops). This is the second confirmed
+instance of Autodesk opening first-party MCP access across its product line, not a one-off.
+
+Alongside it, a real community ecosystem exists, all generation/execution, not verification:
+
+| Project | What it does | Verification capability |
+|---|---|---|
+| `revit-mcp` / `revit-mcp-server` (multiple forks: 3d-mcp, ahmedovelyor-ai, GenproMM, Demolinator) | pyRevit-based MCP, 48 tools — design, editing, analysis, MEP, interop, documentation | Lists a `check_clashes` tool ("hard clashes between disciplines"). **Mechanism unconfirmed** — checked the README directly; it does not say whether this wraps Revit's own native Interference Check engine or is separate logic. Not verified either way |
+| Mira ([pirros.com](https://www.pirros.com/)) | Natural-language Revit automation (place walls, tag elements, set up sheets), trained on firm-specific workflows | None — generation/automation only. Notable: confirmed built on **Claude + MCP** (third confirmed instance of the Claude/MCP/Autodesk-product pattern, after Fusion's official connector and Revit 2027's native MCP) |
+| BIBIM ([SquareZero-Inc/bibim-revit](https://github.com/SquareZero-Inc/bibim-revit)) | Open-source, BYOK across 4 LLMs (Claude Sonnet 4.6/Opus 4.7, GPT-5.5, Gemini 3.1 Pro), natural-language → C# code for Revit/ArchiCAD | None on the *generated design* — but has a genuinely good safety pattern worth noting separately from the verification question: multi-step planner, dry-run mode, one-click rollback, confirmation before applying changes |
+| ArchiLabs ([archilabs.ai](https://archilabs.ai/sdk)) | Code-first Python SDK ("Studio Mode") mirroring every UI action; claims workflow checks beyond geometry clashes — computing derived metrics (Mechanical/Electrical Load Component) and generating compliance reports | **The one real exception found, still unconfirmed.** This is the most substantive verification-adjacent claim in the entire Revit ecosystem — but sourced from marketing-adjacent blog copy, not primary technical documentation. Whether the MLC/ELC computation is deterministic math over model data or LLM-estimated was not established. Flag for a follow-up technical-docs fetch before treating as settled — do not cite as a confirmed render+VLM-style analogue yet |
+
+**Net effect on the standing verdict:** unchanged. No render+VLM output-verification analogue
+was found for Revit either — ArchiLabs is a genuine open question, not a counter-example yet.
 
 ### 3.6 GUI automation state of the art (context for the deferred GUI leg)
 
@@ -560,3 +603,4 @@ and stated in the PR.
 [mcp4ifc]: https://arxiv.org/abs/2511.05533
 [bimscript]: https://arxiv.org/html/2608.21447
 [bimedit]: https://arxiv.org/abs/2606.20146
+[autoaero]: https://arxiv.org/pdf/2605.27968
