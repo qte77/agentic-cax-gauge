@@ -476,6 +476,24 @@ geotechnical report's assumptions, not a direct measurement of the artifact.
   third-party explainer sites, not CSI's own numbering document — likely accurate, not
   independently confirmed this session. Documentation/metadata plumbing either way, not a
   verification mechanism.
+- **Ingestion for building codes / logs — checked 2026-09-19, one hit, one miss.**
+  [Jev/TypeSafe][jev] is **not** an ingestion tool — it's a proprietary fast
+  calibrated-decision API (pick-one-of-255, a 0-10 score, or a yes/no probability) over
+  context already provided, no extraction/structuring capability at all; wrong fit for
+  parsing raw building codes or CAD-tool log files. [GLiFormer][gliformer] (Knowledgator) is
+  the real match — Apache-2.0, `pip install gliformer`, released 2026-09-16, encoder-only
+  (fast, no token generation), with dedicated heads for NER, classification, relation
+  extraction, and nested structured-record (Pydantic) extraction. Confirmed directly against
+  its own repo: it explicitly handles **PDF-with-layout** ("extract fields from a PDF using
+  both text and word bounding boxes") — a direct fit for building codes/laws, typically
+  PDFs with section hierarchy. Plain-text logs (AutoCAD/Revit) would use its standard
+  NER/relation-extraction heads instead — pulling structured entities (error codes, element
+  IDs, operations, timestamps) out of log text. One honest gap: the repo doesn't explicitly
+  claim table or technical-drawing extraction, which matters if a given code leans on
+  tabular clearance/occupancy data — untested, not confirmed either way. This is the
+  preprocessing/ETL layer the hybrid fine-tune+RAG verdict above (Regime 3) needs, not an
+  alternative to it: it would turn raw PDFs/logs into the structured, retrievable records
+  that retrieval layer requires, nothing more.
 
 ## 4. Upstream contribution stance
 
@@ -632,3 +650,5 @@ and stated in the PR.
 [bimedit]: https://arxiv.org/abs/2606.20146
 [autoaero]: https://arxiv.org/pdf/2605.27968
 [leap71]: https://github.com/leap71
+[jev]: https://dev.to/valyuai/how-to-use-jev-a-practical-guide-to-typesafes-system-one-model-g5e
+[gliformer]: https://github.com/Knowledgator/GLiFormer
