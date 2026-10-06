@@ -2,8 +2,8 @@
 title: Landscape — evidence, competitors, backend choice, contribution stance
 purpose: The research behind the design decisions, split out of plan 001 so the plan stays a plan
 created: 2026-07-20
-updated: 2026-09-19
-validated_links: 2026-09-19
+updated: 2026-10-06
+validated_links: 2026-10-06
 status: reference — dated, not needed to build
 ---
 
@@ -388,12 +388,20 @@ Fusion or SolidWorks GUIs. Commercial CAD AI uses native API/macro hooks. This i
 would target to *browser*-based CAD via DOM selectors, which removes the pixel-guessing
 failure mode entirely. The GUI leg is deferred outright — plan §5.
 
-### 3.7 BIM — evaluated, not adopted
+### 3.7 BIM — three regimes; IFC adopted behind a data gate
 
 Raised 2026-09-10 as a scope question (broaden this project to Building Information
 Modeling for "synergies"). Investigated across two research passes rather than answered from
 intuition. Verdict: **BIM is not one verification problem, it is three, and they don't
 share this project's shape.**
+
+**Updated 2026-10-06, on the premise that a BIM user with real project data exists.** Two
+verdicts below change; §3.7.1 holds the evidence. Regime 1: the conclusion that BIM "needs
+nothing from this project" was about a *render+VLM* gate, and still holds — but deterministic
+clash detection is now an open, headless tool (IfcClash), so the gauge can report it as a
+**gate** cheaply. Regime 3: compliance **splits** — requirements already encoded as IDS are a
+deterministic gate; interpreting legal text stays inform-only. The plan carries this as a
+data-gated milestone (plan §13).
 
 **Regime 1 — spatial clash detection** (walls/MEP/structural interference). Solved
 authoritatively by Solibri/Navisworks-style deterministic geometric-intersection checking
@@ -435,11 +443,19 @@ structurally **not** like a bbox check — it's the same shape [`cae.md`](cae.md
 already named for `peak_stress < yield`: a scalar (or pass/fail) at the end of a chain of
 independent judgements (correct rule retrieval, correct interpretation of ambiguous code
 text, correct classification of building elements), any of which can be wrong while it
-returns a plausible pass. Every code-compliance paper found used **generic prompted LLMs**,
-none fine-tuned specifically for this (arXiv:2506.20551, arXiv:2407.21060, door-detection
-arXiv:2509.17283, [BIM-Edit benchmark][bimedit]) — no Solibri-equivalent authoritative gate
-exists for code compliance. Gating on "code-compliant" would be the CAE false-confidence
-failure with extra steps, not a safe preflight. The same caution `cae.md` applies to stress
+returns a plausible pass. The first sweep found only **generic prompted LLMs**
+(arXiv:2506.20551, arXiv:2407.21060, door-detection arXiv:2509.17283,
+[BIM-Edit benchmark][bimedit]). **Corrected 2026-10-06 — that was incomplete:** fine-tuned
+systems exist and beat prompting. [P4IR][p4ir] (SFT then GRPO) beats frontier models
+zero-shot on code-compliance generation, and a National Building Code of Canada QA system
+([arXiv:2505.04666][nbcqa]) finds fine-tuning plus retrieval beats either alone. Both
+fine-tune *behaviour* (output structure, judgement), not the code text itself — consistent
+with the general finding that retrieval beats fine-tuning for injecting facts
+([arXiv:2312.05934][ragvsft]). No Solibri-equivalent authoritative gate exists for
+*interpreted* compliance, and gating on "code-compliant" would be the CAE false-confidence
+failure with extra steps. The exception is requirements someone has already encoded as IDS:
+those are a deterministic data check (§3.7.1), and [CORENET X][corenetx]'s own checker
+claims only the "straightforward" geometric/spatial subset is machine-checkable. The same caution `cae.md` applies to stress
 checks applies here without modification — and generalizes further: footing/foundation
 design checks (base pressure vs. allowable soil bearing, stability, strength design) are
 *also* CAE-shaped rather than bbox-shaped, since allowable bearing pressure depends on a
@@ -494,6 +510,32 @@ geotechnical report's assumptions, not a direct measurement of the artifact.
   preprocessing/ETL layer the hybrid fine-tune+RAG verdict above (Regime 3) needs, not an
   alternative to it: it would turn raw PDFs/logs into the structured, retrievable records
   that retrieval layer requires, nothing more.
+
+#### 3.7.1 IFC toolchain and standards — verified 2026-10-06
+
+Researched by four read-only subagents against primary sources, then the open questions
+verified a second time. **E** = verified empirically by installing the packages on Python
+3.12/Linux and running them; **S** = fetched from the primary source.
+
+| Finding | Evidence |
+|---|---|
+| [IfcOpenShell][ifcopenshell] 0.9.0 installs from cp312 manylinux wheels; `ifcopenshell.geom` turns each IFC element into triangles that **trimesh** checks directly. A synthetic IFC4 wall (5 × 3 × 0.2 m) came out watertight with volume exactly 3.0 | E |
+| `ifcopenshell.validate` (schema) runs headless; IfcClash 0.9 source has `intersection`, `collision`, `clearance`, `allow_touching`, `tolerance` modes; IfcTester 0.9 targets IDS 1.0 (`1.0/ids.xsd`) | E |
+| Quantity-takeoff consistency needs no extra tool: `ifcopenshell.util.shape` ships `get_volume`, `get_area`, `get_side_area` etc. (`get_volume` matched trimesh at 3.0). `ifc5d` is a separate package | E |
+| Licences: ifcopenshell, ifcclash, ifctester are **LGPLv3+**; **ifctester hard-depends on `bcf-client` (GPLv3) and Flask**. Compatibility with this repo's Apache-2.0 is an owner decision, not settled here | E (package metadata) |
+| trimesh: only hard dep `numpy`, MIT; `body_count` needs `scipy` at runtime | E |
+| [IDS][ids] 1.0 is a final buildingSMART standard (v1.0.0, 2024-06-03). It expresses information requirements only — no geometry or rule logic | S |
+| [buildingSMART Validation Service][bsivalidate]: MIT, Docker self-hostable, REST API — schema + normative rules | S |
+| Revit exports IFC4.3: [`Autodesk/revit-ifc`][revitifc] ships IFC4x3 entity code; release IFC_v25.4.40 (2026-01-14) adds IFC4.3 Reference View. The exporter is LGPLv2 + a proprietary DLL, with many open issues — exporter bugs surface as model "defects" | S |
+| Native `.rvt`: APS Model Derivative converts `.rvt` → IFC2x3/IFC4 over plain REST, no C# or Windows ([APS blog][apsifc]); APS Design Automation **requires** a compiled C# add-in; [`rvt-rs`][rvtrs] (Apache-2.0, Python bindings) is an open reader for Revit 2024–25, young and partial | S |
+| [`web-ifc-three`][webifcthree] is **deprecated** (pins three ^0.128); its successor `@thatopen/components` needs three ≥ 0.182. Exporting IFC → `.glb` for the existing three.js viewer avoids that constraint | S |
+| APS pricing: **no caps or prices published as text**. Only figure found: Model Derivative "Basic Interactions" cost 1 Flex token per 300,000 calls, minimum 100 tokens ([APS blog][apsbiz]) | S, incomplete |
+| [CODE-ACCORD][codeaccord]: 862 annotated sentences (England + Finland codes), CC BY 4.0 — training data for rule extraction | S |
+
+**Still unverified:** the Flex token price and Free-tier caps; whether ISO 19650-5 explicitly
+covers disclosure to third parties (only its general scope was confirmable — the standard is
+paywalled); ICC Code Connect pricing (not publicly priced); and behaviour on **real exported
+project data** — every empirical check above used a synthetic model.
 
 ## 4. Upstream contribution stance
 
@@ -652,3 +694,16 @@ and stated in the PR.
 [leap71]: https://github.com/leap71
 [jev]: https://dev.to/valyuai/how-to-use-jev-a-practical-guide-to-typesafes-system-one-model-g5e
 [gliformer]: https://github.com/Knowledgator/GLiFormer
+[p4ir]: https://arxiv.org/html/2606.22402v1
+[nbcqa]: https://arxiv.org/abs/2505.04666
+[ragvsft]: https://arxiv.org/abs/2312.05934
+[corenetx]: https://info.corenet.gov.sg/
+[ifcopenshell]: https://github.com/IfcOpenShell/IfcOpenShell
+[ids]: https://github.com/buildingSMART/IDS
+[bsivalidate]: https://github.com/buildingSMART/validate
+[revitifc]: https://github.com/Autodesk/revit-ifc
+[apsifc]: https://aps.autodesk.com/blog/export-ifc-rvt-using-model-derivative-api
+[rvtrs]: https://github.com/DrunkOnJava/rvt-rs
+[webifcthree]: https://github.com/ThatOpen/web-ifc-three
+[apsbiz]: https://aps.autodesk.com/blog/aps-business-model-evolution
+[codeaccord]: https://arxiv.org/abs/2403.02231
