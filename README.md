@@ -13,11 +13,13 @@ Start here: [`docs/README.md`](docs/README.md), the map of what to read and in w
 
 ## What
 
-A verification harness for agent-generated CAD (CAE later). Three layers, in order of trust:
+A verification harness for agent-generated CAx: CAD now, BIM via IFC once a BIM user's data
+lands, and CAE only as information for a human — never a gate. Three layers, in order of
+trust:
 
-1. **Cheap deterministic preflight** — build-succeeds, watertight/manifold, bounding box,
+1. **Cheap deterministic preflight** — file integrity, watertight/manifold, bounding box,
    mass. Trustworthy but *necessary, not sufficient*; catches the obviously-broken,
-   including silent feature loss in boolean fusion.
+   including silent feature loss in boolean fusion when a volume band is supplied.
 2. **Auto multi-view render as the primary gate** — the real check for the defects geometry
    cannot self-assert (a hole that isn't actually through, a mating feature off its datum).
    Makes the human glance instant.
@@ -54,7 +56,7 @@ regression checks, then **build123d**/OpenSCAD backends; optional VLM annotation
 
 ## Where it's going
 
-v0 is three milestones, each independently shippable
+v0 is three milestones, each independently shippable, plus one data-gated BIM milestone
 ([detail](docs/plans/001-v0.md#5-roadmap)):
 
 | | | Done when |
@@ -62,6 +64,7 @@ v0 is three milestones, each independently shippable
 | **M1** | Scaffold | `make validate` passes green on an empty package |
 | **M2** | The honest gate | A human looks at a real part's render + verdict and decides |
 | **M3** | Adoption | A consumer repo runs the gauge on its real parts |
+| **MB** | BIM preflight (IFC) — dormant until a BIM user's data lands | The gauge checks a real IFC model (schema, IDS, clash, per-element mesh) and a human decides |
 
 After that, nothing starts without a stated trigger: a regression spec when a real part is
 regenerated against a kernel bump, backend dispatch only if exported STLs prove

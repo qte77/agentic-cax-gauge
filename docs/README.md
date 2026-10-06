@@ -6,8 +6,8 @@ material you do not need to build.
 | Document | Status | Use it for |
 |---|---|---|
 | [`../README.md`](../README.md) | Live | What this is and why, in one screen |
-| [`plans/001-v0.md`](plans/001-v0.md) | **Live** | The plan **and** the handoff — one file. Opens with a Handoff section (state, execution model, commands, non-negotiables, owner gates, traps), then Part I (§1-§5: goal, locked decisions, approach, architecture, roadmap), then Part II (§6-§12: executable detail, substrate traps, tests, reuse, risks) |
-| [`reference/landscape.md`](reference/landscape.md) | Reference | Research evidence, competitors, backend choice, contribution stance. Re-swept 2026-09-10; not needed to build |
+| [`plans/001-v0.md`](plans/001-v0.md) | **Live** | The plan **and** the handoff — one file. Opens with a Handoff section (state, execution model, commands, non-negotiables, owner gates, traps), then Part I (§1-§5: goal, locked decisions, approach, architecture, roadmap), then Part II (§6-§13: executable detail, substrate traps, tests, reuse, risks, BIM preflight) |
+| [`reference/landscape.md`](reference/landscape.md) | Reference | Research evidence, competitors, backend choice, contribution stance, BIM/IFC toolchain (§3.7.1, verified 2026-10-06); not needed to build |
 | [`reference/cae.md`](reference/cae.md) | Reference | The owed CAE research. Read §1 before touching `verify/sim.py` — it disproved the plan's own reason for reserving that seam. Not needed to build v0 |
 
 ## Start here
