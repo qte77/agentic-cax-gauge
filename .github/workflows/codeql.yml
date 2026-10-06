@@ -23,18 +23,26 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      # CodeQL hard-fails with "no source code seen" when there are no .py files.
+      # Skip until M1 lands Python, and say so — a silent skip would read as "scanned clean".
+      - name: Report skipped analysis (no Python files yet)
+        if: hashFiles('**/*.py') == ''
+        run: echo "::notice title=CodeQL skipped::No Python files in the repo yet — analysis activates once M1 adds src/."
       - name: Initialize CodeQL
+        if: hashFiles('**/*.py') != ''
         uses: github/codeql-action/init@b96794f015dfd88f77b49b1c93e0fa7110f94c63  # v4.38.0
         with:
           languages: python
           config-file: ./.github/codeql/codeql-config.yml
       - name: Perform CodeQL Analysis
+        if: hashFiles('**/*.py') != ''
         id: analyze
         uses: github/codeql-action/analyze@b96794f015dfd88f77b49b1c93e0fa7110f94c63  # v4.38.0
         with:
           category: "/language:python"
           output: sarif-results
       - name: Dismiss suppressed alerts
+        if: hashFiles('**/*.py') != ''
         uses: advanced-security/dismiss-alerts@a18f986bdb40edba0dd7a74382c15d4a3d50a1c8  # v2.0.3
         with:
           sarif-id: ${{ steps.analyze.outputs.sarif-id }}
