@@ -247,10 +247,47 @@ is a direct measurement. Sink-mark risk depends on wall-thickness thresholds and
 judgement, so it would stay inform-only. Neither is triggered until a consumer actually
 ships molded parts.
 
+The author's [LinkedIn post on the same project][steenkenpost] (read at source 2026-10-09)
+adds a **fourth** finding the blog doesn't list: "the ribs against the pole could break if
+the clamps get fastened too hard" — a load-case judgement, so inform-only under the inclusion
+test. It also claims Opus 5.5 "removed 95% of the time I would have spent on modelling" (the
+author's own estimate; the physical molding test was still pending). Commenters pointed to
+Leo AI ([getleo.ai][leoai], a mechanical-engineering copilot for SOLIDWORKS/Inventor/NX —
+generation-side) and PicoGK (already covered above).
+
 A second source the user supplied, a LinkedIn Pulse article on an Opus 5.5 + Blender
 timelapse workflow, **could not be read**: LinkedIn returned its own "page not found" both
 to a plain fetch and to a real headless browser (polyfetch, patchright tier), and no copy was
 found elsewhere. Not documented.
+
+**Added 2026-10-09 — [Trace][trace] (buildwithtrace.com): a different domain, the same trust
+model.** Researched by a read-only agent; its load-bearing claims re-checked at source. Trace
+is an AI-native **PCB** design tool (WishEDA Inc., public launch Feb 2026, Pro $29.99/mo,
+7-day trial, no free tier) built on a GPLv3 fork of KiCad: natural language → schematic,
+component sourcing, autorouting. It outputs board manufacturing data (Gerber/ODB++/IPC-2581),
+not solids. [`trace-public`][tracepublic] is GPLv3 for the KiCad-derived editor, but the
+`trace/` AI modules are "All Rights Reserved … provided for reference only" and the backend
+is not included.
+
+**Can we use it?**
+
+- **As a consumer this gauge verifies — no.** Board files have no meaning for an STL/IFC
+  preflight; out of scope unless the project ever expands to PCB.
+- **As a component — no.** Wrong domain, and the AI and backend are proprietary. Its local
+  ERC/DRC need no sign-in but do need the Trace desktop app and its libraries
+  ([CLI docs][tracecli]), so there is no headless library for Linux CI.
+- **As prior art — yes, three ideas:**
+  1. Its deterministic checks — ERC on connectivity, DRC against declared design rules — are
+     exactly gate-eligible under the inclusion test, and its DFM docs say presets "do not
+     guarantee fabrication yield … or assembled function": this project's
+     necessary-not-sufficient framing, reached independently.
+  2. Its AI "Design Review" is kept advisory, in its own words: "Severity expresses the
+     check's concern, not a certain prediction of physical failure" and "Inspect the actual
+     tool findings … not only the assistant's summary" ([docs][tracereview]). The page
+     claims no gating at all. Independent corroboration that an LLM judgement layer should
+     inform, not gate — the same verdict as plan §3.1.
+  3. `trace-cli … --format json --exit-code-violations` — a machine-readable report plus a
+     CI-failing exit code — is a clean pattern for `caxgauge check` to mirror in M2.
 
 ### 3.3 `earthtojake/text-to-cad` — the largest adjacent project
 
@@ -737,3 +774,9 @@ and stated in the PR.
 [apsbiz]: https://aps.autodesk.com/blog/aps-business-model-evolution
 [codeaccord]: https://arxiv.org/abs/2403.02231
 [steenkencase]: https://engineer-your-idea.com/en/blog/agentic-cad-room-booking-sign/
+[steenkenpost]: https://www.linkedin.com/posts/anton-steenken_ai-cad-demos-are-full-of-sht-sound-familiar-ugcPost-7513887143623319553-qmVG/
+[leoai]: https://www.getleo.ai/
+[trace]: https://buildwithtrace.com/
+[tracepublic]: https://github.com/buildwithtrace/trace-public
+[tracecli]: https://docs.buildwithtrace.com/resources/cli/
+[tracereview]: https://docs.buildwithtrace.com/concepts/design-review/
