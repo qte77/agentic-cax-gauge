@@ -1,0 +1,11 @@
+# <type>[(<scope>)][!]: <description>
+#
+# Types: feat|fix|build|chore|ci|docs|style|refactor|perf|test
+# Scope: preflight|render|report|cli|bim|ci|docs|tests
+#
+# Body: Explain *why*, not *what*
+#
+# Footer trailers:
+# BREAKING CHANGE: <description>
+# Refs: #<issue>
+# Co-Authored-By: Claude <noreply@anthropic.com>
