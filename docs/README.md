@@ -1,7 +1,9 @@
 # Docs map
 
-No code exists yet. These docs are the project. There are four of them — two are reference
-material you do not need to build.
+The package scaffold exists (M1, 0.1.0) but no checks yet; these docs still carry the
+design. There are four of them — two are reference material you do not need to build.
+Development workflow lives in [`../CONTRIBUTING.md`](../CONTRIBUTING.md), agent rules in
+[`../AGENTS.md`](../AGENTS.md).
 
 | Document | Status | Use it for |
 |---|---|---|

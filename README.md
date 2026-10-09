@@ -6,10 +6,13 @@
 > broken," never "correct."**
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/status-planning-blue.svg)](docs/plans/001-v0.md)
+[![Status](https://img.shields.io/badge/status-M1%20scaffold-blue.svg)](docs/plans/001-v0.md)
+![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)
 
-**Status:** planning — the design is committed and red-teamed; code has not started.
-Start here: [`docs/README.md`](docs/README.md), the map of what to read and in what order.
+**Status:** M1 scaffold shipped (0.1.0) — package, quality gate and CI exist; **no checks
+yet**: the `caxgauge` command is a stub that exits non-zero and says nothing was checked.
+The checks arrive in M2. Start here: [`docs/README.md`](docs/README.md), the map of what to
+read and in what order.
 
 ## What
 
@@ -33,7 +36,7 @@ regenerations), CAD-backend dispatch, generation, slicer printability, and CAE.
 
 ## How
 
-Not yet implemented. v0 takes an **exported mesh**, not a build script — the consumer repos
+Checks not yet implemented (M2). v0 takes an **exported mesh**, not a build script — the consumer repos
 already export STL, so the gauge reaches a real user without owning generation or CAD
 backends:
 
@@ -53,6 +56,9 @@ Python 3.12 + `uv`. Rendering and browser-side checks run through
 [`qte77/polyfetch-scrape`](https://github.com/qte77/polyfetch-scrape). Later milestones add
 regression checks, then **build123d**/OpenSCAD backends; optional VLM annotation via
 [`qte77/vlm-toolkit`](https://github.com/qte77/vlm-toolkit) or any OpenAI-spec endpoint.
+
+**Develop:** `make setup`, then `make validate` — the exact gate CI runs. Commands and
+conventions: [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Where it's going
 
