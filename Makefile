@@ -25,8 +25,6 @@ PYTEST_QUIET :=
 PYRIGHT_QUIET :=
 endif
 
-MD_FILES := "*.md" "docs/**/*.md"
-
 
 # MARK: SETUP
 
@@ -72,16 +70,16 @@ validate: lint type test check_complexity ## Full Python gate — the exact CI g
 	echo "validate: PASS (lint + type + test + complexity)"
 
 # Docs/link checks report SKIP, never PASS, when their tool is absent (verification-honesty).
-check_docs: ## Lint markdown (reads .markdownlint.json); SKIP if markdownlint-cli2 is absent
+check_docs: ## Lint markdown (globs: .markdownlint-cli2.jsonc, rules: .markdownlint.json); SKIP if absent
 	if command -v markdownlint-cli2 > /dev/null 2>&1; then
-		markdownlint-cli2 $(MD_FILES)
+		markdownlint-cli2
 	else
 		echo "check_docs: SKIP — markdownlint-cli2 not installed (npm install -g markdownlint-cli2)"
 	fi
 
-check_links: ## Check links (reads .lychee.toml, needs network); SKIP if lychee is absent
+check_links: ## Check links (reads lychee.toml, needs network); SKIP if lychee is absent
 	if command -v lychee > /dev/null 2>&1; then
-		lychee --config .lychee.toml .
+		lychee --no-progress '**/*.md'
 	else
 		echo "check_links: SKIP — lychee not installed (https://github.com/lycheeverse/lychee/releases)"
 	fi

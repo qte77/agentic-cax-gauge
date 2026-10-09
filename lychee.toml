@@ -1,0 +1,22 @@
+# lychee link checker config — auto-loaded as `lychee.toml` (lychee's default name).
+# Read by `make check_links` and by the estate CI workflow (qte77/.github lint-md-links),
+# which calls lychee without --config — so this exact filename is what CI uses.
+# https://lychee.cli.rs/usage/config/
+
+accept = [200, 201, 204, 429]
+timeout = 30
+max_retries = 2
+
+exclude_path = [".venv", ".claude", "node_modules", ".pytest_cache", ".complexipy_cache"]
+
+# Exclusions are evidence-based, not pre-emptive: each host below returned 403 to lychee
+# but the cited page was confirmed live on 2026-10-09. An exclusion also hides a real dead
+# link, so add one only after the same check — never a blanket "known bot-blocking" list.
+exclude = [
+    # 403 to lychee; 200 via a browser TLS fingerprint (polyfetch curl_cffi tier) → TLS filtering
+    "^https://inis\\.iaea\\.org",
+    "^https://openai\\.com",
+    # 403 to lychee (bot challenge); DOI 10.1145/3772363.3798904 confirmed registered via the
+    # doi.org handle API, resolving to the exact cited URL
+    "^https://dl\\.acm\\.org",
+]

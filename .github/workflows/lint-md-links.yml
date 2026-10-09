@@ -1,0 +1,20 @@
+---
+name: Lint MD and Links
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write  # required at workflow startup by the reusable notify job (even when unused)
+
+jobs:
+  # Estate reusable workflow (same pin as so101-biolab-automation). Reads
+  # .markdownlint-cli2.jsonc (globs) + .markdownlint.json (rules) and lychee.toml,
+  # the same files `make check_docs` / `make check_links` use locally.
+  lint:
+    uses: qte77/.github/.github/workflows/lint-md-links.yml@5dfff1f73ac7241ef37b6103e04d2a8373ff68a4  # 2026-04-27

@@ -1,0 +1,8 @@
+// Which files to lint — rules live in .markdownlint.json.
+// The estate CI action (qte77/.github lint-md-links) only lints root *.md by default;
+// these globs are read by markdownlint-cli2 both there and in `make check_docs`,
+// so local and CI lint the same set.
+{
+  "globs": ["**/*.md"],
+  "ignores": [".venv/**", ".claude/**", "node_modules/**", ".*_cache/**"]
+}
