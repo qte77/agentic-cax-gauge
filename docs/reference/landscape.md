@@ -2,8 +2,8 @@
 title: Landscape — evidence, competitors, backend choice, contribution stance
 purpose: The research behind the design decisions, split out of plan 001 so the plan stays a plan
 created: 2026-07-20
-updated: 2026-10-06
-validated_links: 2026-10-06
+updated: 2026-10-09
+validated_links: 2026-10-09
 status: reference — dated, not needed to build
 ---
 
@@ -222,6 +222,35 @@ project's input contract in principle — C# and this project's locked Python 3.
 (§2) rule it out as an actual backend regardless. Kept as a landscape note: evidence that
 "watertight by construction" is representation-dependent, not a property this project can
 assume in general.
+
+**Added 2026-10-09 — a first-hand agentic-CAD case study ([Steenken, 2026-10-07][steenkencase]),
+read in full and re-checked at source.** Claude Opus 5.5 drove a live CAD session over MCP
+from one brief and produced a two-part ABS injection-molded housing for a Raspberry Pi 4
+room-booking sign: two STEP parts, 5 drawing sheets, a 15-line BOM, a 9-page assembly guide,
+a DFM check against the molder's rules, and a snap-fit strain calculation. Reported effort:
+3 h 9 min active agent time, 472 calls, 222M tokens (98.8% re-reading its own context, about
+730k newly written), plus 1 h of the author's time. **The CAD tool is not named**, so the
+setup can't be reproduced or attributed. Human review caught three defects: the
+documentation said seven snap hooks while the model had eight (the docs hadn't followed a
+revision); the top part had no draft on its outer surfaces, so it would not eject cleanly;
+and excess corner material, a likely sink-mark source. The article states explicitly only
+that the agent "will not flag" the hook-count mismatch itself; that its own DFM pass also
+missed the draft and sink-mark issues is implied, not stated.
+
+**Why it matters here:** it's generation-side, but it is independent real-world evidence for
+this project's thesis (plan §3.1) — the defects that mattered were local and unforeseen, and a
+human looking at the part caught them. Two of the three would fit the plan's gate/inform
+inclusion test as **future** deterministic checks, not current scope: *draft angle* is
+measurable from face normals once the pull direction is declared (a declared bound, so no
+direction → `SKIP`), and *document/model consistency* (e.g. declared vs. counted features)
+is a direct measurement. Sink-mark risk depends on wall-thickness thresholds and material
+judgement, so it would stay inform-only. Neither is triggered until a consumer actually
+ships molded parts.
+
+A second source the user supplied, a LinkedIn Pulse article on an Opus 5.5 + Blender
+timelapse workflow, **could not be read**: LinkedIn returned its own "page not found" both
+to a plain fetch and to a real headless browser (polyfetch, patchright tier), and no copy was
+found elsewhere. Not documented.
 
 ### 3.3 `earthtojake/text-to-cad` — the largest adjacent project
 
@@ -707,3 +736,4 @@ and stated in the PR.
 [webifcthree]: https://github.com/ThatOpen/web-ifc-three
 [apsbiz]: https://aps.autodesk.com/blog/aps-business-model-evolution
 [codeaccord]: https://arxiv.org/abs/2403.02231
+[steenkencase]: https://engineer-your-idea.com/en/blog/agentic-cad-room-booking-sign/
