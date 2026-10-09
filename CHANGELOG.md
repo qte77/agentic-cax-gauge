@@ -13,7 +13,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 - **M1 scaffold (#15)**: `caxgauge` package (Python 3.12, uv), `trimesh` as a core
   dependency, `build123d` behind an optional `cad` extra. `make validate` runs ruff (format,
   lint incl. security), pyright strict, pytest and complexipy — the exact gate CI runs
-  (`validate.yaml`). Markdown and link checks via the estate reusable workflow;
+  (`validate.yaml`). Markdown and link checks run the same `make` targets in CI with pinned, checksum-verified tools (the estate reusable workflow is blocked by this repo's Actions policy);
   `make check_docs` / `make check_links` print `SKIP`, never pass, when their tool is absent.
 - `caxgauge` CLI entry point as an honest stub: exits 2 and states that nothing was checked
   until M2 ships.
