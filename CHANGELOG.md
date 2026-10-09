@@ -6,6 +6,13 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ## [Unreleased]
 
+### Added
+
+- **M2 wave 0 (#16)**: `caxgauge.verify.types` — the result contract preflight, browser
+  check, report and CLI share. `SKIP` never counts toward green; an empty result is not
+  green; a browser load with captured errors cannot be a pass; the *necessary, not
+  sufficient* label is a constant on the contract.
+
 ## [0.1.0] - 2026-10-09
 
 ### Added
