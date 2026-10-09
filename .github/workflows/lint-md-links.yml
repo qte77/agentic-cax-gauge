@@ -1,0 +1,61 @@
+---
+name: Lint MD and Links
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Runs the same `make check_docs` / `make check_links` targets as local, with the tools
+# installed by shell steps at pinned versions. The estate reusable workflow
+# (qte77/.github lint-md-links) cannot be used here: this repo's Actions policy allows only
+# GitHub-owned and verified actions, so calling it ends in `startup_failure` — which posts
+# no PR check at all and so looks like silence, not failure. Versions match local
+# (lychee 0.23.0, markdownlint-cli2 0.23.3) so a local pass predicts CI.
+env:
+  LYCHEE_VERSION: "0.23.0"
+  # sha256 of lychee-x86_64-unknown-linux-gnu.tar.gz, from the GitHub release asset digest
+  LYCHEE_SHA256: "1fcb6ccf10d04c22b8c5873c5b9cb7be32ee7423e12169d6f1a79a6f1962ef81"
+  MARKDOWNLINT_CLI2_VERSION: "0.23.3"
+
+jobs:
+  markdownlint:
+    name: markdownlint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      - name: Install markdownlint-cli2
+        run: npm install -g "markdownlint-cli2@${MARKDOWNLINT_CLI2_VERSION}"
+      - name: Require the tool (CI must not SKIP)
+        run: markdownlint-cli2 --version
+      - name: make check_docs
+        run: make check_docs
+
+  links:
+    name: lychee
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      - name: Install lychee (pinned, checksum-verified)
+        run: |
+          curl -fsSL -o lychee.tar.gz \
+            "https://github.com/lycheeverse/lychee/releases/download/lychee-v${LYCHEE_VERSION}/lychee-x86_64-unknown-linux-gnu.tar.gz"
+          echo "${LYCHEE_SHA256}  lychee.tar.gz" | sha256sum -c -
+          mkdir -p lychee-bin "$HOME/.local/bin"
+          tar -xzf lychee.tar.gz -C lychee-bin
+          install -m 0755 "$(find lychee-bin -type f -name lychee | head -n 1)" "$HOME/.local/bin/lychee"
+          rm -rf lychee.tar.gz lychee-bin
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - name: Require the tool (CI must not SKIP)
+        run: lychee --version
+      - name: make check_links
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # read-only; avoids GitHub API rate limits
+        run: make check_links

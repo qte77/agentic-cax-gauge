@@ -1,0 +1,116 @@
+[project]
+name = "agentic-cax-gauge"
+version = "0.1.0"
+description = "Verifiable CAx for LLM/VLM agents: cheap deterministic preflight + multi-view render, human decides"
+readme = "README.md"
+license = "Apache-2.0"
+# Pin 3.12: build123d -> cadquery-ocp -> VTK has no cp313 wheels (plan §2)
+requires-python = "==3.12.*"
+dependencies = [
+    "pydantic>=2.13.4",
+    "pydantic-settings>=2.14.2",
+    "trimesh>=5.1.1",  # core: preflight always runs (plan §6, §7.2)
+]
+
+[project.optional-dependencies]
+cad = [
+    "build123d>=0.11.1",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.15.21",
+    "pyright>=1.1.411",
+    "complexipy>=6.0.1",
+]
+test = [
+    "scriv[toml]>=1.8",
+    "pytest>=9.1.1",
+    "pytest-cov>=6.0",
+    "hypothesis>=6.156.6",
+]
+
+[project.scripts]
+caxgauge = "caxgauge.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/caxgauge"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+default-groups = ["dev", "test"]
+link-mode = "copy"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "S", "SIM", "RUF", "PT", "ANN", "TCH", "PGH", "C90", "D"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S603", "ANN001", "ANN201", "D100", "D101", "D102", "D103", "D104", "D107"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.pyright]
+pythonVersion = "3.12"
+typeCheckingMode = "strict"
+extraPaths = ["src"]
+include = ["src/caxgauge"]
+reportMissingImports = "error"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "--strict-markers -m 'not cad and not browser'"
+markers = [
+    "cad: tests requiring build123d (uv sync --extra cad)",
+    "browser: tests requiring polyfetch + Chromium",
+]
+
+[tool.coverage.run]
+source = ["caxgauge"]
+
+[tool.bumpversion]
+current_version = "0.1.0"
+parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)"
+serialize = ["{major}.{minor}.{patch}"]
+commit = true
+tag = true
+allow_dirty = false
+tag_name = "v{new_version}"
+tag_message = "Bump version: {current_version} → {new_version}"
+message = "Bump version: {current_version} → {new_version}"
+
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
+search = 'version = "{current_version}"'
+replace = 'version = "{new_version}"'
+
+[[tool.bumpversion.files]]
+filename = "CHANGELOG.md"
+search = """
+## [Unreleased]
+"""
+replace = """
+## [Unreleased]
+
+## [{new_version}] - {now:%Y-%m-%d}
+"""
+
+[tool.scriv]
+format = "md"
+fragment_directory = "changelog.d"
+categories = ["Added", "Changed", "Deprecated", "Removed", "Fixed", "Security"]
+md_header_level = "2"
+entry_title_template = "[{{ version }}] - {{ date.strftime('%Y-%m-%d') }}"
+md_html_anchors = false
