@@ -116,6 +116,18 @@ answers neither "did it load" nor "did it error" on its own.
   (and a plain fixed-length wait) can both land *before* the attribute exists. **Wait for the
   attribute itself** — e.g. Playwright/Patchright `page.wait_for_selector('body[data-state]',
   timeout=...)` — then read it, rather than waiting for navigation and reading immediately.
+- **`html, body` carry an explicit `height: 100%`, specifically so the default
+  `wait_for_selector` resolves on the failure path too.** Playwright/Patchright's default wait
+  state is `"visible"`, which requires a non-zero bounding box. Without the explicit height,
+  `<body>` is zero-height on the failure path (no canvas is ever appended — `main()` returns
+  from inside `fail()`'s `catch` before reaching renderer setup), so `wait_for_selector`
+  silently waits out its full timeout even though `data-state="error"` is already set — a
+  `state="attached"` wait resolves in well under a second against the same page, isolating the
+  cause (confirmed by timing both in testing: `~0.1s` with the height fix vs. a full timeout
+  without it). On the success path `body` already has non-zero height once the canvas is
+  appended, so this was failure-path-only. If you ever see a `wait_for_selector` timeout
+  against this page with no `data-state` read back, suspect this before suspecting a slow
+  Chromium cold start (that is real too, but separate — see step 3 of the smoke test below).
 - **A timeout with no attribute at all is itself a hard failure**, not a "still loading" state
   to retry — it means the module graph never finished (e.g. a vendor file 404, caught by
   `network_failures`/`console_errors`) and `main()` never even reached its own try/catch. This

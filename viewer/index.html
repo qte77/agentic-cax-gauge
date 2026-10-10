@@ -11,6 +11,13 @@
     padding: 0;
     background: #e8e8e8;
     overflow: hidden;
+    /* Non-zero height even before (or without) a canvas is appended — e.g.
+       on the error path, where main() never reaches renderer setup. Without
+       this, <body> has zero height until the canvas exists, so a consumer's
+       `wait_for_selector(..., state="visible")` (Playwright/Patchright's
+       default) never resolves on failure even though the data-state
+       attribute is already set; see viewer/README.md. */
+    height: 100%;
   }
   canvas { display: block; }
   #label {
@@ -58,19 +65,19 @@ import { STLLoader } from 'three/addons/loaders/STLLoader.js';
  * an uncaught exception. This is deliberate — see plan docs/plans/001-v0.md
  * §9.2: Patchright's isolated world reads page-script globals back as
  * `undefined` even on success, so a readable "ok" flag cannot be trusted.
- * Only a DOM attribute (readable structurally) and an uncaught error
- * (fires Chromium's `pageerror`) are usable signals from outside the page.
+ * The DOM attribute (readable structurally) is the one signal this page can
+ * guarantee from outside; see viewer/README.md's "Success / failure
+ * signals" caveat for why an uncaught-exception listener (`pageerror`) is
+ * NOT a signal to depend on here.
  *
- * `main()`'s own rejection (it is async and never awaited) is deliberately
- * re-thrown from inside a `setTimeout`, not left as a bare unhandled
- * rejection. Confirmed empirically: a plain unhandled rejection from a
- * module's top-level call produced neither a polyfetch `console_errors`
- * entry nor a `pageerror` here, even though `dataset.state` was correctly
- * "error" — some tooling's uncaught-exception capture does not reliably
- * surface a module-level unhandled promise rejection. Re-throwing inside a
- * `setTimeout` forces a true, synchronous-style uncaught exception in its
- * own macrotask, which does fire `pageerror` (re-verified after this
- * change). `dataset.state` is already set by `fail()` before this runs.
+ * `main()`'s own rejection (it is async and never awaited) is re-thrown
+ * from inside a `setTimeout` rather than left as a bare unhandled
+ * rejection — correct practice for any `pageerror`/`window.onerror`
+ * listener in general, even though it did not change what polyfetch's
+ * `render_session` observed here: neither a bare unhandled rejection nor
+ * this setTimeout re-throw produced a `console_errors` entry or a
+ * `pageerror` callback in testing (see viewer/README.md). `dataset.state`
+ * is already set by `fail()` before this runs, regardless.
  */
 
 const BACKGROUND_COLOR = 0xe8e8e8;
