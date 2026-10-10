@@ -70,22 +70,44 @@ part and a 5 m part both fill the frame — and for `iso` as well as the axis-al
 **Do not read page-script globals (`window.*`, module-scoped variables) from outside the
 page.** Patchright evaluates scripts in an isolated world; globals read back `undefined` even
 when the page rendered correctly (plan §9.2.1 — the single highest-cost trap in this
-integration). Only these two signals are reliable from outside:
+integration). The page gives you two signals:
 
 | Signal | On success | On failure |
 |---|---|---|
 | `document.body.dataset.state` (DOM attribute, readable structurally — e.g. Playwright's `get_attribute`) | `"rendered"` | `"error"` |
-| Uncaught page exception (`page.on("pageerror")`) | none | **always fires** |
+| Uncaught page exception (`page.on("pageerror")` / `console_errors`) | none | fires in Chromium; **not reliably observed through polyfetch in testing — see caveat below** |
 
 On **any** load failure — missing `mesh` param, unknown `view` value, invalid canvas size,
 `fetch()` rejection, non-2xx response, an STL that fails to parse, or a parsed geometry with
 zero vertices or a non-finite bounding box — `index.html` sets
-`document.body.dataset.state = "error"` and then throws. The throw happens inside an `async`
-function that is deliberately never given a `.catch()`, so it surfaces as an unhandled
-rejection — which Chromium reports as an uncaught page exception, firing `pageerror`.
-**Screenshots remain the ground truth for "did it actually render"**; `pageerror` only answers
-"did it load", and a clean console answers neither (`console` alone misses most real
-failures — capture `pageerror`, `requestfailed`, and non-200 `response`, not just `console`).
+`document.body.dataset.state = "error"`, then throws from inside a `setTimeout` callback (not
+a bare unhandled promise rejection — see the comment at the top of `index.html`'s `<script>`
+for why) so Chromium treats it as a true, uncaught top-level exception.
+
+**Caveat, confirmed empirically — `dataset.state` is the only signal this smoke test could
+rely on; treat `pageerror`/`console_errors` as a bonus, not the primary signal.** Four isolated
+test pages (a synchronous top-level throw in a classic `<script>`, the same in a
+`<script type="module">`, an unhandled async rejection, and a bare `console.error()` call with
+no throw at all) were all served and loaded via `polyfetch_scrape.render_session(...)` with
+`page.on("console", ...)`/`page.on("pageerror", ...)` listeners attached before navigation
+(matching `attach_capture` in polyfetch's own `_backends/patchright_backend.py`). **None of the
+four produced a `console_errors` entry or a `pageerror` callback invocation**, even though
+`document.body.dataset.state` was correctly observed every time. By contrast, a real
+cross-origin CORS failure against this same viewer page *did* get captured in
+`console_errors` earlier in this same testing session (two entries: the CORS policy message
+and a `net::ERR_FAILED` resource-load message) — so capture is not globally broken, only for
+page-script-originated console calls and exceptions. The likely cause: Patchright deliberately avoids enabling the CDP `Runtime`
+domain by default (a well-known anti-fingerprinting design choice — `Runtime.enable` is a
+common bot-detection signal), and `Runtime.consoleAPICalled`/`Runtime.exceptionThrown` (what
+page-script `console.*()` calls and uncaught exceptions need) depend on that domain, while
+browser-generated messages (CORS/network errors) reach Playwright's `console`/`network` events
+through a different path (`Log.entryAdded`) that doesn't need it. **This was not root-caused
+further — wave 2 should re-verify with its own `browser.py`/`render.py` implementation (the
+project's own rule: force a known failure and confirm the listener catches it) before
+depending on `pageerror` as anything more than a bonus signal.** `dataset.state` plus
+screenshots are what this smoke test actually confirmed working.
+**Screenshots remain the ground truth for "did it actually render"**; a clean `console_errors`
+answers neither "did it load" nor "did it error" on its own.
 
 ## Consuming this page headlessly (read before wiring `browser.py`/`render.py`)
 
@@ -105,11 +127,11 @@ failures — capture `pageerror`, `requestfailed`, and non-200 `response`, not j
   same size as a viewport option (e.g. polyfetch's `--viewport 800x600` /
   `render_session(url, viewport=(800, 600))`) when requesting `?w=800&h=600` (or whatever size
   is used), so the screenshot *is* the render.
-- Treat `s.console_errors` (polyfetch's always-on, whole-session capture — USING.md) as the
-  authoritative uncaught-JS signal in a script. A `page.on("pageerror", ...)` listener attached
-  *inside* a `render_session(url)` block will miss an error that already fired during the
-  session's own initial navigation; `console_errors`/`network_failures` are captured from the
-  start of the session regardless of when listeners are attached.
+- **Do not treat `s.console_errors`/`pageerror` as the primary uncaught-JS signal** — see the
+  caveat in "Success / failure signals" above. Browser-generated messages (failed resource
+  loads, CORS policy violations) were reliably captured in testing; page-script `console.*()`
+  calls and uncaught exceptions from *this page's own `<script type="module">`* were not, in
+  any of four isolated test cases. `document.body.dataset.state` is the signal to depend on.
 
 ## Optional label
 
@@ -123,15 +145,23 @@ No Python tests live in `tests/` for this page (that's wave 2's job, against
 `browser.py`/`render.py`). To check it by hand:
 
 1. Make a tiny binary STL (e.g. a cube) with Python's `struct` module, and a second, invalid
-   STL (e.g. a short file of garbage bytes) — write both somewhere outside the repo.
-2. Serve the repo root (`python3 -m http.server <port> --bind 127.0.0.1`).
+   STL (e.g. a file too short to hold a valid 84-byte binary-STL header) — write both
+   somewhere outside the repo.
+2. Serve the repo root (`python3 -m http.server <port> --bind 127.0.0.1`). If the mesh is
+   served from a different origin/port (e.g. because it lives outside the repo), that plain
+   server sends no `Access-Control-Allow-Origin` header, so the viewer's `fetch()` is blocked
+   by CORS — serve the mesh from the same origin, or add a permissive CORS header to whatever
+   serves it.
 3. Load `http://127.0.0.1:<port>/viewer/index.html?mesh=<url>&view=<name>` for each of
    `front`, `iso`, `top`, `right` against the good STL with the browser viewport matched to
-   `w`/`h` — wait for `body[data-state]` (not a fixed timeout or the `load` event), then
-   confirm a filled, centred render and `document.body.dataset.state === "rendered"`.
+   `w`/`h` — wait generously for `body[data-state]` (not a fixed short timeout or the `load`
+   event — first-run/cold-start Chromium latency was observed to take several seconds in
+   testing), then confirm a filled, centred render and `document.body.dataset.state ===
+   "rendered"`.
 4. Load the same URL against the invalid STL — confirm `document.body.dataset.state ===
-   "error"` and an uncaught error in `console_errors`/`pageerror`.
+   "error"`. Do not rely on `console_errors`/`pageerror` firing — see the caveat above.
 
 `../polyfetch-scrape` (its `USING.md`, `render_session`) is the substrate wave 2 uses to do
 this headlessly with screenshot capture and `pageerror`/`console`/`network` listeners already
-wired up.
+wired up — but re-verify the `pageerror`/`console_errors` capture itself (see the caveat
+above) rather than assuming it will fire for this page's own errors.

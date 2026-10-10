@@ -60,8 +60,17 @@ import { STLLoader } from 'three/addons/loaders/STLLoader.js';
  * `undefined` even on success, so a readable "ok" flag cannot be trusted.
  * Only a DOM attribute (readable structurally) and an uncaught error
  * (fires Chromium's `pageerror`) are usable signals from outside the page.
- * `main()` below is intentionally never given a `.catch()` — the rejection
- * must stay unhandled so it surfaces as `pageerror`.
+ *
+ * `main()`'s own rejection (it is async and never awaited) is deliberately
+ * re-thrown from inside a `setTimeout`, not left as a bare unhandled
+ * rejection. Confirmed empirically: a plain unhandled rejection from a
+ * module's top-level call produced neither a polyfetch `console_errors`
+ * entry nor a `pageerror` here, even though `dataset.state` was correctly
+ * "error" — some tooling's uncaught-exception capture does not reliably
+ * surface a module-level unhandled promise rejection. Re-throwing inside a
+ * `setTimeout` forces a true, synchronous-style uncaught exception in its
+ * own macrotask, which does fire `pageerror` (re-verified after this
+ * change). `dataset.state` is already set by `fail()` before this runs.
  */
 
 const BACKGROUND_COLOR = 0xe8e8e8;
@@ -270,9 +279,13 @@ async function main() {
   document.body.dataset.state = 'rendered';
 }
 
-// No .catch() here: see the module-level comment above. An error must stay
-// an uncaught (unhandled) rejection so Chromium fires `pageerror`.
-main();
+// See the module-level comment above for why this re-throws via setTimeout
+// instead of leaving main()'s rejection as a bare unhandled rejection.
+main().catch((err) => {
+  setTimeout(() => {
+    throw err;
+  });
+});
 </script>
 </body>
 </html>
