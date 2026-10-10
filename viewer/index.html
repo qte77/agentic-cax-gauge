@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>caxgauge viewer</title>
+<style>
+  :root { color-scheme: light; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #e8e8e8;
+    overflow: hidden;
+    /* Non-zero height even before (or without) a canvas is appended — e.g.
+       on the error path, where main() never reaches renderer setup. Without
+       this, <body> has zero height until the canvas exists, so a consumer's
+       `wait_for_selector(..., state="visible")` (Playwright/Patchright's
+       default) never resolves on failure even though the data-state
+       attribute is already set; see viewer/README.md. */
+    height: 100%;
+  }
+  canvas { display: block; }
+  #label {
+    position: fixed;
+    top: 8px;
+    left: 8px;
+    font: 12px/1.4 ui-monospace, Menlo, Consolas, monospace;
+    color: #222;
+    background: rgba(255, 255, 255, 0.75);
+    padding: 4px 6px;
+    border-radius: 3px;
+    pointer-events: none;
+    white-space: pre;
+  }
+  #label[hidden] { display: none; }
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three.module.js",
+    "three/addons/loaders/STLLoader.js": "./vendor/examples/jsm/loaders/STLLoader.js"
+  }
+}
+</script>
+</head>
+<body>
+<div id="label" hidden></div>
+<script type="module">
+import * as THREE from 'three';
+import { STLLoader } from 'three/addons/loaders/STLLoader.js';
+
+/*
+ * caxgauge viewer — static three.js STL render page.
+ *
+ * URL contract (see viewer/README.md for the full, authoritative doc):
+ *   ?mesh=<url>   required — STL to load (binary or ASCII)
+ *   ?view=<name>  optional — one of front|iso|top|right, default iso
+ *   ?w=, ?h=      optional — canvas size in px, default 800x600
+ *
+ * Success: document.body.dataset.state === "rendered", one render() call,
+ * no animation loop (deterministic output for headless screenshot capture).
+ *
+ * Failure (missing/unknown params, fetch error, non-2xx, unparseable STL,
+ * empty/degenerate geometry): document.body.dataset.state === "error", then
+ * an uncaught exception. This is deliberate — see plan docs/plans/001-v0.md
+ * §9.2: Patchright's isolated world reads page-script globals back as
+ * `undefined` even on success, so a readable "ok" flag cannot be trusted.
+ * The DOM attribute (readable structurally) is the one signal this page can
+ * guarantee from outside; see viewer/README.md's "Success / failure
+ * signals" caveat for why an uncaught-exception listener (`pageerror`) is
+ * NOT a signal to depend on here.
+ *
+ * `main()`'s own rejection (it is async and never awaited) is re-thrown
+ * from inside a `setTimeout` rather than left as a bare unhandled
+ * rejection — correct practice for any `pageerror`/`window.onerror`
+ * listener in general, even though it did not change what polyfetch's
+ * `render_session` observed here: neither a bare unhandled rejection nor
+ * this setTimeout re-throw produced a `console_errors` entry or a
+ * `pageerror` callback in testing (see viewer/README.md). `dataset.state`
+ * is already set by `fail()` before this runs, regardless.
+ */
+
+const BACKGROUND_COLOR = 0xe8e8e8;
+const DEFAULT_WIDTH = 800;
+const DEFAULT_HEIGHT = 600;
+// Headroom so the part does not touch the frame edge.
+const MARGIN_FACTOR = 1.08;
+
+// Three.js is Y-up. front/right/top are the classic axis-aligned engineering
+// views; iso looks from the (1,1,1) octant. "up" is the camera's screen-up
+// axis, required even for axis-aligned views so lookAt() is well-defined.
+const VIEW_PRESETS = {
+  front: { dir: new THREE.Vector3(0, 0, 1), up: new THREE.Vector3(0, 1, 0) },
+  right: { dir: new THREE.Vector3(1, 0, 0), up: new THREE.Vector3(0, 1, 0) },
+  top: { dir: new THREE.Vector3(0, 1, 0), up: new THREE.Vector3(0, 0, -1) },
+  iso: { dir: new THREE.Vector3(1, 1, 1).normalize(), up: new THREE.Vector3(0, 1, 0) },
+};
+
+/** Set the DOM failure marker and throw. Never returns. */
+function fail(message) {
+  document.body.dataset.state = 'error';
+  throw new Error(message);
+}
+
+function parseParams() {
+  const params = new URLSearchParams(window.location.search);
+
+  const mesh = params.get('mesh');
+  if (!mesh) fail('viewer: missing required "mesh" query parameter');
+
+  const viewName = params.get('view') || 'iso';
+  if (!(viewName in VIEW_PRESETS)) {
+    fail(
+      `viewer: unknown view "${viewName}" (expected one of ${Object.keys(VIEW_PRESETS).join(', ')})`,
+    );
+  }
+
+  const width = Number.parseInt(params.get('w'), 10) || DEFAULT_WIDTH;
+  const height = Number.parseInt(params.get('h'), 10) || DEFAULT_HEIGHT;
+  if (width <= 0 || height <= 0) {
+    fail(`viewer: invalid canvas size ${width}x${height}`);
+  }
+
+  return { mesh, viewName, width, height };
+}
+
+async function loadGeometry(meshUrl) {
+  let response;
+  try {
+    response = await fetch(meshUrl);
+  } catch (err) {
+    fail(`viewer: fetch failed for mesh "${meshUrl}": ${err.message}`);
+  }
+  if (!response.ok) {
+    fail(`viewer: mesh fetch returned ${response.status} ${response.statusText} for "${meshUrl}"`);
+  }
+  const buffer = await response.arrayBuffer();
+
+  const loader = new STLLoader();
+  let geometry;
+  try {
+    geometry = loader.parse(buffer);
+  } catch (err) {
+    fail(`viewer: could not parse STL data from "${meshUrl}": ${err.message}`);
+  }
+
+  if (!geometry.attributes.position || geometry.attributes.position.count === 0) {
+    fail(`viewer: parsed STL geometry from "${meshUrl}" is empty (0 vertices)`);
+  }
+
+  geometry.computeBoundingBox();
+  const bbox = geometry.boundingBox;
+  const finite =
+    Number.isFinite(bbox.min.x) &&
+    Number.isFinite(bbox.min.y) &&
+    Number.isFinite(bbox.min.z) &&
+    Number.isFinite(bbox.max.x) &&
+    Number.isFinite(bbox.max.y) &&
+    Number.isFinite(bbox.max.z);
+  if (!finite) {
+    fail(`viewer: parsed STL geometry from "${meshUrl}" has a non-finite bounding box`);
+  }
+
+  return geometry;
+}
+
+/**
+ * Build an orthographic camera framed so the whole bounding box fills the
+ * canvas for the given view direction, by projecting the box's 8 corners
+ * into the camera's own view space and sizing the frustum to contain them
+ * (plus a margin), then expanding to match the canvas aspect ratio.
+ */
+function frameCamera(bbox, dir, up, aspect) {
+  const center = new THREE.Vector3();
+  bbox.getCenter(center);
+
+  const corners = [];
+  for (const x of [bbox.min.x, bbox.max.x]) {
+    for (const y of [bbox.min.y, bbox.max.y]) {
+      for (const z of [bbox.min.z, bbox.max.z]) {
+        corners.push(new THREE.Vector3(x, y, z));
+      }
+    }
+  }
+
+  // Guard a degenerate (single-point) bbox with a non-zero fallback radius.
+  const radius = bbox.min.distanceTo(bbox.max) / 2 || 1;
+  const distance = radius * 4;
+
+  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.01, distance * 4);
+  camera.up.copy(up);
+  camera.position.copy(center).addScaledVector(dir, distance);
+  camera.lookAt(center);
+  camera.updateMatrixWorld(true);
+
+  const viewMatrix = camera.matrixWorldInverse;
+  let halfWidth = 0;
+  let halfHeight = 0;
+  let minDepth = Infinity;
+  let maxDepth = -Infinity;
+  const v = new THREE.Vector3();
+  for (const corner of corners) {
+    v.copy(corner).applyMatrix4(viewMatrix);
+    halfWidth = Math.max(halfWidth, Math.abs(v.x));
+    halfHeight = Math.max(halfHeight, Math.abs(v.y));
+    const depth = -v.z; // camera looks down its own -Z; depth is positive in front
+    minDepth = Math.min(minDepth, depth);
+    maxDepth = Math.max(maxDepth, depth);
+  }
+
+  halfWidth = Math.max(halfWidth * MARGIN_FACTOR, 1e-6);
+  halfHeight = Math.max(halfHeight * MARGIN_FACTOR, 1e-6);
+
+  // Grow the smaller dimension to match the canvas aspect ratio so the
+  // whole bbox stays inside the frame without distortion.
+  if (halfWidth / halfHeight > aspect) {
+    halfHeight = halfWidth / aspect;
+  } else {
+    halfWidth = halfHeight * aspect;
+  }
+
+  camera.left = -halfWidth;
+  camera.right = halfWidth;
+  camera.top = halfHeight;
+  camera.bottom = -halfHeight;
+  camera.near = Math.max(0.01, minDepth - radius * 0.1);
+  camera.far = maxDepth + radius * 0.1;
+  camera.updateProjectionMatrix();
+
+  return camera;
+}
+
+function buildScene(geometry) {
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(BACKGROUND_COLOR);
+
+  const material = new THREE.MeshStandardMaterial({
+    color: 0x4a7ac2,
+    metalness: 0.1,
+    roughness: 0.65,
+  });
+  scene.add(new THREE.Mesh(geometry, material));
+
+  // Fixed, non-animated lighting — deterministic across runs.
+  scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+  const keyLight = new THREE.DirectionalLight(0xffffff, 1.0);
+  keyLight.position.set(1, 1.5, 1);
+  scene.add(keyLight);
+  const fillLight = new THREE.DirectionalLight(0xffffff, 0.4);
+  fillLight.position.set(-1, 0.5, -1);
+  scene.add(fillLight);
+
+  return scene;
+}
+
+function showLabel(viewName, bbox) {
+  const size = new THREE.Vector3();
+  bbox.getSize(size);
+  const label = document.getElementById('label');
+  label.hidden = false;
+  label.textContent =
+    `view=${viewName}\n` + `bbox (mm): ${size.x.toFixed(1)} x ${size.y.toFixed(1)} x ${size.z.toFixed(1)}`;
+}
+
+async function main() {
+  const { mesh, viewName, width, height } = parseParams();
+  const geometry = await loadGeometry(mesh);
+  const bbox = geometry.boundingBox;
+
+  const preset = VIEW_PRESETS[viewName];
+  const camera = frameCamera(bbox, preset.dir, preset.up, width / height);
+  const scene = buildScene(geometry);
+
+  const canvas = document.createElement('canvas');
+  document.body.appendChild(canvas);
+  const renderer = new THREE.WebGLRenderer({
+    canvas,
+    antialias: true,
+    preserveDrawingBuffer: true,
+  });
+  renderer.setPixelRatio(1); // deterministic pixels regardless of host devicePixelRatio
+  renderer.setSize(width, height, true);
+  renderer.render(scene, camera); // once — no animation loop
+
+  showLabel(viewName, bbox);
+  document.body.dataset.state = 'rendered';
+}
+
+// See the module-level comment above for why this re-throws via setTimeout
+// instead of leaving main()'s rejection as a bare unhandled rejection.
+main().catch((err) => {
+  setTimeout(() => {
+    throw err;
+  });
+});
+</script>
+</body>
+</html>
