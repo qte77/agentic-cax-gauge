@@ -22,10 +22,11 @@ Loading uses `trimesh.load(..., process=True, validate=False)`, never
 `trimesh.repair.*`/`fill_holes` (plan §11 — a gauge must never repair what it reports).
 `process=False` leaves every triangle's three vertices unmerged (a binary STL stores
 vertices by value, not by shared index), so `is_watertight` is `False` for *every* STL,
-including a perfect cube — that is a loader artifact, not a defect. `process=True` merges
-only exactly-coincident vertices; confirmed empirically that a mesh with one face removed
-is still reported non-watertight after merging (merging vertices never re-adds a face).
-`validate=False` skips degenerate/duplicate-face removal. Neither step hides a defect.
+including a perfect cube — that is a loader artifact, not a defect. `process=True` drops
+non-finite values and merges vertices within `trimesh.tol.merge` (1e-8, far below STL's
+float32 precision); confirmed empirically that a mesh with one face removed is still
+reported non-watertight after merging (merging vertices never re-adds a face).
+`validate=False` skips degenerate/duplicate-face removal and normal fixing.
 
 Pure: no network, no agent, no CAD/browser imports.
 """
@@ -97,7 +98,7 @@ def _all_fail(detail: str) -> PreflightResult:
 def _load_mesh(mesh: Path) -> tuple[trimesh.Trimesh | None, str | None]:
     """Load `mesh` without repairing it; return `(None, reason)` on any failure.
 
-    `process=True` merges exactly-coincident vertices only (required: a binary STL
+    `process=True` merges vertices within `trimesh.tol.merge` (required: a binary STL
     stores three independent vertices per triangle, so an unprocessed mesh can never
     be watertight); `validate=False` skips degenerate/duplicate-face removal. See the
     module docstring for the empirical check behind this choice. A malformed file may

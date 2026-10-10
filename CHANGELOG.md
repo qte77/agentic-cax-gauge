@@ -12,6 +12,11 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
   check, report and CLI share. `SKIP` never counts toward green; an empty result is not
   green; a browser load with captured errors cannot be a pass; the *necessary, not
   sufficient* label is a constant on the contract.
+- **M2 wave 1 (#16)**: `caxgauge.verify.preflight` — file integrity (binary STL structure),
+  watertight + winding, bbox within `envelope`, volume within a two-sided `volume_band`. An
+  absent bound is `SKIP`; an unparseable file is `FAIL` on every check, never an exception;
+  the mesh is never repaired. Headline fixture: a build123d boss sunk 3 mm into its plate
+  stays watertight but fails a ±1 % volume band (−2.73 %).
 
 ## [0.1.0] - 2026-10-09
 
