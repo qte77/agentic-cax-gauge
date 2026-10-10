@@ -61,8 +61,8 @@ def make_feature_absorbed() -> None:
     stay watertight; only the volume differs — the one defect this preflight
     is built to catch (plan `docs/plans/001-v0.md` §7.3).
     """
-    from build123d import Cylinder, Pos, export_stl
     from build123d import Box as B123Box
+    from build123d import Cylinder, Pos, export_stl
 
     plate = B123Box(*PLATE_SIZE)
     boss = Cylinder(radius=BOSS_RADIUS, height=BOSS_HEIGHT)
@@ -83,9 +83,7 @@ def make_feature_absorbed() -> None:
 
     intended_mesh = trimesh.load(intended_path)
     buggy_mesh = trimesh.load(buggy_path)
-    print(
-        f"intended: watertight={intended_mesh.is_watertight} volume={intended_mesh.volume:.3f}"
-    )
+    print(f"intended: watertight={intended_mesh.is_watertight} volume={intended_mesh.volume:.3f}")
     print(f"buggy:    watertight={buggy_mesh.is_watertight} volume={buggy_mesh.volume:.3f}")
     print(
         "relative volume shift: "

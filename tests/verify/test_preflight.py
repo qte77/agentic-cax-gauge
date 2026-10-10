@@ -11,7 +11,7 @@ from hypothesis import given, settings
 from hypothesis import strategies as st
 
 from caxgauge.verify.preflight import preflight
-from caxgauge.verify.types import Status
+from caxgauge.verify.types import CheckResult, PreflightResult, Status
 
 FIXTURES = Path(__file__).parent.parent / "fixtures"
 
@@ -26,7 +26,7 @@ GOOD_ENVELOPE = (20.001, 15.001, 10.001)
 GOOD_VOLUME_BAND = (2999.9, 3000.1)
 
 
-def _by_name(result, name: str):
+def _by_name(result: PreflightResult, name: str) -> CheckResult:
     return next(c for c in result.checks if c.name == name)
 
 

@@ -87,7 +87,9 @@ def preflight(
 def _all_fail(detail: str) -> PreflightResult:
     """Build a result where every check in `_CHECK_ORDER` is `FAIL` with `detail`."""
     return PreflightResult(
-        checks=tuple(CheckResult(name=name, status=Status.FAIL, detail=detail) for name in _CHECK_ORDER)
+        checks=tuple(
+            CheckResult(name=name, status=Status.FAIL, detail=detail) for name in _CHECK_ORDER
+        )
     )
 
 
@@ -102,7 +104,11 @@ def _load_mesh(mesh: Path) -> tuple[trimesh.Trimesh | None, str | None]:
     `Trimesh` — both are treated as a parse failure here, never left to propagate.
     """
     try:
-        loaded = trimesh.load(mesh, file_type="stl", process=True, validate=False)
+        # trimesh's own type stubs leave `load`'s return partially unknown (it
+        # returns the `Geometry` union); narrowed below via `isinstance`.
+        loaded = trimesh.load(  # pyright: ignore[reportUnknownMemberType]
+            mesh, file_type="stl", process=True, validate=False
+        )
     except Exception as exc:
         return None, str(exc)
     if not isinstance(loaded, trimesh.Trimesh):
@@ -130,7 +136,9 @@ def _file_integrity(data: bytes) -> CheckResult:
     expected_size = _MIN_BINARY_STL_SIZE + _TRIANGLE_RECORD_SIZE * num_triangles
 
     if num_triangles > 0 and len(data) == expected_size:
-        detail = f"binary STL: header present, {num_triangles} triangles, file length matches 84 + 50*n"
+        detail = (
+            f"binary STL: header present, {num_triangles} triangles, file length matches 84 + 50*n"
+        )
         return CheckResult(name=name, status=Status.PASS, detail=detail)
 
     if data[:5].lower() == b"solid":
@@ -141,9 +149,14 @@ def _file_integrity(data: bytes) -> CheckResult:
         return CheckResult(name=name, status=Status.SKIP, detail=detail)
 
     if num_triangles == 0:
-        return CheckResult(name=name, status=Status.FAIL, detail="zero triangles in binary STL header")
+        return CheckResult(
+            name=name, status=Status.FAIL, detail="zero triangles in binary STL header"
+        )
 
-    detail = f"file length mismatch: expected {expected_size} bytes (84 + 50*{num_triangles}), got {len(data)}"
+    detail = (
+        f"file length mismatch: expected {expected_size} bytes "
+        f"(84 + 50*{num_triangles}), got {len(data)}"
+    )
     return CheckResult(name=name, status=Status.FAIL, detail=detail)
 
 
