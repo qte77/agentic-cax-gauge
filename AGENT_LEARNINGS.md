@@ -48,8 +48,8 @@ below.
   the same session, so capture is not globally broken — only page-script-originated
   `console.*()`/uncaught-exception events were missed; browser-generated messages (failed
   loads, CORS) were not. **Confirmed root cause** (Patchright's own README, fetched and
-  checked, not just inferred): Patchright avoids `Runtime.enable` entirely ("the biggest patch
-  it uses" — JS runs in isolated execution contexts instead) and **disables the Console API**
+  checked, not just inferred): Patchright "avoids using Runtime.enable by executing Javascript
+  in (isolated) ExecutionContexts" instead, and **disables the Console API**
   ("`Console.enable`... console functionality will not work in Patchright"), both deliberate
   anti-fingerprinting choices. `Runtime.consoleAPICalled`/`Runtime.exceptionThrown` depend on
   exactly what's disabled; `Log.entryAdded` (browser-generated messages) does not.

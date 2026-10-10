@@ -97,10 +97,10 @@ cross-origin CORS failure against this same viewer page *did* get captured in
 `console_errors` earlier in this same testing session (two entries: the CORS policy message
 and a `net::ERR_FAILED` resource-load message) — so capture is not globally broken, only for
 page-script-originated console calls and exceptions. **Confirmed root cause, from Patchright's
-own documentation** (not just a hypothesis): Patchright deliberately avoids `Runtime.enable`
-("the biggest patch it uses", per its own README — a page's JS runs in isolated execution
-contexts instead, and init scripts are injected by intercepting HTML requests rather than via
-the CDP calls that need `Runtime.enable`) and **disables the Console API entirely**
+own documentation** (not just a hypothesis): Patchright's README states it "avoids using
+Runtime.enable by executing Javascript in (isolated) ExecutionContexts" instead, and init
+scripts are injected by intercepting HTML requests rather than via the CDP calls that need
+`Runtime.enable`. It also **disables the Console API entirely**
 ("`Console.enable`... console functionality will not work in Patchright" — the project's own
 anti-fingerprinting design, since both are well-known bot-detection signals). That is exactly
 `Runtime.consoleAPICalled`/`Runtime.exceptionThrown` — what page-script `console.*()` calls and
