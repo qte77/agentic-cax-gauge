@@ -27,6 +27,10 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
   polyfetch's CLI, waiting for `body[data-state="rendered"]`, so an error page times out
   rather than yielding a screenshot. `PASS` only when every requested view produced a real
   PNG ("exit 0 but no output" is a fail); `SKIP` without polyfetch. New `RenderResult` type.
+- **M2 wave 2 (#16)**: `caxgauge.verify.browser.browser_load_check` — an in-clone probe
+  (polyfetch's own interpreter, `render_session`) waits for `body[data-state]` and reads it
+  structurally. `PASS` only on `rendered` with nothing captured; `error`, no verdict, any
+  captured error, a probe crash or a timeout is `FAIL`; `SKIP` without polyfetch.
 
 ## [0.1.0] - 2026-10-09
 
