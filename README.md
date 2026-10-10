@@ -54,7 +54,14 @@ Bounds are optional and an unsupplied bound reports `SKIP`, never `PASS` — a b
 no envelope has not checked anything, and the report says so.
 
 Python 3.12 + `uv`. Rendering and browser-side checks run through
-[`qte77/polyfetch-scrape`](https://github.com/qte77/polyfetch-scrape). Later milestones add
+[`qte77/polyfetch-scrape`](https://github.com/qte77/polyfetch-scrape), borrowed from its own
+checkout rather than installed:
+
+| Env var | Meaning |
+|---|---|
+| `CAXGAUGE_POLYFETCH_DIR` | Path to a polyfetch-scrape checkout. Unset or missing: the browser and render checks report `SKIP`, never `PASS` |
+
+Later milestones add
 regression checks, then **build123d**/OpenSCAD backends; optional VLM annotation via
 [`qte77/vlm-toolkit`](https://github.com/qte77/vlm-toolkit) or any OpenAI-spec endpoint.
 

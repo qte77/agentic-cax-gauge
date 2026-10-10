@@ -20,6 +20,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 - **M2 wave 1 (#16)**: `viewer/index.html` — static three.js page (vendored three@0.186.1)
   rendering `?mesh=` at named presets `front|iso|top|right`, framed from the mesh bbox. Signals
   `body[data-state]` `rendered`/`error`; contract in `viewer/README.md`.
+- **M2 wave 2 prep (#16)**: `caxgauge.verify.substrate` — `serve_viewer(mesh)` serves the
+  viewer and mesh from one local origin; env var `CAXGAUGE_POLYFETCH_DIR` names the
+  env-borrowed polyfetch checkout (unset: browser legs `SKIP`).
 
 ## [0.1.0] - 2026-10-09
 
