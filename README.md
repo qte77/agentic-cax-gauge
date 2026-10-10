@@ -6,12 +6,13 @@
 > broken," never "correct."**
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/status-M1%20scaffold-blue.svg)](docs/plans/001-v0.md)
+[![Status](https://img.shields.io/badge/status-M2%20in%20progress-blue.svg)](docs/plans/001-v0.md)
 ![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)
 
-**Status:** M1 scaffold shipped (0.1.0) — package, quality gate and CI exist; **no checks
-yet**: the `caxgauge` command is a stub that exits non-zero and says nothing was checked.
-The checks arrive in M2. Start here: [`docs/README.md`](docs/README.md), the map of what to
+**Status:** M2 in progress. The deterministic preflight (`caxgauge.verify.preflight`) and
+the static render page (`viewer/`) exist; browser load check, multi-view capture, report
+and CLI do not yet. The `caxgauge` command is still a stub that exits non-zero and says
+nothing was checked. Start here: [`docs/README.md`](docs/README.md), the map of what to
 read and in what order.
 
 ## What
@@ -21,7 +22,7 @@ lands, and CAE only as information for a human — never a gate. Three layers, i
 trust:
 
 1. **Cheap deterministic preflight** — file integrity, watertight/manifold, bounding box,
-   mass. Trustworthy but *necessary, not sufficient*; catches the obviously-broken,
+   volume. Trustworthy but *necessary, not sufficient*; catches the obviously-broken,
    including silent feature loss in boolean fusion when a volume band is supplied.
 2. **Auto multi-view render as the primary gate** — the real check for the defects geometry
    cannot self-assert (a hole that isn't actually through, a mating feature off its datum).
@@ -36,14 +37,14 @@ regenerations), CAD-backend dispatch, generation, slicer printability, and CAE.
 
 ## How
 
-Checks not yet implemented (M2). v0 takes an **exported mesh**, not a build script — the consumer repos
+The command below is the M2 target, not yet wired. v0 takes an **exported mesh**, not a build script — the consumer repos
 already export STL, so the gauge reaches a real user without owning generation or CAD
 backends:
 
 ```text
 $ caxgauge check part.stl --envelope 80,80,40
 
-exported STL  ->  cheap preflight (build/watertight/bbox/mass)
+exported STL  ->  cheap preflight (integrity/watertight/bbox/volume)
                         |  pass or fail — both are reported, neither is "verified"
                         v
               auto multi-view render  ->  human decides
