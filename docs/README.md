@@ -1,7 +1,7 @@
 # Docs map
 
-The package scaffold exists (M1, 0.1.0) but no checks yet; these docs still carry the
-design. There are four of them — two are reference material you do not need to build.
+M2 is in progress (preflight and the render page exist; see the plan's Handoff for what is
+next). There are four docs here — two are reference material you do not need to build.
 Development workflow lives in [`../CONTRIBUTING.md`](../CONTRIBUTING.md), agent rules in
 [`../AGENTS.md`](../AGENTS.md).
 
@@ -22,7 +22,8 @@ To **understand the project** — about 6 minutes, and you are done:
    everything else is downstream of it. If you read one section, read that one.
 
 To **build**, continue: the plan's opening **Handoff** section for current state and
-execution model, then Part II for the milestone you are on. Start on M1.
+execution model, then Part II for the milestone you are on. `viewer/README.md` is the
+render page's URL contract.
 
 ## Conventions
 
