@@ -17,6 +17,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
   absent bound is `SKIP`; an unparseable file is `FAIL` on every check, never an exception;
   the mesh is never repaired. Headline fixture: a build123d boss sunk 3 mm into its plate
   stays watertight but fails a ±1 % volume band (−2.73 %).
+- **M2 wave 1 (#16)**: `viewer/index.html` — static three.js page (vendored three@0.186.1)
+  rendering `?mesh=` at named presets `front|iso|top|right`, framed from the mesh bbox. Signals
+  `body[data-state]` `rendered`/`error`; contract in `viewer/README.md`.
 
 ## [0.1.0] - 2026-10-09
 
