@@ -96,16 +96,21 @@ four produced a `console_errors` entry or a `pageerror` callback invocation**, e
 cross-origin CORS failure against this same viewer page *did* get captured in
 `console_errors` earlier in this same testing session (two entries: the CORS policy message
 and a `net::ERR_FAILED` resource-load message) — so capture is not globally broken, only for
-page-script-originated console calls and exceptions. The likely cause: Patchright deliberately avoids enabling the CDP `Runtime`
-domain by default (a well-known anti-fingerprinting design choice — `Runtime.enable` is a
-common bot-detection signal), and `Runtime.consoleAPICalled`/`Runtime.exceptionThrown` (what
-page-script `console.*()` calls and uncaught exceptions need) depend on that domain, while
-browser-generated messages (CORS/network errors) reach Playwright's `console`/`network` events
-through a different path (`Log.entryAdded`) that doesn't need it. **This was not root-caused
-further — wave 2 should re-verify with its own `browser.py`/`render.py` implementation (the
-project's own rule: force a known failure and confirm the listener catches it) before
-depending on `pageerror` as anything more than a bonus signal.** `dataset.state` plus
-screenshots are what this smoke test actually confirmed working.
+page-script-originated console calls and exceptions. **Confirmed root cause, from Patchright's
+own documentation** (not just a hypothesis): Patchright deliberately avoids `Runtime.enable`
+("the biggest patch it uses", per its own README — a page's JS runs in isolated execution
+contexts instead, and init scripts are injected by intercepting HTML requests rather than via
+the CDP calls that need `Runtime.enable`) and **disables the Console API entirely**
+("`Console.enable`... console functionality will not work in Patchright" — the project's own
+anti-fingerprinting design, since both are well-known bot-detection signals). That is exactly
+`Runtime.consoleAPICalled`/`Runtime.exceptionThrown` — what page-script `console.*()` calls and
+uncaught exceptions need — while browser-generated messages (CORS/network errors) reach
+Playwright's `console`/`network` events through a different path (`Log.entryAdded`) that
+doesn't depend on either. **Wave 2 should still re-verify with its own `browser.py`/
+`render.py` implementation** (plan §9.2.3's own rule: force a known failure and confirm the
+listener catches it) before depending on `pageerror` as anything more than a bonus signal —
+but do not expect it to fire for this page's own script errors while running on Patchright.
+`dataset.state` plus screenshots are what this smoke test actually confirmed working.
 **Screenshots remain the ground truth for "did it actually render"**; a clean `console_errors`
 answers neither "did it load" nor "did it error" on its own.
 

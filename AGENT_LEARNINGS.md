@@ -47,10 +47,12 @@ below.
   real cross-origin CORS failure against the same page *did* get captured minutes earlier in
   the same session, so capture is not globally broken — only page-script-originated
   `console.*()`/uncaught-exception events were missed; browser-generated messages (failed
-  loads, CORS) were not. Likely cause (not root-caused further): Patchright avoids enabling
-  the CDP `Runtime` domain by default (a known anti-fingerprinting choice), and
-  `Runtime.consoleAPICalled`/`Runtime.exceptionThrown` depend on it, while `Log.entryAdded`
-  (browser-generated messages) does not.
+  loads, CORS) were not. **Confirmed root cause** (Patchright's own README, fetched and
+  checked, not just inferred): Patchright avoids `Runtime.enable` entirely ("the biggest patch
+  it uses" — JS runs in isolated execution contexts instead) and **disables the Console API**
+  ("`Console.enable`... console functionality will not work in Patchright"), both deliberate
+  anti-fingerprinting choices. `Runtime.consoleAPICalled`/`Runtime.exceptionThrown` depend on
+  exactly what's disabled; `Log.entryAdded` (browser-generated messages) does not.
 - **Solution**: Treat `document.body.dataset.state` (a DOM attribute, read structurally) as
   the primary signal, not `pageerror`/`console_errors`. Still throw on failure (cheap,
   correct, and may work in other tooling/configurations) but never gate on it firing. Before
