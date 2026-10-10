@@ -19,4 +19,7 @@ exclude = [
     # 403 to lychee (bot challenge); DOI 10.1145/3772363.3798904 confirmed registered via the
     # doi.org handle API, resolving to the exact cited URL
     "^https://dl\\.acm\\.org",
+    # 503 to lychee on two consecutive CI runs (2026-10-10); the file is confirmed present on
+    # `devel` via the GitHub contents API. One URL, not the host
+    "^https://github\\.com/ElmerCSC/elmerfem/blob/devel/license_texts/ElmerLicensePolicy\\.md$",
 ]
