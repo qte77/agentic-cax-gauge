@@ -47,12 +47,12 @@ below.
   real cross-origin CORS failure against the same page *did* get captured minutes earlier in
   the same session, so capture is not globally broken — only page-script-originated
   `console.*()`/uncaught-exception events were missed; browser-generated messages (failed
-  loads, CORS) were not. **Confirmed root cause** (Patchright's own README, fetched and
-  checked, not just inferred): Patchright "avoids using Runtime.enable by executing Javascript
-  in (isolated) ExecutionContexts" instead, and **disables the Console API**
-  ("`Console.enable`... console functionality will not work in Patchright"), both deliberate
-  anti-fingerprinting choices. `Runtime.consoleAPICalled`/`Runtime.exceptionThrown` depend on
-  exactly what's disabled; `Log.entryAdded` (browser-generated messages) does not.
+  loads, CORS) were not. **Cause, partly confirmed:** Patchright's README states it "avoids
+  using Runtime.enable by executing Javascript in (isolated) ExecutionContexts" and disables
+  the Console API ("console functionality will not work in Patchright") — that confirms the
+  missing `console_errors`. The README says nothing about exceptions or `pageerror`; that
+  missing uncaught exceptions follow from the same no-`Runtime.enable` choice is an
+  **inference**, consistent with the four-page test but not stated at source.
 - **Solution**: Treat `document.body.dataset.state` (a DOM attribute, read structurally) as
   the primary signal, not `pageerror`/`console_errors`. Still throw on failure (cheap,
   correct, and may work in other tooling/configurations) but never gate on it firing. Before

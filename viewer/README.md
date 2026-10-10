@@ -96,17 +96,13 @@ four produced a `console_errors` entry or a `pageerror` callback invocation**, e
 cross-origin CORS failure against this same viewer page *did* get captured in
 `console_errors` earlier in this same testing session (two entries: the CORS policy message
 and a `net::ERR_FAILED` resource-load message) — so capture is not globally broken, only for
-page-script-originated console calls and exceptions. **Confirmed root cause, from Patchright's
-own documentation** (not just a hypothesis): Patchright's README states it "avoids using
-Runtime.enable by executing Javascript in (isolated) ExecutionContexts" instead, and init
-scripts are injected by intercepting HTML requests rather than via the CDP calls that need
-`Runtime.enable`. It also **disables the Console API entirely**
-("`Console.enable`... console functionality will not work in Patchright" — the project's own
-anti-fingerprinting design, since both are well-known bot-detection signals). That is exactly
-`Runtime.consoleAPICalled`/`Runtime.exceptionThrown` — what page-script `console.*()` calls and
-uncaught exceptions need — while browser-generated messages (CORS/network errors) reach
-Playwright's `console`/`network` events through a different path (`Log.entryAdded`) that
-doesn't depend on either. **Wave 2 should still re-verify with its own `browser.py`/
+page-script-originated console calls and exceptions. **Likely cause, partly confirmed at
+source:** Patchright's README states it "avoids using Runtime.enable by executing Javascript in
+(isolated) ExecutionContexts" and that "console functionality will not work in Patchright" —
+which confirms the missing `console_errors`. The README does not mention exceptions or
+`pageerror`; that uncaught exceptions are lost by the same no-`Runtime.enable` design is an
+**inference**, consistent with the four-page test. Browser-generated messages (CORS/network
+errors) evidently arrive by a different path, since they were captured. **Wave 2 should still re-verify with its own `browser.py`/
 `render.py` implementation** (plan §9.2.3's own rule: force a known failure and confirm the
 listener catches it) before depending on `pageerror` as anything more than a bonus signal —
 but do not expect it to fire for this page's own script errors while running on Patchright.
