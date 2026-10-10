@@ -1,7 +1,7 @@
 """Shared wave-2 substrate: serving the viewer + mesh, locating polyfetch (plan §7.1, §9)."""
 
-import urllib.error
-import urllib.request
+import http.client
+import urllib.parse
 from pathlib import Path
 
 import pytest
@@ -12,8 +12,14 @@ FIXTURE = Path(__file__).parent.parent / "fixtures" / "good.stl"
 
 
 def _get(url: str) -> bytes:
-    with urllib.request.urlopen(url, timeout=5) as resp:  # noqa: S310 — local test server
-        return resp.read()
+    """GET over plain HTTP only (no `file:`/custom schemes, unlike `urlopen`)."""
+    parts = urllib.parse.urlsplit(url)
+    conn = http.client.HTTPConnection(parts.netloc, timeout=5)
+    try:
+        conn.request("GET", f"{parts.path}?{parts.query}" if parts.query else parts.path)
+        return conn.getresponse().read()
+    finally:
+        conn.close()
 
 
 def test_serves_viewer_and_mesh_same_origin():
@@ -36,7 +42,7 @@ def test_page_url_carries_mesh_view_and_size():
 def test_server_stops_on_exit():
     with serve_viewer(FIXTURE) as viewer:
         base = viewer.base
-    with pytest.raises(urllib.error.URLError):
+    with pytest.raises(ConnectionRefusedError):
         _get(f"{base}/mesh.stl")
 
 
