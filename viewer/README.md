@@ -87,6 +87,30 @@ rejection — which Chromium reports as an uncaught page exception, firing `page
 "did it load", and a clean console answers neither (`console` alone misses most real
 failures — capture `pageerror`, `requestfailed`, and non-200 `response`, not just `console`).
 
+## Consuming this page headlessly (read before wiring `browser.py`/`render.py`)
+
+- **The page is asynchronous; navigation events fire before it has a verdict.** `main()` does
+  `await fetch(...)` before setting `document.body.dataset.state`, so Chromium's `load` event
+  (and a plain fixed-length wait) can both land *before* the attribute exists. **Wait for the
+  attribute itself** — e.g. Playwright/Patchright `page.wait_for_selector('body[data-state]',
+  timeout=...)` — then read it, rather than waiting for navigation and reading immediately.
+- **A timeout with no attribute at all is itself a hard failure**, not a "still loading" state
+  to retry — it means the module graph never finished (e.g. a vendor file 404, caught by
+  `network_failures`/`console_errors`) and `main()` never even reached its own try/catch. This
+  mirrors the estate's own "exit 0 but no output = FAIL" rule (plan §11, i3mega's slicer
+  validator) applied to this page: no verdict is not a pass.
+- **Match the browser viewport to `w`/`h`.** The canvas is laid out at the top-left of an
+  otherwise-plain page; a screenshot taken at Chromium's default viewport (commonly larger than
+  800x600) captures the canvas plus surrounding page background, not the render alone. Pass the
+  same size as a viewport option (e.g. polyfetch's `--viewport 800x600` /
+  `render_session(url, viewport=(800, 600))`) when requesting `?w=800&h=600` (or whatever size
+  is used), so the screenshot *is* the render.
+- Treat `s.console_errors` (polyfetch's always-on, whole-session capture — USING.md) as the
+  authoritative uncaught-JS signal in a script. A `page.on("pageerror", ...)` listener attached
+  *inside* a `render_session(url)` block will miss an error that already fired during the
+  session's own initial navigation; `console_errors`/`network_failures` are captured from the
+  start of the session regardless of when listeners are attached.
+
 ## Optional label
 
 A small fixed-position overlay (`#label`, top-left) shows `view=<name>` and the bbox extents
@@ -102,10 +126,11 @@ No Python tests live in `tests/` for this page (that's wave 2's job, against
    STL (e.g. a short file of garbage bytes) — write both somewhere outside the repo.
 2. Serve the repo root (`python3 -m http.server <port> --bind 127.0.0.1`).
 3. Load `http://127.0.0.1:<port>/viewer/index.html?mesh=<url>&view=<name>` for each of
-   `front`, `iso`, `top`, `right` against the good STL — confirm a filled, centred render and
-   `document.body.dataset.state === "rendered"`.
-4. Load the same URL against the invalid STL — confirm a `pageerror` fires and
-   `document.body.dataset.state === "error"`.
+   `front`, `iso`, `top`, `right` against the good STL with the browser viewport matched to
+   `w`/`h` — wait for `body[data-state]` (not a fixed timeout or the `load` event), then
+   confirm a filled, centred render and `document.body.dataset.state === "rendered"`.
+4. Load the same URL against the invalid STL — confirm `document.body.dataset.state ===
+   "error"` and an uncaught error in `console_errors`/`pageerror`.
 
 `../polyfetch-scrape` (its `USING.md`, `render_session`) is the substrate wave 2 uses to do
 this headlessly with screenshot capture and `pageerror`/`console`/`network` listeners already
