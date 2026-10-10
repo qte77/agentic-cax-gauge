@@ -11,7 +11,8 @@ always reported in this order:
 - `watertight` — `trimesh.is_watertight` + `is_winding_consistent`; the Euler number is
   reported, never asserted on (plan §7.2: it only catches through-holes, not blind
   feature loss — that is what `volume` is for).
-- `bbox` — mesh extents within an optional two-sided `envelope`; `SKIP` with none given.
+- `bbox` — mesh extents at or below an optional per-axis `envelope` (max extents, not a
+  two-sided band); `SKIP` with none given.
 - `volume` — mesh volume within an optional two-sided `volume_band`; `SKIP` with none
   given. A non-watertight mesh's volume is not a meaningful measurement, so a *supplied*
   band still reports `FAIL` rather than `SKIP` (`SKIP` is reserved for an absent bound,
@@ -173,7 +174,7 @@ def _watertight(tm_mesh: trimesh.Trimesh) -> CheckResult:
 
 
 def _bbox(tm_mesh: trimesh.Trimesh, envelope: tuple[float, float, float] | None) -> CheckResult:
-    """Mesh extents within a two-sided `envelope`; `SKIP` with none given."""
+    """Mesh extents at or below a per-axis `envelope` (max extents); `SKIP` with none given."""
     if envelope is None:
         return CheckResult(name="bbox", status=Status.SKIP, detail="no --envelope given")
     extents = tuple(float(e) for e in tm_mesh.extents)

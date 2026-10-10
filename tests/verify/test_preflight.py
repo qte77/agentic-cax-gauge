@@ -45,6 +45,10 @@ def test_non_manifold_fixture_fails_watertight():
     assert not result.green
     watertight = _by_name(result, "watertight")
     assert watertight.status is Status.FAIL
+    # A non-watertight mesh's volume is not meaningful: a *supplied* band still FAILs
+    # (never SKIPs — the bound was given; never PASSes — the measurement is untrustworthy).
+    volume = _by_name(result, "volume")
+    assert volume.status is Status.FAIL
 
 
 def test_oversize_fixture_fails_bbox():
@@ -59,6 +63,12 @@ def test_headline_feature_absorbed_fails_volume_band():
     intended_mesh = trimesh.load(HEADLINE_INTENDED)
     intended_volume = float(intended_mesh.volume)
     band = (intended_volume * 0.99, intended_volume * 1.01)
+
+    # The actual claim: same band, the intended part passes, the absorbed one fails.
+    intended_result = preflight(HEADLINE_INTENDED, volume_band=band)
+    assert _by_name(intended_result, "file_integrity").status is Status.PASS
+    assert _by_name(intended_result, "watertight").status is Status.PASS
+    assert _by_name(intended_result, "volume").status is Status.PASS
 
     result = preflight(HEADLINE_BUGGY, volume_band=band)
 
