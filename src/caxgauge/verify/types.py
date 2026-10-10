@@ -5,6 +5,7 @@ counts toward green, and green is only ever *necessary, not sufficient*.
 """
 
 from enum import StrEnum
+from pathlib import Path
 from typing import Self
 
 from pydantic import BaseModel, ConfigDict, model_validator
@@ -79,4 +80,44 @@ class BrowserResult(BaseModel):
     @property
     def hard_fail(self) -> bool:
         """Whether the load failed."""
+        return self.status is Status.FAIL
+
+
+class RenderedView(BaseModel):
+    """One camera preset's captured screenshot."""
+
+    model_config = ConfigDict(frozen=True)
+
+    name: str
+    path: Path
+
+
+class RenderResult(BaseModel):
+    """Multi-view PNG capture (plan §7.1): the primary gate, made by `verify/render.py`.
+
+    `requested_views` names every view that was asked for, in order; `views` holds only
+    the ones a real PNG was produced for. A `PASS` must have exactly one view per
+    requested view, in the same order — enforced below so a partial capture (one failed
+    view) can never present as green (plan §11: "exit 0 but no output = FAIL").
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    status: Status
+    detail: str
+    requested_views: tuple[str, ...]
+    views: tuple[RenderedView, ...] = ()
+
+    @model_validator(mode="after")
+    def _pass_has_one_view_per_requested(self) -> Self:
+        if self.status is Status.PASS:
+            names = tuple(v.name for v in self.views)
+            if names != self.requested_views:
+                msg = "a pass must produce exactly one PNG per requested view, in order"
+                raise ValueError(msg)
+        return self
+
+    @property
+    def hard_fail(self) -> bool:
+        """Whether the render failed outright (never true for `SKIP`)."""
         return self.status is Status.FAIL
