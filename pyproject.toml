@@ -66,6 +66,13 @@ pythonVersion = "3.12"
 typeCheckingMode = "strict"
 extraPaths = ["src"]
 include = ["src/caxgauge"]
+# `verify/probes/*` runs under polyfetch's own interpreter/venv (plan §9), never
+# caxgauge's — `polyfetch_scrape` is not and must not become a caxgauge dependency,
+# so pyright cannot (and should not) resolve it here. `ignore` (not `exclude`)
+# because `make type` passes `src` as a CLI path, which pulls files in regardless
+# of `include`/`exclude`; `ignore` suppresses diagnostics for files matched this
+# way too. Ruff still lints this directory (`[tool.ruff]` has no matching exclude).
+ignore = ["src/caxgauge/verify/probes"]
 reportMissingImports = "error"
 
 [tool.pytest.ini_options]
