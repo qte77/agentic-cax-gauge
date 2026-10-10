@@ -1,5 +1,7 @@
 """Result contract for M2 (plan §7.1 wave 0): the types encode the honesty rules."""
 
+from pathlib import Path
+
 import pytest
 from pydantic import ValidationError
 
@@ -8,6 +10,8 @@ from caxgauge.verify.types import (
     BrowserResult,
     CheckResult,
     PreflightResult,
+    RenderedView,
+    RenderResult,
     Status,
 )
 
@@ -79,3 +83,67 @@ def test_browser_result_rejects_pass_with_captured_errors():
 def test_browser_skip_when_tooling_absent_is_not_a_fail():
     skipped = BrowserResult(status=Status.SKIP, detail="polyfetch/Chromium absent")
     assert not skipped.hard_fail
+
+
+def test_render_result_pass_with_one_view_per_requested():
+    result = RenderResult(
+        status=Status.PASS,
+        detail="2 view(s) captured",
+        requested_views=("front", "iso"),
+        views=(
+            RenderedView(name="front", path=Path("front.png")),
+            RenderedView(name="iso", path=Path("iso.png")),
+        ),
+    )
+    assert not result.hard_fail
+    assert [v.name for v in result.views] == ["front", "iso"]
+
+
+def test_render_result_pass_rejects_partial_views():
+    with pytest.raises(ValidationError):
+        RenderResult(
+            status=Status.PASS,
+            detail="only one captured",
+            requested_views=("front", "iso"),
+            views=(RenderedView(name="front", path=Path("front.png")),),
+        )
+
+
+def test_render_result_pass_rejects_wrong_or_reordered_names():
+    with pytest.raises(ValidationError):
+        RenderResult(
+            status=Status.PASS,
+            detail="mismatched",
+            requested_views=("front", "iso"),
+            views=(
+                RenderedView(name="iso", path=Path("iso.png")),
+                RenderedView(name="front", path=Path("front.png")),
+            ),
+        )
+
+
+def test_render_result_fail_is_hard_fail_and_may_carry_partial_views():
+    result = RenderResult(
+        status=Status.FAIL,
+        detail="render failed: top: exit 1: boom",
+        requested_views=("front", "top"),
+        views=(RenderedView(name="front", path=Path("front.png")),),
+    )
+    assert result.hard_fail
+    assert "verified" not in result.detail.lower()
+
+
+def test_render_result_skip_when_polyfetch_absent_is_not_a_fail():
+    skipped = RenderResult(
+        status=Status.SKIP,
+        detail="no render: polyfetch unavailable",
+        requested_views=("front", "iso", "top", "right"),
+    )
+    assert not skipped.hard_fail
+    assert skipped.views == ()
+
+
+def test_render_result_is_immutable():
+    result = RenderResult(status=Status.FAIL, detail="d", requested_views=("front",), views=())
+    with pytest.raises(ValidationError):
+        result.status = Status.PASS  # type: ignore[misc]

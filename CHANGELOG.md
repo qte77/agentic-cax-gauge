@@ -23,6 +23,10 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 - **M2 wave 2 prep (#16)**: `caxgauge.verify.substrate` — `serve_viewer(mesh)` serves the
   viewer and mesh from one local origin; env var `CAXGAUGE_POLYFETCH_DIR` names the
   env-borrowed polyfetch checkout (unset: browser legs `SKIP`).
+- **M2 wave 2 (#16)**: `caxgauge.verify.render.render_views` — one PNG per camera preset via
+  polyfetch's CLI, waiting for `body[data-state="rendered"]`, so an error page times out
+  rather than yielding a screenshot. `PASS` only when every requested view produced a real
+  PNG ("exit 0 but no output" is a fail); `SKIP` without polyfetch. New `RenderResult` type.
 
 ## [0.1.0] - 2026-10-09
 
