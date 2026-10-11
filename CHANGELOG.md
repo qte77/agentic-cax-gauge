@@ -31,6 +31,10 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
   (polyfetch's own interpreter, `render_session`) waits for `body[data-state]` and reads it
   structurally. `PASS` only on `rendered` with nothing captured; `error`, no verdict, any
   captured error, a probe crash or a timeout is `FAIL`; `SKIP` without polyfetch.
+- **M2 wave 3 (#16)**: `caxgauge.report` — `build_report` + `write_report` produce
+  `report.json` and `report.html` (render views beside every check). The verdict is only
+  `fail` or `review` — never a pass; the necessary-not-sufficient label, the unsupplied
+  bounds, and a loud "No render" notice when the render was skipped are always shown.
 
 ### Fixed
 
