@@ -64,6 +64,9 @@ part and a 5 m part both fill the frame — and for `iso` as well as the axis-al
   `requestAnimationFrame`, no time- or random-based state.
 - Fixed background colour (`#e8e8e8`), fixed lighting (ambient + two directional lights, fixed
   positions), fixed canvas size via `w`/`h`.
+- Feature edges drawn in near-black (`EdgesGeometry`, 30° threshold): faces sharing a normal
+  shade identically, so without lines a boss on a plate vanishes from `top`. The threshold
+  keeps real feature edges and drops the facet seams of tessellated curves.
 - `renderer.setPixelRatio(1)` — output pixels do not depend on the host's device pixel ratio.
 - `preserveDrawingBuffer: true` so a screenshot taken right after load reflects the rendered
   frame.
