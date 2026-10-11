@@ -35,6 +35,10 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
   `report.json` and `report.html` (render views beside every check). The verdict is only
   `fail` or `review` — never a pass; the necessary-not-sufficient label, the unsupplied
   bounds, and a loud "No render" notice when the render was skipped are always shown.
+- **M2 wave 4 (#16)**: `caxgauge check MESH [--envelope X,Y,Z] [--volume-band MIN,MAX]
+  [--out DIR] [--no-render]` replaces the stub. Exit `0` = `review`, `1` = `fail`, `2` =
+  usage error; prints the verdict, the necessary-not-sufficient label, every skipped check
+  and the report path. The headline silent-fusion fixture fails through the CLI.
 
 ### Fixed
 
