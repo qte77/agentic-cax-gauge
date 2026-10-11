@@ -1,7 +1,8 @@
 # Docs map
 
-M2 is in progress (preflight and the render page exist; see the plan's Handoff for what is
-next). There are four docs here — two are reference material you do not need to build.
+M2 code is complete (`caxgauge check`: preflight, browser load, render, report); M2 closes
+when the owner reviews a real part's report — see the plan's opening status. There are four
+docs here — two are reference material you do not need to build.
 Development workflow lives in [`../CONTRIBUTING.md`](../CONTRIBUTING.md), agent rules in
 [`../AGENTS.md`](../AGENTS.md).
 
