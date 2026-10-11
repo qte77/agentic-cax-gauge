@@ -9,7 +9,9 @@ set to a real polyfetch-scrape checkout with Chromium installed).
 Strict TDD: written before `src/caxgauge/verify/render.py` exists.
 """
 
+import struct
 import subprocess
+import zlib
 from pathlib import Path
 
 import pytest
@@ -195,6 +197,75 @@ def test_real_render_of_good_part_produces_four_pngs(tmp_path: Path):
     for view in result.views:
         assert view.path.is_file()
         assert view.path.stat().st_size > 0
+
+
+def _decode_png(path: Path) -> tuple[int, int, int, bytes]:
+    """Minimal stdlib PNG decoder (8-bit RGB/RGBA, non-interlaced) → (w, h, channels, raw)."""
+    data = path.read_bytes()
+    pos, idat, width, height, channels = 8, b"", 0, 0, 0
+    while pos < len(data):
+        (length,) = struct.unpack(">I", data[pos : pos + 4])
+        kind, body = data[pos + 4 : pos + 8], data[pos + 8 : pos + 8 + length]
+        if kind == b"IHDR":
+            width, height, depth, color = struct.unpack(">IIBB", body[:10])
+            assert (depth, body[12]) == (8, 0), "only 8-bit non-interlaced PNGs"
+            channels = {2: 3, 6: 4}[color]
+        elif kind == b"IDAT":
+            idat += body
+        pos += 12 + length
+    raw, stride, out = zlib.decompress(idat), width * channels, bytearray()
+    prev = bytearray(stride)
+    for row in range(height):
+        start = row * (stride + 1)
+        line = bytearray(raw[start + 1 : start + 1 + stride])
+        _unfilter(raw[start], line, prev, channels)
+        out += line
+        prev = line
+    return width, height, channels, bytes(out)
+
+
+def _paeth(a: int, b: int, c: int) -> int:
+    p = a + b - c
+    pa, pb, pc = abs(p - a), abs(p - b), abs(p - c)
+    return a if pa <= pb and pa <= pc else (b if pb <= pc else c)
+
+
+def _unfilter(kind: int, line: bytearray, prev: bytearray, channels: int) -> None:
+    """Undo one PNG row filter in place (types 0-4: none/sub/up/average/paeth)."""
+    for i in range(len(line)):
+        a = line[i - channels] if i >= channels else 0
+        c = prev[i - channels] if i >= channels else 0
+        predictor = (0, a, prev[i], (a + prev[i]) // 2, _paeth(a, prev[i], c))[kind]
+        line[i] = (line[i] + predictor) & 0xFF
+
+
+def _part_aspect(path: Path) -> float:
+    """Width/height of the bounding box of the part's (blue) pixels in a render."""
+    width, height, channels, px = _decode_png(path)
+    xs: list[int] = []
+    ys: list[int] = []
+    for y in range(height):
+        for x in range(width):
+            i = (y * width + x) * channels
+            r, g, b = px[i], px[i + 1], px[i + 2]
+            if b > r + 40 and b > g:  # the part's blue; background is grey, label is dark
+                xs.append(x)
+                ys.append(y)
+    assert xs, f"no part pixels in {path}"
+    return (max(xs) - min(xs) + 1) / (max(ys) - min(ys) + 1)
+
+
+@pytest.mark.browser
+def test_real_render_views_follow_cad_z_up(tmp_path: Path):
+    # good.stl is a 20 (X) x 15 (Y) x 10 (Z) box. CAD exports are Z-up, so `top` looks
+    # down -Z (20:15), `front` looks along +Y (20:10), `right` looks along -X (15:10).
+    result = render_views(FIXTURE, tmp_path / "out", views=("top", "front", "right"))
+
+    assert result.status is Status.PASS, result.detail
+    aspects = {v.name: _part_aspect(v.path) for v in result.views}
+    assert aspects["top"] == pytest.approx(20 / 15, rel=0.05)
+    assert aspects["front"] == pytest.approx(20 / 10, rel=0.05)
+    assert aspects["right"] == pytest.approx(15 / 10, rel=0.05)
 
 
 @pytest.mark.browser
