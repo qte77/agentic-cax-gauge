@@ -30,22 +30,25 @@ Then open `http://127.0.0.1:<port>/viewer/index.html?mesh=...`. Both `localhost`
 
 ## Camera presets
 
-Three.js's Y-up world convention. Each preset is a fixed view direction + screen-up axis; the
+CAD convention, **Z-up** (build123d and most STL exports), not three.js's own Y-up. Each
+preset is a fixed camera position + screen-up axis; the
 camera is always an **orthographic** camera, framed from the loaded mesh's bounding box so the
 part fills the canvas regardless of its size (see "Framing" below) — there is no
 pan/zoom/orbit, no user interaction, and no persisted camera state.
 
 | Preset | Looks along | Camera sits on | Screen-up |
 |---|---|---|---|
-| `front` | `-Z` | `+Z` axis | `+Y` |
-| `right` | `-X` | `+X` axis | `+Y` |
-| `top` | `-Y` (straight down) | `+Y` axis | `-Z` |
-| `iso` | from `(1,1,1)` normalized, toward the origin | — | `+Y` |
+| `front` | `+Y` | `-Y` axis | `+Z` |
+| `right` | `-X` | `+X` axis | `+Z` |
+| `top` | `-Z` (straight down) | `+Z` axis | `+Y` |
+| `iso` | from `(1,-1,1)` normalized (front-right-top), toward the origin | — | `+Z` |
 
 `front`/`right`/`top` are the classic axis-aligned engineering views; `iso` is a standard
-isometric. These are rendering conventions for this viewer, not an assertion about CAD-frame
-vs. machine-frame `+Y` (that distinction, and its trap, is a consumer-repo concern — plan
-Handoff → Traps).
+isometric. Until 2026-10-11 the presets used three.js's Y-up, which swapped `top` and
+`front` for a Z-up part; `tests/verify/test_render.py::test_real_render_views_follow_cad_z_up`
+now pins the orientation by measuring each view's aspect ratio on a 20×15×10 box (it cannot
+detect a mirrored view). Machine-frame vs. CAD-frame `+Y` remains a consumer-repo concern
+(plan Handoff → Traps).
 
 ## Framing
 

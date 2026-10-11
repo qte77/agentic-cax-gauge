@@ -86,14 +86,15 @@ const DEFAULT_HEIGHT = 600;
 // Headroom so the part does not touch the frame edge.
 const MARGIN_FACTOR = 1.08;
 
-// Three.js is Y-up. front/right/top are the classic axis-aligned engineering
-// views; iso looks from the (1,1,1) octant. "up" is the camera's screen-up
-// axis, required even for axis-aligned views so lookAt() is well-defined.
+// CAD convention, Z-up (build123d and most STL exports), not three.js's own
+// Y-up: `dir` is where the camera sits relative to the part. front = from -Y,
+// right = from +X, top = from +Z, iso = the front-right-top octant. "up" is
+// the camera's screen-up axis, required so lookAt() is well-defined.
 const VIEW_PRESETS = {
-  front: { dir: new THREE.Vector3(0, 0, 1), up: new THREE.Vector3(0, 1, 0) },
-  right: { dir: new THREE.Vector3(1, 0, 0), up: new THREE.Vector3(0, 1, 0) },
-  top: { dir: new THREE.Vector3(0, 1, 0), up: new THREE.Vector3(0, 0, -1) },
-  iso: { dir: new THREE.Vector3(1, 1, 1).normalize(), up: new THREE.Vector3(0, 1, 0) },
+  front: { dir: new THREE.Vector3(0, -1, 0), up: new THREE.Vector3(0, 0, 1) },
+  right: { dir: new THREE.Vector3(1, 0, 0), up: new THREE.Vector3(0, 0, 1) },
+  top: { dir: new THREE.Vector3(0, 0, 1), up: new THREE.Vector3(0, 1, 0) },
+  iso: { dir: new THREE.Vector3(1, -1, 1).normalize(), up: new THREE.Vector3(0, 0, 1) },
 };
 
 /** Set the DOM failure marker and throw. Never returns. */
@@ -241,13 +242,14 @@ function buildScene(geometry) {
   });
   scene.add(new THREE.Mesh(geometry, material));
 
-  // Fixed, non-animated lighting — deterministic across runs.
+  // Fixed, non-animated lighting — deterministic across runs. Z-up: the key
+  // light sits front-right-above, so top, front and right faces shade apart.
   scene.add(new THREE.AmbientLight(0xffffff, 0.6));
   const keyLight = new THREE.DirectionalLight(0xffffff, 1.0);
-  keyLight.position.set(1, 1.5, 1);
+  keyLight.position.set(1, -1, 1.5);
   scene.add(keyLight);
   const fillLight = new THREE.DirectionalLight(0xffffff, 0.4);
-  fillLight.position.set(-1, 0.5, -1);
+  fillLight.position.set(-1, 1, 0.5);
   scene.add(fillLight);
 
   return scene;

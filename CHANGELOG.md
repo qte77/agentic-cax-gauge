@@ -32,6 +32,12 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
   structurally. `PASS` only on `rendered` with nothing captured; `error`, no verdict, any
   captured error, a probe crash or a timeout is `FAIL`; `SKIP` without polyfetch.
 
+### Fixed
+
+- **Viewer orientation**: camera presets now follow the CAD Z-up convention. They used
+  three.js's Y-up, so for a Z-up export `top` showed a side face and `front` showed the top.
+  A real-render test pins each view's aspect ratio.
+
 ## [0.1.0] - 2026-10-09
 
 ### Added
