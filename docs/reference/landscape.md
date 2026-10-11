@@ -255,6 +255,17 @@ author's own estimate; the physical molding test was still pending). Commenters 
 Leo AI ([getleo.ai][leoai], a mechanical-engineering copilot for SOLIDWORKS/Inventor/NX —
 generation-side) and PicoGK (already covered above).
 
+**Added 2026-10-11 — the same author's earlier run ([Steenken, 2026-09-29][steenkenrun1]),
+re-checked at source.** A Raspberry Pi 4 housing, again Claude Opus 5.5 over MCP, and this
+post **does name the tool**: a live Fusion session. One human correction (the model moved
+hundreds of bodies one by one instead of the component). The finding that matters here: the
+snap-fits looked fine, yet would likely break on first assembly if printed, and there were no
+draft angles for injection molding — both missed by the author's own visual read, and traced
+to a missing constraint rather than a geometry bug: "I never communicated which manufacturing
+process it was designing for." Same lesson as above from the other direction: a render can
+look finished while the part is wrong for its process, so the human decides, and
+process-dependent checks stay future, declared-bound work.
+
 A second source the user supplied, a LinkedIn Pulse article on an Opus 5.5 + Blender
 timelapse workflow, **could not be read**: LinkedIn returned its own "page not found" both
 to a plain fetch and to a real headless browser (polyfetch, patchright tier), and no copy was
@@ -774,6 +785,7 @@ and stated in the PR.
 [apsbiz]: https://aps.autodesk.com/blog/aps-business-model-evolution
 [codeaccord]: https://arxiv.org/abs/2403.02231
 [steenkencase]: https://engineer-your-idea.com/en/blog/agentic-cad-room-booking-sign/
+[steenkenrun1]: https://engineer-your-idea.com/en/blog/agentic-cad-pi4-housing/
 [steenkenpost]: https://www.linkedin.com/posts/anton-steenken_ai-cad-demos-are-full-of-sht-sound-familiar-ugcPost-7513887143623319553-qmVG/
 [leoai]: https://www.getleo.ai/
 [trace]: https://buildwithtrace.com/
