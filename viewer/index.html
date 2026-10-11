@@ -85,6 +85,8 @@ const DEFAULT_WIDTH = 800;
 const DEFAULT_HEIGHT = 600;
 // Headroom so the part does not touch the frame edge.
 const MARGIN_FACTOR = 1.08;
+const EDGE_COLOR = 0x111111;
+const EDGE_THRESHOLD_DEG = 30;
 
 // CAD convention, Z-up (build123d and most STL exports), not three.js's own
 // Y-up: `dir` is where the camera sits relative to the part. front = from -Y,
@@ -241,6 +243,12 @@ function buildScene(geometry) {
     roughness: 0.65,
   });
   scene.add(new THREE.Mesh(geometry, material));
+
+  // Feature edges: faces sharing a normal (a boss top and the plate top, both +Z) shade
+  // identically, so without lines a feature can vanish from an axis view. 30° keeps real
+  // feature edges and drops the facet seams of tessellated curved surfaces.
+  const edges = new THREE.EdgesGeometry(geometry, EDGE_THRESHOLD_DEG);
+  scene.add(new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: EDGE_COLOR })));
 
   // Fixed, non-animated lighting — deterministic across runs. Z-up: the key
   // light sits front-right-above, so top, front and right faces shade apart.

@@ -269,6 +269,25 @@ def test_real_render_views_follow_cad_z_up(tmp_path: Path):
 
 
 @pytest.mark.browser
+def test_real_top_view_shows_features_that_share_a_face_normal(tmp_path: Path):
+    # The boss's top face and the plate's top face both point +Z, so flat shading alone
+    # renders them as one colour and the boss vanishes from `top`. Feature edges must show it.
+    boss = FIXTURE.parent / "feature_absorbed_intended.stl"  # 40x40x5 plate + d10 boss
+    result = render_views(boss, tmp_path / "out", views=("top",))
+    assert result.status is Status.PASS, result.detail
+
+    width, height, channels, px = _decode_png(result.views[0].path)
+    # Central quarter of the frame: inside the plate, away from its outer border and the label.
+    dark = 0
+    for y in range(height * 3 // 8, height * 5 // 8):
+        for x in range(width * 3 // 8, width * 5 // 8):
+            i = (y * width + x) * channels
+            if max(px[i], px[i + 1], px[i + 2]) < 60:
+                dark += 1
+    assert dark > 50, f"no feature edges inside the plate ({dark} dark px)"
+
+
+@pytest.mark.browser
 def test_real_render_of_garbage_stl_fails_with_no_screenshot(tmp_path: Path):
     garbage = tmp_path / "garbage.stl"
     garbage.write_bytes(b"not an stl at all")

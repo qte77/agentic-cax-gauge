@@ -45,6 +45,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 - **Viewer orientation**: camera presets now follow the CAD Z-up convention. They used
   three.js's Y-up, so for a Z-up export `top` showed a side face and `front` showed the top.
   A real-render test pins each view's aspect ratio.
+- **Viewer feature edges (M2.1)**: features whose faces share a normal with their
+  surroundings (a boss on a plate, seen from `top`) were invisible under flat shading. Edges
+  are now drawn (30° threshold); a real-render test checks the boss outline appears.
 
 ## [0.1.0] - 2026-10-09
 
