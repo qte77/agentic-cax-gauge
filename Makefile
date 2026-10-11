@@ -8,7 +8,7 @@ endif
 .ONESHELL:
 .PHONY: \
 	setup_uv setup setup_cad \
-	autofix lint type test test_cov check_complexity validate check_docs check_links \
+	autofix lint type test test_cov test_browser check_complexity validate check_docs check_links \
 	help
 .DEFAULT_GOAL := help
 
@@ -62,6 +62,14 @@ test: ## Run tests (cad/browser-marked tests excluded by default)
 
 test_cov: ## Run tests with coverage report
 	uv run pytest --cov=caxgauge --cov-report=term-missing $(PYTEST_QUIET)
+
+# Real Chromium via the env-borrowed polyfetch checkout; SKIP, never PASS, when it is not set.
+test_browser: ## Run browser-marked tests (real render); needs CAXGAUGE_POLYFETCH_DIR, else SKIP
+	if [ -n "$$CAXGAUGE_POLYFETCH_DIR" ] && [ -d "$$CAXGAUGE_POLYFETCH_DIR" ]; then
+		uv run pytest -m browser $(PYTEST_QUIET)
+	else
+		echo "test_browser: SKIP — set CAXGAUGE_POLYFETCH_DIR to a polyfetch-scrape checkout (Chromium: make -C <it> doctor)"
+	fi
 
 check_complexity: ## Check cognitive complexity (max 15/function)
 	uv run complexipy src/caxgauge/ --max-complexity-allowed 15

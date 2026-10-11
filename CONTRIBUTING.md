@@ -12,6 +12,7 @@ For AI agent behavioral rules, see [AGENTS.md](AGENTS.md).
 | `make validate` | **The gate** — ruff format check + ruff lint (incl. security) + pyright strict + pytest + complexipy. CI runs exactly this |
 | `make autofix` | Auto-format and fix lint issues |
 | `make test` / `make test_cov` | Tests (cad/browser-marked tests excluded by default) / with coverage |
+| `make test_browser` | Browser-marked tests against real Chromium (render, load check, view orientation, edges). Needs `CAXGAUGE_POLYFETCH_DIR` set to a polyfetch-scrape checkout whose Chromium is installed (`make -C <it> doctor`); prints `SKIP` otherwise. Not in CI — run before changing `viewer/`, `render.py` or `browser.py` |
 | `make check_docs` | Markdown lint — prints `SKIP` if `markdownlint-cli2` is not installed |
 | `make check_links` | Link check (needs network) — prints `SKIP` if `lychee` is not installed |
 | `make help` | List all recipes |

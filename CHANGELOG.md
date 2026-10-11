@@ -39,6 +39,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
   [--out DIR] [--no-render]` replaces the stub. Exit `0` = `review`, `1` = `fail`, `2` =
   usage error; prints the verdict, the necessary-not-sufficient label, every skipped check
   and the report path. The headline silent-fusion fixture fails through the CLI.
+- `make test_browser`: runs the browser-marked tests against real Chromium when
+  `CAXGAUGE_POLYFETCH_DIR` is set; prints `SKIP` otherwise (not part of CI).
 
 ### Fixed
 
