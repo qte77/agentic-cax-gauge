@@ -6,13 +6,12 @@
 > broken," never "correct."**
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/status-M2%20in%20progress-blue.svg)](docs/plans/001-v0.md)
+[![Status](https://img.shields.io/badge/status-M2%20code%20complete-blue.svg)](docs/plans/001-v0.md)
 ![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)
 
-**Status:** M2 in progress. The deterministic preflight (`caxgauge.verify.preflight`) and
-the static render page (`viewer/`) exist; browser load check, multi-view capture, report
-and CLI do not yet. The `caxgauge` command is still a stub that exits non-zero and says
-nothing was checked. Start here: [`docs/README.md`](docs/README.md), the map of what to
+**Status:** M2 code complete — `caxgauge check` runs preflight, a browser load check and
+a four-view render, and writes a review report. M2 closes once a human has judged a real
+part's report with it. Start here: [`docs/README.md`](docs/README.md), the map of what to
 read and in what order.
 
 ## What
@@ -37,21 +36,27 @@ regenerations), CAD-backend dispatch, generation, slicer printability, and CAE.
 
 ## How
 
-The command below is the M2 target, not yet wired. v0 takes an **exported mesh**, not a build script — the consumer repos
-already export STL, so the gauge reaches a real user without owning generation or CAD
-backends:
+v0 takes an **exported mesh**, not a build script — the consumer repos already export STL,
+so the gauge reaches a real user without owning generation or CAD backends:
 
 ```text
-$ caxgauge check part.stl --envelope 80,80,40
-
-exported STL  ->  cheap preflight (integrity/watertight/bbox/volume)
-                        |  pass or fail — both are reported, neither is "verified"
-                        v
-              auto multi-view render  ->  human decides
+$ caxgauge check part.stl --envelope 80,80,40 --volume-band 8540,8720
+verdict: review
+Green is necessary, not sufficient: these checks cannot see local defects. Look at the render and decide.
+report: reports/part/report.html
 ```
 
-Bounds are optional and an unsupplied bound reports `SKIP`, never `PASS` — a bbox check with
-no envelope has not checked anything, and the report says so.
+| Switch | Meaning |
+|---|---|
+| `MESH` | Exported STL (Z-up, mm) |
+| `--envelope X,Y,Z` | Max extents; without it the bbox check is `SKIP` |
+| `--volume-band MIN,MAX` | Two-sided volume band (mm³); without it the volume check is `SKIP` |
+| `--out DIR` | Report directory (default `reports/<stem>`): `report.html`, `report.json`, one PNG per view |
+| `--no-render` | Skip the browser load check and the render (the report says so loudly) |
+
+The verdict is `fail` (exit 1) if any check failed, otherwise `review` (exit 0) — a human
+looks at the render and decides. There is no "pass". Usage errors exit 2. An unsupplied
+bound reports `SKIP`, never `PASS`, and is listed in the output and the report.
 
 Python 3.12 + `uv`. Rendering and browser-side checks run through
 [`qte77/polyfetch-scrape`](https://github.com/qte77/polyfetch-scrape), borrowed from its own
@@ -59,7 +64,7 @@ checkout rather than installed:
 
 | Env var | Meaning |
 |---|---|
-| `CAXGAUGE_POLYFETCH_DIR` | Path to a polyfetch-scrape checkout. Unset or missing: the browser and render checks report `SKIP`, never `PASS` |
+| `CAXGAUGE_POLYFETCH_DIR` | Path to a polyfetch-scrape checkout (Chromium via its `make doctor`). Unset or missing: the browser and render checks report `SKIP`, never `PASS` |
 
 Later milestones add
 regression checks, then **build123d**/OpenSCAD backends; optional VLM annotation via
