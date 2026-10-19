@@ -266,6 +266,17 @@ process it was designing for." Same lesson as above from the other direction: a 
 look finished while the part is wrong for its process, so the human decides, and
 process-dependent checks stay future, declared-bound work.
 
+**Added 2026-10-19 — [SolidCraft][solidcraft], an open-source parametric CAD app with an MCP
+server; re-checked at source.** Pure Rust (desktop, web, headless CLI), licensed "MIT OR
+Apache-2.0, at your option"; `solidcraft-cli mcp` lets agents model, measure and look at
+parts, and it exports STEP and STL among other formats. It is **generation-side**: its
+[reference tests][solidcraftoracle] replay recipes through its own kernel and compare against
+hand-derived analytic values or an independent FreeCAD build ("83 / 83 cases pass" on the day
+read; the README still said "75 of 76", so its own figures drift fast). That validates *its
+kernel*, not whether an agent's design matches intent — and the README says so itself: "These
+checks do not establish complete geometric or workflow equivalence." Nothing to adopt; if a
+consumer ever models with it, `caxgauge check` takes its exported STL unchanged.
+
 A second source the user supplied, a LinkedIn Pulse article on an Opus 5.5 + Blender
 timelapse workflow, **could not be read**: LinkedIn returned its own "page not found" both
 to a plain fetch and to a real headless browser (polyfetch, patchright tier), and no copy was
@@ -786,6 +797,8 @@ and stated in the PR.
 [codeaccord]: https://arxiv.org/abs/2403.02231
 [steenkencase]: https://engineer-your-idea.com/en/blog/agentic-cad-room-booking-sign/
 [steenkenrun1]: https://engineer-your-idea.com/en/blog/agentic-cad-pi4-housing/
+[solidcraft]: https://github.com/tangency-labs/solidcraft
+[solidcraftoracle]: https://github.com/tangency-labs/solidcraft/blob/main/docs/oracle.md
 [steenkenpost]: https://www.linkedin.com/posts/anton-steenken_ai-cad-demos-are-full-of-sht-sound-familiar-ugcPost-7513887143623319553-qmVG/
 [leoai]: https://www.getleo.ai/
 [trace]: https://buildwithtrace.com/
