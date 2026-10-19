@@ -87,6 +87,28 @@ def test_default_views_are_the_four_camera_presets(monkeypatch: pytest.MonkeyPat
     assert [v.name for v in result.views] == ["front", "iso", "top", "right"]
 
 
+def test_relative_out_dir_reaches_polyfetch_as_an_absolute_path(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+):
+    # polyfetch runs via `uv run --directory <polyfetch>`, which makes its cwd the polyfetch
+    # checkout; a relative PNG path would then point inside that checkout (USING.md).
+    _with_polyfetch_dir(monkeypatch, tmp_path)
+    monkeypatch.chdir(tmp_path)
+    seen: list[Path] = []
+
+    def fake(cmd: list[str], timeout: float) -> subprocess.CompletedProcess[bytes]:
+        seen.append(_screenshot_out(cmd))
+        return _fake_success(cmd, timeout)
+
+    monkeypatch.setattr(render_module, "_run_polyfetch", fake)
+
+    result = render_views(FIXTURE, Path("reports/part"), views=("front",))
+
+    assert result.status is Status.PASS
+    assert seen == [tmp_path / "reports" / "part" / f"{FIXTURE.stem}-front.png"]
+    assert seen[0].is_absolute()
+
+
 def test_png_named_mesh_stem_dash_view(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
     _with_polyfetch_dir(monkeypatch, tmp_path)
     monkeypatch.setattr(render_module, "_run_polyfetch", _fake_success)

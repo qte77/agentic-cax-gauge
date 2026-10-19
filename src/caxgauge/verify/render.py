@@ -120,8 +120,12 @@ def _capture_view(
     size: tuple[int, int],
     timeout: float,
 ) -> RenderedView | str:
-    """Capture one view; returns the `RenderedView` on success, a failure reason on FAIL."""
-    cmd = _build_command(uv, pf_dir, page_url, png, size, timeout)
+    """Capture one view; returns the `RenderedView` on success, a failure reason on FAIL.
+
+    polyfetch runs with its own checkout as the working directory (`uv run --directory`), so it
+    must get an absolute PNG path — a relative one would land inside that checkout.
+    """
+    cmd = _build_command(uv, pf_dir, page_url, png.resolve(), size, timeout)
     try:
         result = _run_polyfetch(cmd, timeout + _SUBPROCESS_TIMEOUT_BUFFER_S)
     except subprocess.TimeoutExpired:

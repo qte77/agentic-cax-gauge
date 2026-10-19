@@ -6,6 +6,12 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ## [Unreleased]
 
+### Fixed
+
+- **Render with a relative `--out` failed every view.** polyfetch runs with its own checkout
+  as the working directory, so a relative PNG path (including the default `reports/<stem>`)
+  resolved inside that checkout. `render.py` now passes an absolute path; a unit test pins it.
+
 ## [0.2.0] - 2026-10-19
 
 ### Added
