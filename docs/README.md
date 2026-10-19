@@ -23,7 +23,7 @@ To **understand the project** — about 6 minutes, and you are done:
    everything else is downstream of it. If you read one section, read that one.
 
 To **build**, continue: the plan's opening **Handoff** section for current state and
-execution model, then Part II for the milestone you are on. `viewer/README.md` is the
+execution model, then Part II for the milestone you are on. [`src/caxgauge/viewer/README.md`](../src/caxgauge/viewer/README.md) is the
 render page's URL contract.
 
 ## Conventions

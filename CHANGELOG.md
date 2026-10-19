@@ -50,6 +50,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 - **Viewer feature edges (M2.1)**: features whose faces share a normal with their
   surroundings (a boss on a plate, seen from `top`) were invisible under flat shading. Edges
   are now drawn (30° threshold); a real-render test checks the boss outline appears.
+- **Viewer shipped in the package**: moved from repo-root `viewer/` to
+  `src/caxgauge/viewer/`. It used to be found relative to the source checkout, so a consumer
+  installing caxgauge got no viewer and rendering would have failed.
 
 ## [0.1.0] - 2026-10-09
 

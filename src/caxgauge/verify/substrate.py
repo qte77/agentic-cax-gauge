@@ -21,9 +21,8 @@ from pathlib import Path
 
 POLYFETCH_ENV = "CAXGAUGE_POLYFETCH_DIR"
 
-# Repo-root `viewer/` (src/caxgauge/verify/substrate.py -> parents[3]). Works from a source
-# checkout or editable install; packaging the viewer as package data is not done yet.
-VIEWER_DIR = Path(__file__).resolve().parents[3] / "viewer"
+# `caxgauge/viewer/` ships inside the package, so an installed consumer gets it too.
+VIEWER_DIR = Path(__file__).resolve().parents[1] / "viewer"
 
 
 @dataclass(frozen=True)
