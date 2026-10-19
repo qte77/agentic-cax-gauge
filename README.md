@@ -11,7 +11,8 @@
 
 **Status:** M2 code complete — `caxgauge check` runs preflight, a browser load check and
 a four-view render, and writes a review report. M2 closes once a human has judged a real
-part's report with it. Start here: [`docs/README.md`](docs/README.md), the map of what to
+part's report with it. **[Sample reports](https://qte77.github.io/agentic-cax-gauge/)** —
+two fixtures, the silent-fusion defect, and one real so101 part. Start here: [`docs/README.md`](docs/README.md), the map of what to
 read and in what order.
 
 ## What
