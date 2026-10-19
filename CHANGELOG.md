@@ -6,6 +6,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-19
+
 ### Added
 
 - **M2 wave 0 (#16)**: `caxgauge.verify.types` — the result contract preflight, browser
