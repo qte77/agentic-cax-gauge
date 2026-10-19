@@ -7,7 +7,7 @@
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-M2%20code%20complete-blue.svg)](docs/plans/001-v0.md)
-![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)
+![Version](https://img.shields.io/badge/version-0.2.0-blue.svg)
 
 **Status:** M2 code complete — `caxgauge check` runs preflight, a browser load check and
 a four-view render, and writes a review report. M2 closes once a human has judged a real
