@@ -1,6 +1,6 @@
 [project]
 name = "agentic-cax-gauge"
-version = "0.2.0"
+version = "0.2.1"
 description = "Verifiable CAx for LLM/VLM agents: cheap deterministic preflight + multi-view render, human decides"
 readme = "README.md"
 license = "Apache-2.0"
@@ -88,7 +88,7 @@ markers = [
 source = ["caxgauge"]
 
 [tool.bumpversion]
-current_version = "0.2.0"
+current_version = "0.2.1"
 parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)"
 serialize = ["{major}.{minor}.{patch}"]
 commit = true

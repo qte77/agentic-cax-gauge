@@ -6,6 +6,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-10-19
+
 ### Fixed
 
 - **Render with a relative `--out` failed every view.** polyfetch runs with its own checkout
