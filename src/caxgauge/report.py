@@ -96,6 +96,7 @@ body { font: 14px/1.5 system-ui, sans-serif; margin: 16px; color: #1d1d1f; backg
 .fail { background: #fde2e1; } .review { background: #fff4d6; }
 .label, .norender { padding: 8px 12px; border-left: 4px solid #b26b00; background: #fff; }
 .norender { border-color: #c0392b; font-weight: 600; }
+.checks { overflow-x: auto; }
 table { border-collapse: collapse; margin: 12px 0; }
 td, th { border: 1px solid #ddd; padding: 4px 8px; text-align: left; vertical-align: top; }
 .views { display: flex; flex-wrap: wrap; gap: 12px; }
@@ -123,11 +124,13 @@ def _as_html(report: Report, out_dir: Path) -> str:
     )
     return (
         '<!doctype html>\n<html lang="en"><head><meta charset="utf-8">'
+        '<meta name="viewport" content="width=device-width, initial-scale=1">'
         f"<title>caxgauge: {esc(report.mesh.name)}</title><style>{_STYLE}</style></head><body>"
         f"<h1>{esc(report.mesh.name)}</h1>"
         f'<p class="verdict {report.verdict}">Verdict: {report.verdict}</p>'
         f'<p class="label">{esc(NECESSARY_NOT_SUFFICIENT)}</p>{norender}'
         f'<div class="views">{views}</div>'
-        f"<table><tr><th>Check</th><th>Status</th><th>Detail</th></tr>{rows}</table>"
+        f'<div class="checks"><table><tr><th>Check</th><th>Status</th><th>Detail</th></tr>'
+        f"{rows}</table></div>"
         "</body></html>\n"
     )

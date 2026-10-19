@@ -92,6 +92,13 @@ def test_html_shows_each_view_by_relative_path(tmp_path: Path):
     assert 'src="part-iso.png"' in html
 
 
+def test_html_is_readable_on_a_phone(tmp_path: Path):
+    # Without a viewport meta tag, mobile browsers lay the page out at desktop width and shrink it.
+    report = build_report(MESH, _ALL_PASS, _BROWSER_OK, _render(tmp_path))
+    html = write_report(report, tmp_path)[1].read_text()
+    assert '<meta name="viewport" content="width=device-width, initial-scale=1">' in html
+
+
 def test_html_escapes_check_details(tmp_path: Path):
     preflight = _preflight(("watertight", Status.FAIL, "<script>alert(1)</script>"))
     report = build_report(MESH, preflight, _BROWSER_OK, _render(tmp_path))
