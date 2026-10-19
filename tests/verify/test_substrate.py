@@ -6,7 +6,8 @@ from pathlib import Path
 
 import pytest
 
-from caxgauge.verify.substrate import POLYFETCH_ENV, polyfetch_dir, serve_viewer
+import caxgauge
+from caxgauge.verify.substrate import POLYFETCH_ENV, VIEWER_DIR, polyfetch_dir, serve_viewer
 
 FIXTURE = Path(__file__).parent.parent / "fixtures" / "good.stl"
 
@@ -20,6 +21,13 @@ def _get(url: str) -> bytes:
         return conn.getresponse().read()
     finally:
         conn.close()
+
+
+def test_viewer_ships_inside_the_package():
+    # A consumer installing caxgauge gets only the package directory; the viewer must be in it.
+    package_dir = Path(caxgauge.__file__).resolve().parent
+    assert VIEWER_DIR.is_relative_to(package_dir)
+    assert (VIEWER_DIR / "index.html").is_file()
 
 
 def test_serves_viewer_and_mesh_same_origin():

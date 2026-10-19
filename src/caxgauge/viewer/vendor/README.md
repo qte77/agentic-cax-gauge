@@ -1,7 +1,7 @@
 # Vendored three.js
 
 Pinned, offline, deterministic — no CDN fetch at render time (plan
-[`docs/plans/001-v0.md`](../../docs/plans/001-v0.md) §9.2). Downloaded into a fresh empty
+[`docs/plans/001-v0.md`](../../../../docs/plans/001-v0.md) §9.2). Downloaded into a fresh empty
 directory, sha256'd, then copied in; the hashes below were recomputed independently after the
 copy and matched.
 

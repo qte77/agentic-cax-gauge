@@ -5,12 +5,14 @@ server-side code — `index.html` plus vendored assets under `vendor/` (see
 [`vendor/README.md`](vendor/README.md) for the pin + licence). This is the interface
 `src/caxgauge/verify/browser.py` and `src/caxgauge/verify/render.py` (M2 wave 2) drive through
 polyfetch/Patchright. It does not itself decide anything — it renders, and (per
-[`.claude/rules/verification-honesty.md`](../.claude/rules/verification-honesty.md)) never
-emits a "verified" verdict of any kind.
+[`.claude/rules/verification-honesty.md`](../../../.claude/rules/verification-honesty.md))
+never emits a "verified" verdict of any kind. It ships inside the `caxgauge` package
+(`src/caxgauge/viewer/`), so an installed consumer gets it; `serve_viewer` in
+`verify/substrate.py` serves it at `/viewer/`.
 
 ## Serving
 
-Any static file server works; from the repo root:
+Any static file server works; from `src/caxgauge/`:
 
 ```bash
 python3 -m http.server <port> --bind 127.0.0.1
