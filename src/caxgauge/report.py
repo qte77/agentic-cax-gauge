@@ -92,6 +92,7 @@ def _as_json(report: Report, out_dir: Path) -> dict[str, object]:
 
 _STYLE = """
 body { font: 14px/1.5 system-ui, sans-serif; margin: 16px; color: #1d1d1f; background: #fafafa; }
+h1 { overflow-wrap: anywhere; }
 .verdict { font-size: 20px; font-weight: 600; padding: 8px 12px; border-radius: 4px; }
 .fail { background: #fde2e1; } .review { background: #fff4d6; }
 .label, .norender { padding: 8px 12px; border-left: 4px solid #b26b00; background: #fff; }

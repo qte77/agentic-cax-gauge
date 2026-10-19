@@ -17,7 +17,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 - **`report.html` was unreadable on a phone**: no viewport meta tag, so mobile browsers laid
   it out at desktop width and shrank it. Added the tag; the checks table scrolls sideways
-  instead of overflowing.
+  instead of overflowing. A long file-name heading now wraps instead of running off the
+  screen.
 
 ## [0.2.1] - 2026-10-19
 
