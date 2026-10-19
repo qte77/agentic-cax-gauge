@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>caxgauge sample reports</title>
+<style>
+  body { font: 15px/1.55 system-ui, sans-serif; margin: 0 auto; padding: 16px; max-width: 760px;
+         color: #1d1d1f; background: #fafafa; }
+  h1 { font-size: 22px; margin: 8px 0 4px; }
+  .label { padding: 8px 12px; border-left: 4px solid #b26b00; background: #fff; }
+  ul { padding: 0; list-style: none; }
+  li { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 12px; margin: 10px 0; }
+  li a { font-weight: 600; }
+  .verdict { font-size: 13px; padding: 1px 8px; border-radius: 3px; margin-left: 6px; }
+  .fail { background: #fde2e1; } .review { background: #fff4d6; }
+  p.small { font-size: 13px; color: #555; }
+</style>
+</head>
+<body>
+<h1>caxgauge sample reports</h1>
+<p>Each report is the output of <code>caxgauge check</code> on one exported STL: deterministic
+checks beside a four-view render. The verdict is only <em>fail</em> or <em>review</em> &mdash;
+never "pass".</p>
+<p class="label">Green is necessary, not sufficient: these checks cannot see local defects.
+Look at the render and decide.</p>
+<ul>
+  <li><a href="good-box/report.html">Good box</a><span class="verdict review">review</span><br>
+    A 20&times;15&times;10&nbsp;mm box with an envelope and a volume band supplied.</li>
+  <li><a href="boss-intended/report.html">Plate with boss &mdash; intended</a><span class="verdict review">review</span><br>
+    A 40&times;40&times;5&nbsp;mm plate with a &#8960;10&times;8&nbsp;mm boss on top.</li>
+  <li><a href="boss-buggy/report.html">Plate with boss &mdash; feature absorbed</a><span class="verdict fail">fail</span><br>
+    The same part with the boss sunk 3&nbsp;mm into the plate. Still watertight, so a
+    watertight check passes; the volume is 2.7&nbsp;% low, so the volume band catches it.</li>
+  <li><a href="so101-pipette-mount/report.html">so101 pipette mount (real part)</a><span class="verdict review">review</span><br>
+    A real exported part from <a href="https://github.com/qte77/so101-biolab-automation">so101-biolab-automation</a>.
+    It has no declared envelope or volume band, so those checks report <code>SKIP</code> &mdash;
+    nothing was checked there, and the report says so.</li>
+</ul>
+<p class="small">Generated with <code>make site</code> from
+<a href="https://github.com/qte77/agentic-cax-gauge">agentic-cax-gauge</a> v0.2.1.</p>
+</body>
+</html>
