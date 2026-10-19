@@ -9,6 +9,7 @@ endif
 .PHONY: \
 	setup_uv setup setup_cad \
 	autofix lint type test test_cov test_browser check_complexity validate audit check_docs check_links \
+	site \
 	help
 .DEFAULT_GOAL := help
 
@@ -98,6 +99,32 @@ check_links: ## Check links (reads lychee.toml, needs network); SKIP if lychee i
 	else
 		echo "check_links: SKIP — lychee not installed (https://github.com/lycheeverse/lychee/releases)"
 	fi
+
+
+# MARK: SITE
+
+
+SO101 ?= ../so101-biolab-automation
+
+# Sample reports for GitHub Pages (pages.yml deploys site/). Needs real renders, so it refuses
+# to run without polyfetch + Chromium, and each part must get its expected verdict (exit 0 =
+# review, 1 = fail) — a broken environment would otherwise publish all-`fail` pages.
+site: ## Regenerate site/ sample reports (needs CAXGAUGE_POLYFETCH_DIR + the so101 checkout)
+	set -e
+	if [ -z "$$CAXGAUGE_POLYFETCH_DIR" ] || [ ! -d "$$CAXGAUGE_POLYFETCH_DIR" ]; then
+		echo "site: needs CAXGAUGE_POLYFETCH_DIR (a polyfetch-scrape checkout)"; exit 2
+	fi
+	uv run --directory "$$CAXGAUGE_POLYFETCH_DIR" polyfetch doctor
+	expect() {
+		want="$$1"; shift
+		rc=0; uv run caxgauge check "$$@" || rc=$$?
+		if [ "$$rc" -ne "$$want" ]; then echo "site: expected exit $$want, got $$rc: $$*"; exit 1; fi
+	}
+	expect 0 tests/fixtures/good.stl --envelope 21,16,11 --volume-band 2990,3010 --out site/good-box
+	expect 0 tests/fixtures/feature_absorbed_intended.stl --envelope 41,41,14 --volume-band 8540,8720 --out site/boss-intended
+	expect 1 tests/fixtures/feature_absorbed_buggy.stl --envelope 41,41,14 --volume-band 8540,8720 --out site/boss-buggy
+	expect 0 $(SO101)/hardware/stl/so101/pipette_mount_so101.stl --out site/so101-pipette-mount
+	echo "site: regenerated site/ (index.html is hand-written; commit both)"
 
 
 # MARK: HELP

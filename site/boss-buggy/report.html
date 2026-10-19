@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>caxgauge: feature_absorbed_buggy.stl</title><style>
+body { font: 14px/1.5 system-ui, sans-serif; margin: 16px; color: #1d1d1f; background: #fafafa; }
+.verdict { font-size: 20px; font-weight: 600; padding: 8px 12px; border-radius: 4px; }
+.fail { background: #fde2e1; } .review { background: #fff4d6; }
+.label, .norender { padding: 8px 12px; border-left: 4px solid #b26b00; background: #fff; }
+.norender { border-color: #c0392b; font-weight: 600; }
+.checks { overflow-x: auto; }
+table { border-collapse: collapse; margin: 12px 0; }
+td, th { border: 1px solid #ddd; padding: 4px 8px; text-align: left; vertical-align: top; }
+.views { display: flex; flex-wrap: wrap; gap: 12px; }
+.views figure { margin: 0; } .views img { max-width: 400px; width: 100%; border: 1px solid #ccc; }
+</style></head><body><h1>feature_absorbed_buggy.stl</h1><p class="verdict fail">Verdict: fail</p><p class="label">Green is necessary, not sufficient: these checks cannot see local defects. Look at the render and decide.</p><div class="views"><figure><img src="feature_absorbed_buggy-front.png" alt="front view"><figcaption>front</figcaption></figure><figure><img src="feature_absorbed_buggy-iso.png" alt="iso view"><figcaption>iso</figcaption></figure><figure><img src="feature_absorbed_buggy-top.png" alt="top view"><figcaption>top</figcaption></figure><figure><img src="feature_absorbed_buggy-right.png" alt="right view"><figcaption>right</figcaption></figure></div><div class="checks"><table><tr><th>Check</th><th>Status</th><th>Detail</th></tr><tr><td>file_integrity</td><td>PASS</td><td>binary STL: header present, 516 triangles, file length matches 84 + 50*n</td></tr><tr><td>watertight</td><td>PASS</td><td>watertight=True, winding_consistent=True, euler_number=2 (reported only, not asserted — plan §7.2)</td></tr><tr><td>bbox</td><td>PASS</td><td>extents=(40.0, 40.0, 10.0), envelope=(41.0, 41.0, 14.0)</td></tr><tr><td>volume</td><td>FAIL</td><td>volume=8392.536348471584, band=[8540.0, 8720.0]</td></tr><tr><td>browser_load</td><td>PASS</td><td>viewer reported body[data-state]=rendered</td></tr><tr><td>render</td><td>PASS</td><td>4 view(s) captured at 800x600</td></tr></table></div></body></html>

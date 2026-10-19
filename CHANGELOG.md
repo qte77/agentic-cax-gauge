@@ -6,6 +6,13 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ## [Unreleased]
 
+### Added
+
+- **Sample reports on GitHub Pages (M2.6)**: `make site` renders the good box, the intended
+  and feature-absorbed boss, and one real so101 part (no declared bounds, so bbox/volume
+  `SKIP`) into a committed `site/`; `pages.yml` deploys it. The target checks Chromium first
+  and refuses to write if a part gets an unexpected verdict.
+
 ### Fixed
 
 - **`report.html` was unreadable on a phone**: no viewport meta tag, so mobile browsers laid
