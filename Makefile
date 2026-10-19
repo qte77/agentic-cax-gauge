@@ -8,7 +8,7 @@ endif
 .ONESHELL:
 .PHONY: \
 	setup_uv setup setup_cad \
-	autofix lint type test test_cov test_browser check_complexity validate check_docs check_links \
+	autofix lint type test test_cov test_browser check_complexity validate audit check_docs check_links \
 	help
 .DEFAULT_GOAL := help
 
@@ -76,6 +76,13 @@ check_complexity: ## Check cognitive complexity (max 15/function)
 
 validate: lint type test check_complexity ## Full Python gate — the exact CI gate (validate.yaml)
 	echo "validate: PASS (lint + type + test + complexity)"
+
+# Network-bound, so not part of validate; Dependabot security updates cover CI.
+audit: ## Scan resolved dependencies for known vulnerabilities (pip-audit, needs network)
+	reqs="$$(mktemp)"
+	trap 'rm -f "$$reqs"' EXIT
+	uv export --no-hashes --no-emit-project --quiet -o "$$reqs"
+	uvx pip-audit -r "$$reqs"
 
 # Docs/link checks report SKIP, never PASS, when their tool is absent (verification-honesty).
 check_docs: ## Lint markdown (globs: .markdownlint-cli2.jsonc, rules: .markdownlint.json); SKIP if absent

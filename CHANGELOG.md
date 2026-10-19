@@ -41,6 +41,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
   and the report path. The headline silent-fusion fixture fails through the CLI.
 - `make test_browser`: runs the browser-marked tests against real Chromium when
   `CAXGAUGE_POLYFETCH_DIR` is set; prints `SKIP` otherwise (not part of CI).
+- `make audit`: `pip-audit` over the resolved dependencies (local, needs network).
 
 ### Fixed
 
