@@ -12,6 +12,11 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
   and feature-absorbed boss, and one real so101 part (no declared bounds, so bbox/volume
   `SKIP`) into a committed `site/`; `pages.yml` deploys it. The target checks Chromium first
   and refuses to write if a part gets an unexpected verdict.
+- **Benchmark pilot (`bench/`)**: five briefs with bounds declared up front and
+  `bench/run.sh`, which has `claude -p` write each brief in build123d and OpenSCAD and scores
+  every output with `caxgauge check` (restricted tools, pinned model, per-run and total spend
+  caps). Results under `site/bench/`; the human accept/reject labels go in
+  `bench/labels.csv`.
 
 ### Fixed
 

@@ -15,6 +15,7 @@ For AI agent behavioral rules, see [AGENTS.md](AGENTS.md).
 | `make test_browser` | Browser-marked tests against real Chromium (render, load check, view orientation, edges). Needs `CAXGAUGE_POLYFETCH_DIR` set to a polyfetch-scrape checkout whose Chromium is installed (`make -C <it> doctor`); prints `SKIP` otherwise. Not in CI — run before changing `src/caxgauge/viewer/`, `render.py` or `browser.py` |
 | `make audit` | Scan resolved dependencies for known vulnerabilities (`pip-audit`, needs network). Not in `validate` or CI — Dependabot security updates cover CI. Run before a release |
 | `make site` | Regenerate the sample reports in `site/` (deployed to GitHub Pages by `pages.yml`). Needs `CAXGAUGE_POLYFETCH_DIR` with Chromium and the so101 checkout beside this repo (`SO101=` to override); refuses to write if any part gets an unexpected verdict. Commit `site/` after regenerating |
+| `bench/run.sh [GLOB] [TOOLS] [RUNS]` | CAD-generation benchmark: `claude -p` writes each brief in each tool, `caxgauge check` scores it into `site/bench/` (ledger `runs.tsv`). Needs `CAXGAUGE_POLYFETCH_DIR`; spends your Claude usage — `BENCH_TOTAL_USD` (default 20) stops it, `BENCH_RUN_USD` caps each run, `BENCH_MODEL` pins the model. Dry-run first: `bench/run.sh '01-*' build123d 1` |
 | `make check_docs` | Markdown lint — prints `SKIP` if `markdownlint-cli2` is not installed |
 | `make check_links` | Link check (needs network) — prints `SKIP` if `lychee` is not installed |
 | `make help` | List all recipes |
