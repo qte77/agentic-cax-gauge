@@ -289,7 +289,9 @@ PTC's [Onshape FeatureScript MCP Server][onshapefsmcp] (2026-08-13), where AI "a
 build, test, debug, and refine the custom feature in FeatureScript until it works as intended" —
 generation, with the model iterating on its own code; no independent geometry check is
 described. Commenters' additions (SimScale, CoLab, Synera, Istari Digital) are CAE, design
-review, workflow automation and data lineage respectively — none verify CAD geometry.
+review, workflow automation and data lineage respectively — none verify CAD geometry. The
+vendors' features themselves — what shipped, usage patterns, and what checks the output — are
+in [`vendor-ai.md`](vendor-ai.md).
 
 A second source the user supplied, a LinkedIn Pulse article on an Opus 5.5 + Blender
 timelapse workflow, **could not be read**: LinkedIn returned its own "page not found" both

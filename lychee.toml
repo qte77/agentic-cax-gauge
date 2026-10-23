@@ -22,4 +22,8 @@ exclude = [
     # 503 to lychee on two consecutive CI runs (2026-10-10); the file is confirmed present on
     # `devel` via the GitHub contents API. One URL, not the host
     "^https://github\\.com/ElmerCSC/elmerfem/blob/devel/license_texts/ElmerLicensePolicy\\.md$",
+    # 403 (Akamai) to lychee and to headless browsers; pages confirmed live 2026-10-23 via
+    # polyfetch --tier patchright --headed under xvfb-run (fusion-compute-mcp,
+    # autodesk-assistant-script-execute-update). The Fusion blog path only, not the host
+    "^https://www\\.autodesk\\.com/products/fusion-360/blog/",
 ]
