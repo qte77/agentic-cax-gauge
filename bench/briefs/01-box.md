@@ -2,6 +2,9 @@
 envelope: 21,16,11
 volume_band: 2990,3010
 ---
+
+# Brief: box
+
 A solid rectangular block, 20 mm long (X), 15 mm wide (Y) and 10 mm tall (Z), with one
 corner at the origin or centred on it. No holes or other features.
 

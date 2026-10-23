@@ -32,8 +32,8 @@ spent() { awk -F'\t' 'NR > 1 { s += $6 } END { printf "%.4f", s + 0 }' "$ledger"
 # Front-matter value, e.g. `envelope: 21,16,11`.
 field() { sed -n "s/^$2: *//p" "$1" | head -n1; }
 
-# The prompt is the brief body without front matter and without the `Bounds:` notes.
-prompt_of() { awk '/^---$/ { fm++; next } fm >= 2 && /^Bounds:/ { exit } fm >= 2' "$1"; }
+# The prompt is the brief body without front matter, its `# heading`, or the `Bounds:` notes.
+prompt_of() { awk '/^---$/ { fm++; next } fm >= 2 && /^Bounds:/ { exit } fm >= 2 && !/^# /' "$1"; }
 
 system_for() {
 	case "$1" in

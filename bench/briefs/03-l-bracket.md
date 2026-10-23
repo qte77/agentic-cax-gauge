@@ -2,6 +2,9 @@
 envelope: 41,31,31
 volume_band: 10590,11020
 ---
+
+# Brief: L-bracket
+
 An L-bracket, one solid, Z up. Base: a plate 40 mm (X) × 30 mm (Y) × 5 mm thick, lying flat.
 Upright: a wall 40 mm (X) wide and 5 mm thick (Y), standing on the base along one 40 mm edge,
 so the bracket is 30 mm tall overall. Two through-holes, 5 mm diameter, go vertically through

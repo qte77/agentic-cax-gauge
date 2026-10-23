@@ -1,0 +1,58 @@
+{
+  "mesh": "/tmp/claude-1000/bench-gCQ8tp/part.stl",
+  "verdict": "review",
+  "label": "Green is necessary, not sufficient: these checks cannot see local defects. Look at the render and decide.",
+  "checks": [
+    {
+      "name": "file_integrity",
+      "status": "skip",
+      "detail": "ASCII STL (starts with 'solid'): the binary header/triangle-count/file-length structure this check validates does not apply"
+    },
+    {
+      "name": "watertight",
+      "status": "pass",
+      "detail": "watertight=True, winding_consistent=True, euler_number=2 (reported only, not asserted \u2014 plan \u00a77.2)"
+    },
+    {
+      "name": "bbox",
+      "status": "pass",
+      "detail": "extents=(40.0, 40.0, 13.0), envelope=(41.0, 41.0, 14.0)"
+    },
+    {
+      "name": "volume",
+      "status": "pass",
+      "detail": "volume=8627.30972030528, band=[8540.0, 8720.0]"
+    },
+    {
+      "name": "browser_load",
+      "status": "pass",
+      "detail": "viewer reported body[data-state]=rendered"
+    },
+    {
+      "name": "render",
+      "status": "pass",
+      "detail": "4 view(s) captured at 800x600"
+    }
+  ],
+  "skipped": [
+    "file_integrity"
+  ],
+  "views": [
+    {
+      "name": "front",
+      "path": "part-front.png"
+    },
+    {
+      "name": "iso",
+      "path": "part-iso.png"
+    },
+    {
+      "name": "top",
+      "path": "part-top.png"
+    },
+    {
+      "name": "right",
+      "path": "part-right.png"
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "mesh": "/tmp/claude-1000/bench-1o5AGd/part.stl",
+  "verdict": "review",
+  "label": "Green is necessary, not sufficient: these checks cannot see local defects. Look at the render and decide.",
+  "checks": [
+    {
+      "name": "file_integrity",
+      "status": "pass",
+      "detail": "binary STL: header present, 12 triangles, file length matches 84 + 50*n"
+    },
+    {
+      "name": "watertight",
+      "status": "pass",
+      "detail": "watertight=True, winding_consistent=True, euler_number=2 (reported only, not asserted \u2014 plan \u00a77.2)"
+    },
+    {
+      "name": "bbox",
+      "status": "pass",
+      "detail": "extents=(20.0, 15.0, 10.0), envelope=(21.0, 16.0, 11.0)"
+    },
+    {
+      "name": "volume",
+      "status": "pass",
+      "detail": "volume=3000.0, band=[2990.0, 3010.0]"
+    },
+    {
+      "name": "browser_load",
+      "status": "pass",
+      "detail": "viewer reported body[data-state]=rendered"
+    },
+    {
+      "name": "render",
+      "status": "pass",
+      "detail": "4 view(s) captured at 800x600"
+    }
+  ],
+  "skipped": [],
+  "views": [
+    {
+      "name": "front",
+      "path": "part-front.png"
+    },
+    {
+      "name": "iso",
+      "path": "part-iso.png"
+    },
+    {
+      "name": "top",
+      "path": "part-top.png"
+    },
+    {
+      "name": "right",
+      "path": "part-right.png"
+    }
+  ]
+}

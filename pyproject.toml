@@ -48,6 +48,8 @@ link-mode = "copy"
 target-version = "py312"
 line-length = 100
 src = ["src", "tests"]
+# site/ holds generated reports and the benchmark agents' scripts, kept verbatim as a record.
+extend-exclude = ["site"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "UP", "B", "S", "SIM", "RUF", "PT", "ANN", "TCH", "PGH", "C90", "D"]

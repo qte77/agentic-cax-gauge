@@ -37,6 +37,36 @@ Look at the render and decide.</p>
     It has no declared envelope or volume band, so those checks report <code>SKIP</code> &mdash;
     nothing was checked there, and the report says so.</li>
 </ul>
+<h2>Benchmark pilot: build123d vs OpenSCAD</h2>
+<p>Five written briefs, each with bounds declared before any run; an agent
+(<code>claude -p</code>, Claude Sonnet 5.5) wrote each part three times in each tool. All 30
+runs produced a part and passed preflight &mdash; which only means nothing was obviously
+broken. <strong>Whether each part is actually right is decided by looking at its
+views.</strong> Per brief: build123d runs 1&ndash;3, OpenSCAD runs 1&ndash;3.</p>
+<ul>
+  <li>Box &mdash; build123d <a href="bench/01-box-build123d-1/report.html">1</a>
+    <a href="bench/01-box-build123d-2/report.html">2</a> <a href="bench/01-box-build123d-3/report.html">3</a>
+    &middot; OpenSCAD <a href="bench/01-box-openscad-1/report.html">1</a>
+    <a href="bench/01-box-openscad-2/report.html">2</a> <a href="bench/01-box-openscad-3/report.html">3</a></li>
+  <li>Plate with boss &mdash; build123d <a href="bench/02-plate-boss-build123d-1/report.html">1</a>
+    <a href="bench/02-plate-boss-build123d-2/report.html">2</a> <a href="bench/02-plate-boss-build123d-3/report.html">3</a>
+    &middot; OpenSCAD <a href="bench/02-plate-boss-openscad-1/report.html">1</a>
+    <a href="bench/02-plate-boss-openscad-2/report.html">2</a> <a href="bench/02-plate-boss-openscad-3/report.html">3</a></li>
+  <li>L-bracket with two holes &mdash; build123d <a href="bench/03-l-bracket-build123d-1/report.html">1</a>
+    <a href="bench/03-l-bracket-build123d-2/report.html">2</a> <a href="bench/03-l-bracket-build123d-3/report.html">3</a>
+    &middot; OpenSCAD <a href="bench/03-l-bracket-openscad-1/report.html">1</a>
+    <a href="bench/03-l-bracket-openscad-2/report.html">2</a> <a href="bench/03-l-bracket-openscad-3/report.html">3</a></li>
+  <li>Snap-fit lid (no volume band &mdash; judge the hooks) &mdash; build123d <a href="bench/04-snap-lid-build123d-1/report.html">1</a>
+    <a href="bench/04-snap-lid-build123d-2/report.html">2</a> <a href="bench/04-snap-lid-build123d-3/report.html">3</a>
+    &middot; OpenSCAD <a href="bench/04-snap-lid-openscad-1/report.html">1</a>
+    <a href="bench/04-snap-lid-openscad-2/report.html">2</a> <a href="bench/04-snap-lid-openscad-3/report.html">3</a></li>
+  <li>so101 tip rack holder &mdash; build123d <a href="bench/05-tip-rack-holder-build123d-1/report.html">1</a>
+    <a href="bench/05-tip-rack-holder-build123d-2/report.html">2</a> <a href="bench/05-tip-rack-holder-build123d-3/report.html">3</a>
+    &middot; OpenSCAD <a href="bench/05-tip-rack-holder-openscad-1/report.html">1</a>
+    <a href="bench/05-tip-rack-holder-openscad-2/report.html">2</a> <a href="bench/05-tip-rack-holder-openscad-3/report.html">3</a></li>
+</ul>
+<p class="small">Each run's folder also holds the agent's script (<code>part.py</code> /
+<code>part.scad</code>) and its run record. Ledger: <a href="bench/runs.tsv">runs.tsv</a>.</p>
 <p class="small">Generated with <code>make site</code> from
 <a href="https://github.com/qte77/agentic-cax-gauge">agentic-cax-gauge</a> v0.2.1.</p>
 </body>

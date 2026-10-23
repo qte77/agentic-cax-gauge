@@ -2,6 +2,9 @@
 envelope: 41,41,14
 volume_band: 8540,8720
 ---
+
+# Brief: plate with boss
+
 A square plate 40 × 40 mm and 5 mm thick, lying flat (Z up). On its top face, centred, a
 solid cylindrical boss 10 mm in diameter rising 8 mm above the plate, so the part is 13 mm
 tall overall. Plate and boss are one solid.

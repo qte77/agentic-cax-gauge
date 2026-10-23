@@ -2,8 +2,12 @@
 envelope: 128,86,14
 volume_band: 40298,41112
 ---
+
+# Brief: tip rack holder
+
 A tray that holds a standard 96-tip pipette rack whose footprint is 122 × 80 mm. One solid,
 Z up:
+
 - a flat base 3 mm thick;
 - a perimeter wall 2 mm thick and 10 mm tall, standing on the base;
 - 0.5 mm clearance between the rack and the inside of the wall on every side, so the inside

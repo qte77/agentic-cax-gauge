@@ -1,6 +1,9 @@
 ---
 envelope: 55,35,9
 ---
+
+# Brief: snap-fit lid
+
 A snap-fit lid for an open-topped box whose outer footprint is 50 × 30 mm and whose walls
 are 1.5 mm thick, to be 3D-printed in PETG. The lid is a flat top plate covering the box
 with a small overhang, plus a rim or tabs that locate inside the box walls, plus at least
