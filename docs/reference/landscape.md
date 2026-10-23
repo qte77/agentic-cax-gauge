@@ -277,6 +277,20 @@ kernel*, not whether an agent's design matches intent — and the README says so
 checks do not establish complete geometric or workflow equivalence." Nothing to adopt; if a
 consumer ever models with it, `caxgauge check` takes its exported STL unchanged.
 
+**Added 2026-10-23 — the incumbents' AI race ([Molitor, LinkedIn, 2026-10-23][molitor]).** The
+post's thesis, read at source: "Engineering AI is becoming a vendor war", naming Siemens, PTC,
+Dassault Systèmes, MathWorks, Cadence, Synopsys/Ansys and Autodesk. Its video is a
+Jan 2025 – Oct 2026 timeline of about 35 in-suite AI launches (copilots, MCP servers, agents),
+tagged PLM/ALM/CAD/CAE/V&V. *Read from the video's frames by a research agent; dates are
+approximate and were not re-checked per vendor.* On that reading, the few V&V entries are chip
+and software verification (EDA, static analysis), not checks of CAD geometry — consistent with
+this section's generation-heavy, verification-thin picture. One entry re-checked at source:
+PTC's [Onshape FeatureScript MCP Server][onshapefsmcp] (2026-08-13), where AI "automatically helps
+build, test, debug, and refine the custom feature in FeatureScript until it works as intended" —
+generation, with the model iterating on its own code; no independent geometry check is
+described. Commenters' additions (SimScale, CoLab, Synera, Istari Digital) are CAE, design
+review, workflow automation and data lineage respectively — none verify CAD geometry.
+
 A second source the user supplied, a LinkedIn Pulse article on an Opus 5.5 + Blender
 timelapse workflow, **could not be read**: LinkedIn returned its own "page not found" both
 to a plain fetch and to a real headless browser (polyfetch, patchright tier), and no copy was
@@ -799,6 +813,8 @@ and stated in the PR.
 [steenkenrun1]: https://engineer-your-idea.com/en/blog/agentic-cad-pi4-housing/
 [solidcraft]: https://github.com/tangency-labs/solidcraft
 [solidcraftoracle]: https://github.com/tangency-labs/solidcraft/blob/main/docs/oracle.md
+[molitor]: https://www.linkedin.com/posts/dirk-molitor_engineering-ai-is-becoming-a-vendor-war-activity-7519290174040809475-23Qp
+[onshapefsmcp]: https://www.ptc.com/en/news/2026/onshape-launches-featurescript-mcp-server
 [steenkenpost]: https://www.linkedin.com/posts/anton-steenken_ai-cad-demos-are-full-of-sht-sound-familiar-ugcPost-7513887143623319553-qmVG/
 [leoai]: https://www.getleo.ai/
 [trace]: https://buildwithtrace.com/
