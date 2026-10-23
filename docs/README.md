@@ -1,8 +1,8 @@
 # Docs map
 
 M2 code is complete (`caxgauge check`: preflight, browser load, render, report); M2 closes
-when the owner reviews a real part's report — see the plan's opening status. There are four
-docs here — two are reference material you do not need to build.
+when the owner reviews a real part's report — see the plan's opening status. There are five
+docs here — three are reference material you do not need to build.
 Development workflow lives in [`../CONTRIBUTING.md`](../CONTRIBUTING.md), agent rules in
 [`../AGENTS.md`](../AGENTS.md).
 
@@ -11,6 +11,7 @@ Development workflow lives in [`../CONTRIBUTING.md`](../CONTRIBUTING.md), agent 
 | [`../README.md`](../README.md) | Live | What this is and why, in one screen |
 | [`plans/001-v0.md`](plans/001-v0.md) | **Live** | The plan **and** the handoff — one file. Opens with a Handoff section (state, execution model, commands, non-negotiables, owner gates, traps), then Part I (§1-§5: goal, locked decisions, approach, architecture, roadmap), then Part II (§6-§13: executable detail, substrate traps, tests, reuse, risks, BIM preflight) |
 | [`reference/landscape.md`](reference/landscape.md) | Reference | Research evidence, competitors, backend choice, contribution stance, BIM/IFC toolchain (§3.7.1, verified 2026-10-06); not needed to build |
+| [`reference/vendor-ai.md`](reference/vendor-ai.md) | Reference | What Dassault, Siemens, Autodesk, Ansys and PTC shipped in AI (2025–26), how it is used, and what checks its output (nothing independent). Includes the Fusion Compute MCP route relevant to the benchmark |
 | [`reference/cae.md`](reference/cae.md) | Reference | The owed CAE research. Read §1 before touching `verify/sim.py` — it disproved the plan's own reason for reserving that seam. Not needed to build v0 |
 
 ## Start here
