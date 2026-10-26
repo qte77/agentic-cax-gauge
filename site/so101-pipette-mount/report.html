@@ -11,4 +11,101 @@ table { border-collapse: collapse; margin: 12px 0; }
 td, th { border: 1px solid #ddd; padding: 4px 8px; text-align: left; vertical-align: top; }
 .views { display: flex; flex-wrap: wrap; gap: 12px; }
 .views figure { margin: 0; } .views img { max-width: 400px; width: 100%; border: 1px solid #ccc; }
-</style></head><body><h1>pipette_mount_so101.stl</h1><p class="verdict review">Verdict: review</p><p class="label">Green is necessary, not sufficient: these checks cannot see local defects. Look at the render and decide.</p><div class="views"><figure><img src="pipette_mount_so101-front.png" alt="front view"><figcaption>front</figcaption></figure><figure><img src="pipette_mount_so101-iso.png" alt="iso view"><figcaption>iso</figcaption></figure><figure><img src="pipette_mount_so101-top.png" alt="top view"><figcaption>top</figcaption></figure><figure><img src="pipette_mount_so101-right.png" alt="right view"><figcaption>right</figcaption></figure></div><div class="checks"><table><tr><th>Check</th><th>Status</th><th>Detail</th></tr><tr><td>file_integrity</td><td>PASS</td><td>binary STL: header present, 2300 triangles, file length matches 84 + 50*n</td></tr><tr><td>watertight</td><td>PASS</td><td>watertight=True, winding_consistent=True, euler_number=2 (reported only, not asserted — plan §7.2)</td></tr><tr><td>bbox</td><td>SKIP</td><td>no --envelope given</td></tr><tr><td>volume</td><td>SKIP</td><td>no --volume-band given</td></tr><tr><td>browser_load</td><td>PASS</td><td>viewer reported body[data-state]=rendered</td></tr><tr><td>render</td><td>PASS</td><td>4 view(s) captured at 800x600</td></tr></table></div></body></html>
+.source pre { overflow-x: auto; padding: 8px 12px; background: #fff; border: 1px solid #ddd; }
+</style></head><body><h1>pipette_mount_so101.stl</h1><p class="verdict review">Verdict: review</p><p class="label">Green is necessary, not sufficient: these checks cannot see local defects. Look at the render and decide.</p><div class="views"><figure><img src="pipette_mount_so101-front.png" alt="front view"><figcaption>front</figcaption></figure><figure><img src="pipette_mount_so101-iso.png" alt="iso view"><figcaption>iso</figcaption></figure><figure><img src="pipette_mount_so101-top.png" alt="top view"><figcaption>top</figcaption></figure><figure><img src="pipette_mount_so101-right.png" alt="right view"><figcaption>right</figcaption></figure></div><section class="source"><h2>Design source: pipette_mount.py</h2><p>The intent as written, for comparison with the renders. Not checked.</p><pre><code>&quot;&quot;&quot;Pipette mount adapter — SO-101 wrist to dPette barrel.
+
+Clamps around the dPette 7016 (single-channel) barrel and attaches to
+the tool cone male base. The SO-101 arm holds the dPette as a tool,
+moving it between positions.
+
+Features a cutout at the top so the ejector button remains accessible
+(for the tip ejection post or manual use).
+
+Barrel dimensions are approximate — verify against real hardware.
+
+Usage:
+    uv run --group cad python hardware/cad/so101/pipette_mount.py
+&quot;&quot;&quot;
+
+# Shared export helper (standalone mode)
+import sys
+from pathlib import Path
+
+from build123d import Box, Cylinder, Pos, Rot
+
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+from util.export import export_part
+
+sys.path.pop()
+
+# --- Parameters (all in mm) ---
+# dPette 7016 barrel (approximate — measure real hardware)
+BARREL_DIAMETER = 20.0
+BARREL_CLEARANCE = 0.3
+
+# Clamp dimensions
+CLAMP_LENGTH = 45.0  # Longer for stable grip
+CLAMP_WALL = 4.0
+CLAMP_OUTER = BARREL_DIAMETER + BARREL_CLEARANCE * 2 + CLAMP_WALL * 2
+
+# Mounting plate (mates with tool cone male base)
+MOUNT_WIDTH = 36.0
+MOUNT_THICKNESS = 5.0
+
+# Clamp split (for tightening around barrel)
+SPLIT_GAP = 2.0
+SCREW_DIAMETER = 3.2  # M3 clearance
+
+# Ejector button clearance — cutout so top push-button stays accessible
+BUTTON_CUTOUT_WIDTH = 12.0
+BUTTON_CUTOUT_DEPTH = 8.0
+
+
+def build_pipette_mount():
+    &quot;&quot;&quot;Build dPette barrel clamp with tool cone mounting plate.&quot;&quot;&quot;
+    # Mounting plate (bolts to tool cone male base)
+    mount = Box(MOUNT_WIDTH, MOUNT_WIDTH, MOUNT_THICKNESS)
+
+    # Clamp body (cylinder around pipette barrel)
+    clamp = Pos(0, 0, MOUNT_THICKNESS / 2 + CLAMP_LENGTH / 2) * Cylinder(
+        CLAMP_OUTER / 2, CLAMP_LENGTH
+    )
+
+    # Cut barrel hole
+    barrel = Pos(0, 0, MOUNT_THICKNESS / 2 + CLAMP_LENGTH / 2) * Cylinder(
+        (BARREL_DIAMETER + BARREL_CLEARANCE * 2) / 2, CLAMP_LENGTH + 1
+    )
+    clamp = clamp - barrel
+
+    # Cut split gap for clamping
+    gap = Pos(0, 0, MOUNT_THICKNESS / 2 + CLAMP_LENGTH / 2) * Box(
+        SPLIT_GAP, CLAMP_OUTER + 1, CLAMP_LENGTH + 1
+    )
+    clamp = clamp - gap
+
+    # Ejector button cutout at top of clamp
+    button_cut = Pos(0, 0, MOUNT_THICKNESS / 2 + CLAMP_LENGTH * 0.8) * Box(
+        BUTTON_CUTOUT_WIDTH, BUTTON_CUTOUT_DEPTH, CLAMP_LENGTH * 0.4
+    )
+    clamp = clamp - button_cut
+
+    # Screw holes for clamp tightening (2x M3)
+    for z_off in [CLAMP_LENGTH * 0.25, CLAMP_LENGTH * 0.65]:
+        hole = (
+            Pos(0, 0, MOUNT_THICKNESS / 2 + z_off)
+            * Rot(90, 0, 0)
+            * Cylinder(SCREW_DIAMETER / 2, CLAMP_OUTER + 10)
+        )
+        clamp = clamp - hole
+
+    return mount + clamp
+
+
+def export(part) -&gt; None:
+    &quot;&quot;&quot;Export to STL and SVG.&quot;&quot;&quot;
+    export_part(part, &quot;so101&quot;, &quot;pipette_mount_so101&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    export(build_pipette_mount())
+</code></pre></section><div class="checks"><table><tr><th>Check</th><th>Status</th><th>Detail</th></tr><tr><td>file_integrity</td><td>PASS</td><td>binary STL: header present, 2300 triangles, file length matches 84 + 50*n</td></tr><tr><td>watertight</td><td>PASS</td><td>watertight=True, winding_consistent=True, euler_number=2 (reported only, not asserted — plan §7.2)</td></tr><tr><td>bbox</td><td>SKIP</td><td>no --envelope given</td></tr><tr><td>volume</td><td>SKIP</td><td>no --volume-band given</td></tr><tr><td>browser_load</td><td>PASS</td><td>viewer reported body[data-state]=rendered</td></tr><tr><td>render</td><td>PASS</td><td>4 view(s) captured at 800x600</td></tr></table></div></body></html>

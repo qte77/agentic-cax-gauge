@@ -55,5 +55,6 @@
       "name": "right",
       "path": "pipette_mount_so101-right.png"
     }
-  ]
+  ],
+  "source": "../so101-biolab-automation/src/hardware/cad/so101/pipette_mount.py"
 }

@@ -37,6 +37,7 @@ class Report(BaseModel):
     checks: tuple[CheckResult, ...]
     views: tuple[RenderedView, ...]
     render_skipped: bool
+    source: Path | None = None
 
     @property
     def skipped(self) -> tuple[CheckResult, ...]:
@@ -45,9 +46,18 @@ class Report(BaseModel):
 
 
 def build_report(
-    mesh: Path, preflight: PreflightResult, browser: BrowserResult, render: RenderResult
+    mesh: Path,
+    preflight: PreflightResult,
+    browser: BrowserResult,
+    render: RenderResult,
+    *,
+    source: Path | None = None,
 ) -> Report:
-    """Combine all results; any `FAIL` makes the verdict `fail`, otherwise `review`."""
+    """Combine all results; any `FAIL` makes the verdict `fail`, otherwise `review`.
+
+    `source` is the part's design script, shown beside the renders so the human can compare
+    intent with result. It informs the review only: it is never a check and never gates.
+    """
     checks = (
         *preflight.checks,
         CheckResult(name="browser_load", status=browser.status, detail=browser.detail),
@@ -60,6 +70,7 @@ def build_report(
         checks=checks,
         views=render.views,
         render_skipped=render.status is Status.SKIP,
+        source=source,
     )
 
 
@@ -87,6 +98,7 @@ def _as_json(report: Report, out_dir: Path) -> dict[str, object]:
         ],
         "skipped": [c.name for c in report.skipped],
         "views": [{"name": v.name, "path": _rel(v.path, out_dir)} for v in report.views],
+        "source": report.source.as_posix() if report.source else None,
     }
 
 
@@ -102,7 +114,21 @@ table { border-collapse: collapse; margin: 12px 0; }
 td, th { border: 1px solid #ddd; padding: 4px 8px; text-align: left; vertical-align: top; }
 .views { display: flex; flex-wrap: wrap; gap: 12px; }
 .views figure { margin: 0; } .views img { max-width: 400px; width: 100%; border: 1px solid #ccc; }
+.source pre { overflow-x: auto; padding: 8px 12px; background: #fff; border: 1px solid #ddd; }
 """
+
+
+def _source_html(source: Path | None) -> str:
+    """The design script as inert, escaped text — compare it with the renders by eye."""
+    if source is None:
+        return ""
+    esc = html.escape
+    text = source.read_text(errors="replace")
+    return (
+        f'<section class="source"><h2>Design source: {esc(source.name)}</h2>'
+        "<p>The intent as written, for comparison with the renders. Not checked.</p>"
+        f"<pre><code>{esc(text)}</code></pre></section>"
+    )
 
 
 def _as_html(report: Report, out_dir: Path) -> str:
@@ -130,7 +156,7 @@ def _as_html(report: Report, out_dir: Path) -> str:
         f"<h1>{esc(report.mesh.name)}</h1>"
         f'<p class="verdict {report.verdict}">Verdict: {report.verdict}</p>'
         f'<p class="label">{esc(NECESSARY_NOT_SUFFICIENT)}</p>{norender}'
-        f'<div class="views">{views}</div>'
+        f'<div class="views">{views}</div>{_source_html(report.source)}'
         f'<div class="checks"><table><tr><th>Check</th><th>Status</th><th>Detail</th></tr>'
         f"{rows}</table></div>"
         "</body></html>\n"

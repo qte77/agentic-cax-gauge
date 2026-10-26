@@ -28,6 +28,12 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
   locally (`bench/rescore.sh`). Adds the `solidcraft` tool to `bench/run.sh` and the
   `BENCH_TMP` / `BENCH_NO_RENDER` env vars; runs now keep `part.stl`.
 
+- **`caxgauge check --source FILE`**: the report shows the part's design script (escaped,
+  inert) beside the renders, so the reviewer compares intent with result. Informational —
+  never a check, never changes the verdict. `make site` and the benchmark scripts pass it.
+  Prompted by the so101 pipette mount: green checks and a plausible render, but reading its
+  script next to the views showed four design defects.
+
 ### Fixed
 
 - **`report.html` was unreadable on a phone**: no viewport meta tag, so mobile browsers laid

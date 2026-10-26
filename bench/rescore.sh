@@ -20,6 +20,9 @@ for out in "$repo"/site/bench/${1:-*}/; do
 	brief="$repo/bench/briefs/${run%-*-*}.md"
 	[ -f "$brief" ] || { echo "rescore.sh: no brief for $run"; continue; }
 	args=(check "$out/part.stl" --out "$out")
+	for s in part.py part.scad part.json; do  # the agent's script, beside its renders
+		[ -f "$out/$s" ] && { args+=(--source "$out/$s"); break; }
+	done
 	envelope="$(field "$brief" envelope)"
 	band="$(field "$brief" volume_band)"
 	[ -n "$envelope" ] && args+=(--envelope "$envelope")

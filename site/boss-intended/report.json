@@ -52,5 +52,6 @@
       "name": "right",
       "path": "feature_absorbed_intended-right.png"
     }
-  ]
+  ],
+  "source": "tests/fixtures/make_fixtures.py"
 }

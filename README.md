@@ -52,6 +52,7 @@ report: reports/part/report.html
 | `MESH` | Exported STL (Z-up, mm) |
 | `--envelope X,Y,Z` | Max extents; without it the bbox check is `SKIP` |
 | `--volume-band MIN,MAX` | Two-sided volume band (mm³); without it the volume check is `SKIP` |
+| `--source FILE` | The part's design script (e.g. the build123d `.py`), shown escaped beside the renders so the reviewer compares intent with result; not a check, never changes the verdict |
 | `--out DIR` | Report directory (default `reports/<stem>`): `report.html`, `report.json`, one PNG per view |
 | `--no-render` | Skip the browser load check and the render (the report says so loudly) |
 

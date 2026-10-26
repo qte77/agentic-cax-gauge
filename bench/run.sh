@@ -99,6 +99,9 @@ for brief in "$repo"/bench/briefs/$brief_glob.md; do
 			if [ -s "$work/part.stl" ]; then
 				cp "$work/part.stl" "$out/part.stl"
 				args=(check "$out/part.stl" --out "$out" "${render[@]}")
+				for s in part.py part.scad part.json; do  # the agent's script, beside its renders
+					[ -f "$out/$s" ] && { args+=(--source "$out/$s"); break; }
+				done
 				[ -n "$envelope" ] && args+=(--envelope "$envelope")
 				[ -n "$band" ] && args+=(--volume-band "$band")
 				rc=0; uv run --directory "$repo" caxgauge "${args[@]}" || rc=$?

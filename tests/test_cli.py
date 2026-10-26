@@ -81,9 +81,19 @@ def test_without_polyfetch_the_render_is_skipped_loudly(tmp_path: Path):
     assert "No render" in (tmp_path / "report.html").read_text()
 
 
+def test_source_option_puts_the_design_script_in_the_report(tmp_path: Path):
+    source = tmp_path / "part.py"
+    source.write_text("Box(20, 15, 10)\n")
+    out = tmp_path / "report"
+    assert cli.main(["check", str(GOOD), "--source", str(source), "--out", str(out)]) == 0
+    assert _report(out)["source"] == source.as_posix()
+    assert "Box(20, 15, 10)" in (out / "report.html").read_text()
+
+
 @pytest.mark.parametrize(
     "args",
     [
+        ["check", str(GOOD), "--source", "does-not-exist.py"],
         ["check", str(GOOD), "--envelope", "1,2"],
         ["check", str(GOOD), "--envelope", "a,b,c"],
         ["check", str(GOOD), "--volume-band", "10,1"],
