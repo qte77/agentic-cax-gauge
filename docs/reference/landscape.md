@@ -293,6 +293,18 @@ review, workflow automation and data lineage respectively — none verify CAD ge
 vendors' features themselves — what shipped, usage patterns, and what checks the output — are
 in [`vendor-ai.md`](vendor-ai.md).
 
+**Added 2026-10-26 — [tanishqbhattad/rhino-mcp][rhinomcp], from a LinkedIn "vibe modelling"
+post; repo checked via the GitHub API.** MIT, created 2026-05-12, last pushed 2026-10-12. A
+Rhino 8 MCP server for architectural modelling ("128 tools") with post-condition checks —
+`assert_geometry` ("bbox / envelope / count / count_delta / watertight / supported") and
+`validate_objects` ("separates *real corruption* from *intentionally open shells*") — and its
+README states this project's own premise: "Valid geometry is not correct geometry", since
+arithmetic and wiring errors still produce "a perfectly closed, valid solid". It is
+generation-side, with the generating model checking its own work. **Not a benchmark track
+here:** Rhino itself is commercial (McNeel), and the owner's bar for now is free tools. The
+post itself is a near-verbatim copy of an earlier one by another author, so it is not cited as
+first-hand evidence.
+
 A second source the user supplied, a LinkedIn Pulse article on an Opus 5.5 + Blender
 timelapse workflow, **could not be read**: LinkedIn returned its own "page not found" both
 to a plain fetch and to a real headless browser (polyfetch, patchright tier), and no copy was
@@ -817,6 +829,7 @@ and stated in the PR.
 [solidcraftoracle]: https://github.com/tangency-labs/solidcraft/blob/main/docs/oracle.md
 [molitor]: https://www.linkedin.com/posts/dirk-molitor_engineering-ai-is-becoming-a-vendor-war-activity-7519290174040809475-23Qp
 [onshapefsmcp]: https://www.ptc.com/en/news/2026/onshape-launches-featurescript-mcp-server
+[rhinomcp]: https://github.com/tanishqbhattad/rhino-mcp
 [steenkenpost]: https://www.linkedin.com/posts/anton-steenken_ai-cad-demos-are-full-of-sht-sound-familiar-ugcPost-7513887143623319553-qmVG/
 [leoai]: https://www.getleo.ai/
 [trace]: https://buildwithtrace.com/
