@@ -20,6 +20,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 - **Benchmark briefs 06–15**: ten more parts (cylinder, holes, chamfer, shells, bolt flange,
   hemispherical pocket, counterbores, heat sink), ideas from SolidCraft's analytic reference
   cases, written here with their volumes recomputed and checked against reference meshes.
+- **Free BIM benchmark track**: briefs `bim-01…04` and tool `ifcopenshell` in
+  `bench/run.sh` (`bench/run.sh 'bim-*' ifcopenshell 3`); `bench/ifc_to_stl.py` tessellates
+  the agent's IFC into an STL in millimetres for `caxgauge check`.
 
 ### Fixed
 
