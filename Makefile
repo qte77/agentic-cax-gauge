@@ -120,10 +120,11 @@ site: ## Regenerate site/ sample reports (needs CAXGAUGE_POLYFETCH_DIR + the so1
 		rc=0; uv run caxgauge check "$$@" || rc=$$?
 		if [ "$$rc" -ne "$$want" ]; then echo "site: expected exit $$want, got $$rc: $$*"; exit 1; fi
 	}
-	expect 0 tests/fixtures/good.stl --envelope 21,16,11 --volume-band 2990,3010 --out site/good-box
-	expect 0 tests/fixtures/feature_absorbed_intended.stl --envelope 41,41,14 --volume-band 8540,8720 --out site/boss-intended
-	expect 1 tests/fixtures/feature_absorbed_buggy.stl --envelope 41,41,14 --volume-band 8540,8720 --out site/boss-buggy
-	expect 0 $(SO101)/hardware/stl/so101/pipette_mount_so101.stl --out site/so101-pipette-mount
+	fixtures=tests/fixtures/make_fixtures.py
+	expect 0 tests/fixtures/good.stl --envelope 21,16,11 --volume-band 2990,3010 --source $$fixtures --out site/good-box
+	expect 0 tests/fixtures/feature_absorbed_intended.stl --envelope 41,41,14 --volume-band 8540,8720 --source $$fixtures --out site/boss-intended
+	expect 1 tests/fixtures/feature_absorbed_buggy.stl --envelope 41,41,14 --volume-band 8540,8720 --source $$fixtures --out site/boss-buggy
+	expect 0 $(SO101)/hardware/stl/so101/pipette_mount_so101.stl --source $(SO101)/src/hardware/cad/so101/pipette_mount.py --out site/so101-pipette-mount
 	echo "site: regenerated site/ (index.html is hand-written; commit both)"
 
 

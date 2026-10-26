@@ -107,6 +107,29 @@ def test_html_escapes_check_details(tmp_path: Path):
     assert "&lt;script&gt;" in html
 
 
+def test_design_source_is_shown_escaped_for_comparison_with_the_renders(tmp_path: Path):
+    # The so101 review found four design defects only by reading the CAD script next to the
+    # renders; the report has to carry that script, inert (never executed or rendered as HTML).
+    source = tmp_path / "part.py"
+    source.write_text('cut = Box(12, 8, 18)  # "<b>ejector</b>"\n')
+    report = build_report(MESH, _ALL_PASS, _BROWSER_OK, _render(tmp_path), source=source)
+    json_path, html_path = write_report(report, tmp_path)
+    html = html_path.read_text()
+    assert "cut = Box(12, 8, 18)" in html
+    assert "<b>ejector</b>" not in html
+    assert "&lt;b&gt;ejector&lt;/b&gt;" in html
+    assert html.index("part-iso.png") < html.index("cut = Box")  # renders first, then intent
+    assert json.loads(json_path.read_text())["source"] == source.as_posix()
+    assert report.verdict == "review"  # informs the human; never a check, never gates
+
+
+def test_without_a_design_source_the_report_has_no_source_section(tmp_path: Path):
+    report = build_report(MESH, _ALL_PASS, _BROWSER_OK, _render(tmp_path))
+    json_path, html_path = write_report(report, tmp_path)
+    assert json.loads(json_path.read_text())["source"] is None
+    assert "Design source" not in html_path.read_text()
+
+
 def test_json_lists_every_check_with_its_status(tmp_path: Path):
     report = build_report(MESH, _ALL_PASS, _BROWSER_OK, _render(tmp_path))
     data = json.loads(write_report(report, tmp_path)[0].read_text())

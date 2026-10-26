@@ -46,7 +46,7 @@ def _band(text: str) -> tuple[float, float]:
 def _existing_file(text: str) -> Path:
     path = Path(text)
     if not path.is_file():
-        msg = f"mesh file not found: {text}"
+        msg = f"file not found: {text}"
         raise argparse.ArgumentTypeError(msg)
     return path
 
@@ -58,6 +58,12 @@ def _parser() -> argparse.ArgumentParser:
     check.add_argument("mesh", type=_existing_file, help="Exported STL to check.")
     check.add_argument("--envelope", type=_envelope, metavar="X,Y,Z", help="Max extents (mm).")
     check.add_argument("--volume-band", type=_band, metavar="MIN,MAX", help="Volume (mm³).")
+    check.add_argument(
+        "--source",
+        type=_existing_file,
+        metavar="FILE",
+        help="Design script shown beside the renders for comparison (not checked).",
+    )
     check.add_argument("--out", type=Path, help="Report directory (default: reports/<stem>).")
     check.add_argument("--no-render", action="store_true", help="Skip browser + render.")
     return parser
@@ -84,7 +90,7 @@ def main(argv: list[str] | None = None) -> int:
         browser = browser_load_check(mesh)
         render = render_views(mesh, out)
 
-    report = build_report(mesh, checked, browser, render)
+    report = build_report(mesh, checked, browser, render, source=args.source)
     _, html_path = write_report(report, out)
 
     print(f"verdict: {report.verdict}")
