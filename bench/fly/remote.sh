@@ -3,7 +3,7 @@
 # site/bench/ for bench/fly/launch.sh to fetch, and waits a bounded time before exiting so
 # the Machine is never left running. Args are passed straight to bench/run.sh.
 set -uo pipefail
-cd "$(dirname "$0")/../.."
+cd "$(dirname "$0")/../.." || exit 2
 
 # Model-written scripts run under Claude Code's Bash tool; keep the subscription token out
 # of their environment. The docs list what the scrub removes but not CLAUDE_CODE_OAUTH_TOKEN
@@ -27,6 +27,6 @@ echo "remote: token not visible to subprocesses"
 
 BENCH_NO_RENDER=1 BENCH_TMP=/tmp bash bench/run.sh "$@"
 tar -czf /tmp/out.tgz site/bench
-echo done > /tmp/done
+echo finished > /tmp/done
 echo "remote: packed /tmp/out.tgz; waiting up to ${BENCH_FETCH_WAIT:-3600}s for the fetch"
 sleep "${BENCH_FETCH_WAIT:-3600}"

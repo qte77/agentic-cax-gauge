@@ -7,10 +7,14 @@ FROM ghcr.io/astral-sh/uv:0.12.5 AS uv
 
 FROM node:22-bookworm-slim
 COPY --from=uv /uv /uvx /usr/local/bin/
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# OpenSCAD for that track; curl + certificates for the SolidCraft download.
+# OpenSCAD for that track; curl + certificates for the SolidCraft download. Versions are
+# the bookworm ones resolved on 2026-10-26; a security update that drops one from the
+# archive fails the build loudly — bump it here.
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends openscad ca-certificates curl \
+    && apt-get install -y --no-install-recommends \
+        openscad=2021.01-6 ca-certificates=20250419~deb12u2 curl=7.88.1-10+deb12u15 \
     && rm -rf /var/lib/apt/lists/*
 
 # SolidCraft CLI, release v0.23.1, checksum from the release's own SHA256SUMS.txt.

@@ -25,7 +25,7 @@ trap 'fly machine destroy --force -a "$app" "$id" || true' EXIT
 echo "launch: machine $id ($name) — waiting for the round to finish"
 
 deadline=$(( $(date +%s) + ${BENCH_MAX_WAIT:-14400} ))
-until fly ssh console -q -a "$app" --machine "$id" -C "cat /tmp/done" 2>/dev/null | grep -q done; do
+until fly ssh console -q -a "$app" --machine "$id" -C "cat /tmp/done" 2>/dev/null | grep -q finished; do
 	[ "$(date +%s)" -lt "$deadline" ] || { echo "launch: gave up waiting"; exit 1; }
 	sleep 60
 done

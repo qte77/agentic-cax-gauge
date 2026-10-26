@@ -3,7 +3,7 @@
 # score its output? No agent and no model — every part below is written by us. Output goes to
 # the Machine's log (`fly logs`).
 set -uo pipefail
-cd "$(dirname "$0")/../.."
+cd "$(dirname "$0")/../.." || exit 2
 work="$(mktemp -d)"
 
 check() {  # check NAME STL ENVELOPE BAND
