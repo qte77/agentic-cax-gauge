@@ -83,3 +83,26 @@ below.
   timeout, not just elapsed time.
 - **References**: `viewer/index.html` (`html, body { height: 100%; }`, with the reasoning
   inline); `viewer/README.md` → "Consuming this page headlessly".
+
+### "Target crashed" in a render is the Codespace's memory, not the part
+
+- **Context**: Running `caxgauge check` with the render in the Codespace while other sessions
+  share it (2026-10-26: ~1 GB of 8 GB available).
+- **Problem**: A 28-triangle wall failed three runs in a row — `browser_load` or one view with
+  Patchright's `Target crashed` — then passed four in a row with nothing changed. A small
+  fixture passed meanwhile, which made it look size-related; scaling the wall 1:100 ruled
+  that out.
+- **Solution**: Re-run before debugging the viewer, and check `free -m`. The gauge reporting
+  `fail` on a crash is correct (it fails closed); don't loosen it.
+- **References**: `bench/rescore.sh`; plan §5 BENCH-FLY.
+
+### Fly: build with `fly deploy --build-only`, not `fly machine run .`
+
+- **Context**: Building the ~1.1 GB benchmark image on Fly (`bench/fly/`).
+- **Problem**: `fly machine run . --dockerfile …` built the image but failed to push it three
+  times (`error rendering push status stream: unexpected EOF`); with `--build-depot` the push
+  succeeded but the Machine launch got `MANIFEST_UNKNOWN` for the fresh tag.
+- **Solution**: `fly deploy . --build-only --push --image-label bench -c bench/fly/fly.toml
+  --depot`, then `fly machine run registry.fly.io/<app>:bench …`. `fly deploy` needs a
+  `fly.toml` even for an app that only ever runs one-off Machines.
+- **References**: `bench/fly/launch.sh`, `bench/fly/fly.toml`.
