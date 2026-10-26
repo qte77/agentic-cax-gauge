@@ -17,6 +17,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
   every output with `caxgauge check` (restricted tools, pinned model, per-run and total spend
   caps). Results under `site/bench/`; the human accept/reject labels go in
   `bench/labels.csv`.
+- **Benchmark briefs 06–15**: ten more parts (cylinder, holes, chamfer, shells, bolt flange,
+  hemispherical pocket, counterbores, heat sink), ideas from SolidCraft's analytic reference
+  cases, written here with their volumes recomputed and checked against reference meshes.
 
 ### Fixed
 
