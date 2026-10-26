@@ -3,7 +3,7 @@
 # from the repo root: see bench/fly/README.md. No ports, no services.
 #
 # Tags are pinned to a version; Dependabot (docker ecosystem, /bench/fly) bumps them.
-FROM ghcr.io/astral-sh/uv:0.12.5 AS uv
+FROM ghcr.io/astral-sh/uv:0.13.5 AS uv
 
 FROM node:22-bookworm-slim
 COPY --from=uv /uv /uvx /usr/local/bin/
