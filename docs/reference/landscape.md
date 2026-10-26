@@ -577,6 +577,27 @@ design checks (base pressure vs. allowable soil bearing, stability, strength des
 *also* CAE-shaped rather than bbox-shaped, since allowable bearing pressure depends on a
 geotechnical report's assumptions, not a direct measurement of the artifact.
 
+**Added 2026-10-26 — free alternatives to Revit for an agent BIM track** (owner bar: free
+tools only). Researched by read-only agents; the load-bearing claims re-checked by the lead
+at source. **The free, headless route is IfcOpenShell itself:** its Python API authors real
+geometry — `ifcopenshell.api.geometry` has `create_2pt_wall` and wall/slab/door/window
+representations — so an agent can write IFC with no Blender or FreeCAD (IfcOpenShell is
+LGPL-3.0). The same repo ships an official MCP server, [`src/ifcmcp`][ifcmcp] (last commit
+2026-10-25, "build the server on MCP SDK 2.x"). The GUI-based options are weaker for a
+headless agent: Bonsai (GPL-3.0, in the same repo) runs inside Blender, and its two agent
+integrations found (`Show2Instruct/ifc-bonsai-mcp`, MIT; `ProfRino/bonsai-bim-skills`,
+GPL-3.0) both document a GUI step; FreeCAD's BIM workbench creates walls under the headless
+`FreeCADCmd`, but its IFC exporter imports `FreeCADGui` unconditionally
+(`src/Mod/BIM/importers/exportIFC.py`, line 48), so headless IFC export likely fails —
+read from source, not run. Commercial tools offer no free headless Linux path: Archicad,
+Vectorworks and Allplan offer education or trial licences (agent-reported), and BricsCAD,
+the one with a Linux build, discontinued its free Shape tier in V26 ([Bricsys][bricsshape]).
+Other IFC libraries — web-ifc (MPL-2.0, read/write, no documented authoring API) and IFC++
+(MIT, active) — are readers/writers rather than authoring tools. **Independence caveat:** a
+track that authors with IfcOpenShell and is scored by the IfcOpenShell-based checker (§13)
+shares one library on both sides, so a library bug can pass its own output; such a track
+needs an independent cross-check (e.g. web-ifc tessellation or the buildingSMART validator).
+
 **Adjacent, checked and dismissed:**
 
 - **Specialized/fine-tuned LLMs for BIM** exist but cluster on generation/retrieval/
@@ -830,6 +851,8 @@ and stated in the PR.
 [molitor]: https://www.linkedin.com/posts/dirk-molitor_engineering-ai-is-becoming-a-vendor-war-activity-7519290174040809475-23Qp
 [onshapefsmcp]: https://www.ptc.com/en/news/2026/onshape-launches-featurescript-mcp-server
 [rhinomcp]: https://github.com/tanishqbhattad/rhino-mcp
+[ifcmcp]: https://github.com/IfcOpenShell/IfcOpenShell/tree/v0.9.0/src/ifcmcp
+[bricsshape]: https://www.bricsys.com/news/bricscad-shape-discontinued
 [steenkenpost]: https://www.linkedin.com/posts/anton-steenken_ai-cad-demos-are-full-of-sht-sound-familiar-ugcPost-7513887143623319553-qmVG/
 [leoai]: https://www.getleo.ai/
 [trace]: https://buildwithtrace.com/
