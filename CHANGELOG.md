@@ -23,6 +23,10 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 - **Free BIM benchmark track**: briefs `bim-01…04` and tool `ifcopenshell` in
   `bench/run.sh` (`bench/run.sh 'bim-*' ifcopenshell 3`); `bench/ifc_to_stl.py` tessellates
   the agent's IFC into an STL in millimetres for `caxgauge check`.
+- **Fly.io benchmark sandbox (`bench/fly/`)**: model-written scripts run on a throwaway
+  Machine (`bench/fly/launch.sh`), scored preflight-only there and re-scored with the render
+  locally (`bench/rescore.sh`). Adds the `solidcraft` tool to `bench/run.sh` and the
+  `BENCH_TMP` / `BENCH_NO_RENDER` env vars; runs now keep `part.stl`.
 
 ### Fixed
 

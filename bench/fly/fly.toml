@@ -1,0 +1,8 @@
+# Fly app for the benchmark sandbox (bench/fly/README.md). Used only to build and push the
+# image (`fly deploy --build-only`); rounds run as one-off Machines from bench/fly/launch.sh.
+# No [http_service]: nothing is exposed.
+app = 'caxgauge-bench'
+primary_region = 'fra'
+
+[build]
+  dockerfile = 'Dockerfile'

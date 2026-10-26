@@ -1,0 +1,7 @@
+# Build context for bench/fly/Dockerfile (Fly's remote builder uploads the repo root).
+.git
+.venv
+.*_cache
+site
+reports
+**/__pycache__
