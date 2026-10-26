@@ -600,6 +600,11 @@ Other IFC libraries — web-ifc (MPL-2.0, read/write, no documented authoring AP
 track that authors with IfcOpenShell and is scored by the IfcOpenShell-based checker (§13)
 shares one library on both sides, so a library bug can pass its own output; such a track
 needs an independent cross-check (e.g. web-ifc tessellation or the buildingSMART validator).
+The strongest candidate found is [ifc-lite][ifclite] (MPL-2.0, pushed 2026-10-26): "parse,
+view, query, edit, validate, and export" with a CLI and its own "Rust/WASM core with
+exact-arithmetic geometry kernel" — a second kernel, not IfcOpenShell's. The bench BIM track
+(`bench/run.sh … ifcopenshell`) scores only the IfcOpenShell-tessellated STL so far; the
+cross-check is not wired.
 
 **Adjacent, checked and dismissed:**
 
@@ -856,6 +861,7 @@ and stated in the PR.
 [rhinomcp]: https://github.com/tanishqbhattad/rhino-mcp
 [ifcmcp]: https://github.com/IfcOpenShell/IfcOpenShell/tree/v0.9.0/src/ifcmcp
 [ifcedit]: https://github.com/IfcOpenShell/IfcOpenShell/tree/v0.9.0/src/ifcedit
+[ifclite]: https://github.com/LTplus-AG/ifc-lite
 [bricsshape]: https://www.bricsys.com/news/bricscad-shape-discontinued
 [steenkenpost]: https://www.linkedin.com/posts/anton-steenken_ai-cad-demos-are-full-of-sht-sound-familiar-ugcPost-7513887143623319553-qmVG/
 [leoai]: https://www.getleo.ai/
