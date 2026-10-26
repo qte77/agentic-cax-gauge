@@ -582,8 +582,11 @@ tools only). Researched by read-only agents; the load-bearing claims re-checked 
 at source. **The free, headless route is IfcOpenShell itself:** its Python API authors real
 geometry — `ifcopenshell.api.geometry` has `create_2pt_wall` and wall/slab/door/window
 representations — so an agent can write IFC with no Blender or FreeCAD (IfcOpenShell is
-LGPL-3.0). The same repo ships an official MCP server, [`src/ifcmcp`][ifcmcp] (last commit
-2026-10-25, "build the server on MCP SDK 2.x"). The GUI-based options are weaker for a
+LGPL-3.0). The same repo ships official CLIs — [`ifcedit`][ifcedit] ("exposes all 350+
+`ifcopenshell.api` mutation functions as shell commands", e.g. `ifcedit run model.ifc
+root.create_entity --ifc_class IfcWall`) and `ifcquery` (inspect, validate, clash, render) —
+and an MCP server, [`src/ifcmcp`][ifcmcp] (last commit 2026-10-25). This project prefers the
+CLIs where both exist. The GUI-based options are weaker for a
 headless agent: Bonsai (GPL-3.0, in the same repo) runs inside Blender, and its two agent
 integrations found (`Show2Instruct/ifc-bonsai-mcp`, MIT; `ProfRino/bonsai-bim-skills`,
 GPL-3.0) both document a GUI step; FreeCAD's BIM workbench creates walls under the headless
@@ -852,6 +855,7 @@ and stated in the PR.
 [onshapefsmcp]: https://www.ptc.com/en/news/2026/onshape-launches-featurescript-mcp-server
 [rhinomcp]: https://github.com/tanishqbhattad/rhino-mcp
 [ifcmcp]: https://github.com/IfcOpenShell/IfcOpenShell/tree/v0.9.0/src/ifcmcp
+[ifcedit]: https://github.com/IfcOpenShell/IfcOpenShell/tree/v0.9.0/src/ifcedit
 [bricsshape]: https://www.bricsys.com/news/bricscad-shape-discontinued
 [steenkenpost]: https://www.linkedin.com/posts/anton-steenken_ai-cad-demos-are-full-of-sht-sound-familiar-ugcPost-7513887143623319553-qmVG/
 [leoai]: https://www.getleo.ai/
