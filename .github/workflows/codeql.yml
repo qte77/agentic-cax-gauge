@@ -30,14 +30,14 @@ jobs:
         run: echo "::notice title=CodeQL skipped::No Python files in the repo yet — analysis activates once M1 adds src/."
       - name: Initialize CodeQL
         if: hashFiles('**/*.py') != ''
-        uses: github/codeql-action/init@9b3254085494b55a0f7c4c2b3d2d52cc712ce370  # v4.39.1
+        uses: github/codeql-action/init@33d7b85da1a04171e211befe2c739303b9a4c066  # v4.39.3
         with:
           languages: python
           config-file: ./.github/codeql/codeql-config.yml
       - name: Perform CodeQL Analysis
         if: hashFiles('**/*.py') != ''
         id: analyze
-        uses: github/codeql-action/analyze@9b3254085494b55a0f7c4c2b3d2d52cc712ce370  # v4.39.1
+        uses: github/codeql-action/analyze@33d7b85da1a04171e211befe2c739303b9a4c066  # v4.39.3
         with:
           category: "/language:python"
           output: sarif-results
