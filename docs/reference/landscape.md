@@ -132,7 +132,8 @@ CAE — never a gate — if it is ever built at all.
 | FreeCAD Python API | Assess | `FreeCADCmd --console` headless; verbose, less training data |
 | pythonocc-core | Assess | Low-level OCCT escape hatch |
 | Onshape API | Assess | REST is tool-calling friendly; FeatureScript is niche/proprietary |
-| Blender bpy | Hold | Mesh/procedural, not parametric BREP — wrong domain for manufacturing CAD |
+| Blender bpy | Hold | Mesh/procedural, not parametric BREP — wrong domain for manufacturing CAD. Headless is not the blocker (checked 2026-11-11, §3.2) |
+| Rhino (rhino3dm / Compute) | Hold | No free headless path: Rhino 8 does not support Linux, Compute is billed per core-hour (checked 2026-11-11, §3.2) |
 | SolidPython | Hold | Transpiles to OpenSCAD; no advantage over using build123d directly |
 | Fusion 360 API | Hold | Desktop-app dependent; new Automation API is metered and thin on training data |
 
@@ -196,15 +197,33 @@ None of the above change the backend choice (§3.1) or reopen the rejected auto-
 verification-thin, which is this project's actual differentiation (see the "Honest read"
 paragraph above).
 
-**Added 2026-09-19 — [LEAP71][leap71], re-verified after an initial pass was deliberately
-falsified against primary sources.** "Computational Engineering": algorithmic design of
-complex hardware (rocket engines, heat exchangers, electric motors) for advanced
-manufacturing. Their kernel **PicoGK** (C#, 1.1k★, 186 forks, Apache-2.0) plus an ecosystem —
-`LEAP71_ShapeKernel` (302★), `PicoGKRuntime` (132★), `LEAP71_HelixHeatX` (84★),
-`LEAP71_LatticeLibrary` (78★), a `leap71` meta-repo (57★, missing from the first pass) — all
-confirmed directly on re-fetch. Three repos named in the first pass (`PicoGKInstaller`,
-`LEAP71_QuasiCrystals`, `LEAP71_RoverWheel`) did **not** reappear on re-fetch of the org
-page — not cited here, treat as unconfirmed rather than repeated.
+**Added 2026-09-19, corrected 2026-11-11 — [LEAP71][leap71].** "Computational Engineering":
+algorithmic design of complex hardware (rocket engines, heat exchangers, electric motors)
+for advanced manufacturing. Their kernel **PicoGK** (C#, Apache-2.0) plus an ecosystem —
+`LEAP71_ShapeKernel`, `PicoGKRuntime`, `LEAP71_HelixHeatX`, `LEAP71_LatticeLibrary`,
+`LEAP71_QuasiCrystals`, `LEAP71_RoverWheel`, `PicoGKInstaller`, `PicoGKUnitTests` (MIT) and
+examples. **Correction:** the 2026-09-19 note said three of these "did not reappear" on the
+org page; the GitHub API lists all three (`users/leap71/repos`, 2026-11-11) — a search-scope
+error then, not a fact about the repos.
+
+**Restructure, as of 2026-11-11.** [`PicoGK.Legacy`][picogklegacy] (created that day) wraps
+the PicoGK 2.x library and its native runtime as submodules behind a new automated build;
+its README puts PicoGK 2.x "into maintenance mode while developing its successor, PicoGK.Core"
+and lists Windows x64 and macOS ARM64 as build targets (an experimental Linux package landed
+in a commit the same day). Its root has no licence file, but the README says both components
+keep their own licences (Apache-2.0). [`PicoGK.Core`][picogkcore] is a ground-up kernel
+rewrite (sparse signed-distance voxels, immutable meshes, a C ABI, .NET 10 / C# 14), the
+basis for PicoGK 3.x, and is marked "Early development — do not use yet"; `PicoGK.Geometry`
+and `PicoGK.Viewer` split off geometry interchange and viewing. None has a Python binding or
+CLI. LEAP71's commercial engineering model, Noyron, is proprietary and built on PicoGK
+([leap71.com/noyron][noyron]); no first-party agent or MCP tooling was found.
+
+**Two findings for this project.** (1) `PicoGKUnitTests` asserts measured voxel volumes
+against closed-form values (a sphere's) — the same oracle pattern as our briefs' bounds.
+(2) PicoGK's own volume measurement is wrong for closed hollow bodies:
+[Discussion #118][picogk118] (2026-09-25, unanswered) reports a hollow sphere measured at
+the solid sphere's volume (+14.26 %), while the triangle mesh itself is correct — so a
+representation that is watertight by construction can still report a wrong number.
 
 **The one finding worth keeping past the "not a build candidate" filter.** PicoGK is
 **voxel-field/signed-distance-field based, not B-Rep** — confirmed by reading the actual
@@ -304,6 +323,31 @@ generation-side, with the generating model checking its own work. **Not a benchm
 here:** Rhino itself is commercial (McNeel), and the owner's bar for now is free tools. The
 post itself is a near-verbatim copy of an earlier one by another author, so it is not cited as
 first-hand evidence.
+
+**Added 2026-11-11 — Rhino beyond rhino-mcp: no free headless path.** Researched by a
+read-only agent; the load-bearing claims re-checked at source. Rhino 8's
+[system requirements][rhino8req] list Linux and Windows Server (any version) as not
+supported. [`rhino3dm`][rhino3dm] (MIT, active) reads, writes and creates `.3dm` geometry on
+Linux, but its README sends "operations that need Rhino" to Rhino.Compute, and
+[Compute][rhinocompute] is billed at $0.10 per core-hour with no free tier (a Linux beta
+exists, on that billing). The evaluation download (now Rhino 9) is "one-time", and saving and
+plug-ins stop after 90 days.
+McNeel now ships its own agent plugin, [`mcneel/rhinoai`][rhinoai] (MIT, created 2026-04-25),
+connecting Rhino and Grasshopper to Claude, Codex and others; nothing found says it checks
+the geometry it produces (its forum announcement was read only through a search summary —
+unverified at first hand). Verdict: not a benchmark track under the free-tools bar.
+
+**Added 2026-11-11 — Blender: headless is easy, the domain is still wrong.** The `bpy`
+package on PyPI (GPL-3.0, 5.3.0, a Linux x86-64 wheel, Python 3.13 only) runs Blender's
+Python API with no GUI, and `blender --background --python` does the same. That does not
+move the §3.1 Hold: Blender builds meshes, not exact solids, and CAD Sketcher (GPL-3.0) is
+2D and self-labelled experimental. The 3D-Print Toolbox is now a separate extension with a
+bad-geometry check close to our watertight check. **BIM correction to §3.7:** Bonsai's own
+CI runs its tool and BIM test suites under `blender --background`
+(`.github/workflows/test-bonsai.yml`), so headless Bonsai is further along than the
+2026-10-26 note implied; whether an agent can create a wall that way is still unprobed.
+[blender-mcp][blendermcp] (MIT) has the model check its own renders — self-checking, not an
+independent gate.
 
 A second source the user supplied, a LinkedIn Pulse article on an Opus 5.5 + Blender
 timelapse workflow, **could not be read**: LinkedIn returned its own "page not found" both
@@ -837,6 +881,10 @@ and stated in the PR.
 [bimedit]: https://arxiv.org/abs/2606.20146
 [autoaero]: https://arxiv.org/pdf/2605.27968
 [leap71]: https://github.com/leap71
+[picogklegacy]: https://github.com/leap71/PicoGK.Legacy
+[picogkcore]: https://github.com/leap71/PicoGK.Core
+[picogk118]: https://github.com/leap71/PicoGK/discussions/118
+[noyron]: https://leap71.com/noyron/
 [jev]: https://dev.to/valyuai/how-to-use-jev-a-practical-guide-to-typesafes-system-one-model-g5e
 [gliformer]: https://github.com/Knowledgator/GLiFormer
 [p4ir]: https://arxiv.org/html/2606.22402v1
@@ -859,6 +907,10 @@ and stated in the PR.
 [molitor]: https://www.linkedin.com/posts/dirk-molitor_engineering-ai-is-becoming-a-vendor-war-activity-7519290174040809475-23Qp
 [onshapefsmcp]: https://www.ptc.com/en/news/2026/onshape-launches-featurescript-mcp-server
 [rhinomcp]: https://github.com/tanishqbhattad/rhino-mcp
+[rhino8req]: https://www.rhino3d.com/8/system-requirements
+[rhino3dm]: https://github.com/mcneel/rhino3dm
+[rhinocompute]: https://developer.rhino3d.com/guides/compute/core-hour-billing/
+[rhinoai]: https://github.com/mcneel/rhinoai
 [ifcmcp]: https://github.com/IfcOpenShell/IfcOpenShell/tree/v0.9.0/src/ifcmcp
 [ifcedit]: https://github.com/IfcOpenShell/IfcOpenShell/tree/v0.9.0/src/ifcedit
 [ifclite]: https://github.com/LTplus-AG/ifc-lite
