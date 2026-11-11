@@ -6,6 +6,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ## [Unreleased]
 
+**M2 closed (#16):** the owner's review of the so101 pipette mount report — all checks green,
+four design defects found by reading its design source beside the renders.
+
 ### Added
 
 - **Sample reports on GitHub Pages (M2.6)**: `make site` renders the good box, the intended
