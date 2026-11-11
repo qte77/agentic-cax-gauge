@@ -383,6 +383,23 @@ is not included.
   3. `trace-cli … --format json --exit-code-violations` — a machine-readable report plus a
      CI-failing exit code — is a clean pattern for `caxgauge check` to mirror in M2.
 
+**Added 2026-11-11 — PCB beyond Trace: KiCad clears the free-headless bar, Fusion does not.**
+Researched by a read-only agent; KiCad and the Fusion API claims re-checked at source.
+Trace's `--format json --exit-code-violations` pattern is upstream KiCad's own:
+[`kicad-cli`][kicadcli] has `pcb drc` and `sch erc` with both flags from KiCad 8.0, and
+`pcb export stl` from 9.0 (STEP and VRML earlier), so a board's 3D solid can go straight into
+`caxgauge check`. KiCad is GPL-3.0-or-later, so it runs as a separate tool, never imported.
+The most active agent bridge is [`mixelpixx/kicad-mcp-server`][kicadmcp] (MIT); this project
+would use the CLI. **Autodesk Fusion's electronics workspace** (EAGLE's successor — EAGLE
+access was "scheduled to end on June 7, 2026", per [Autodesk's blog][eagleeol]) fails the bar:
+its [electronics API][fusionelectron] "is in preview and is read-only for modifying the
+design", so a script can read design data but cannot trigger a design-rule check, and Fusion
+needs a desktop install. Agent-reported, not re-checked here (Autodesk's pages blocked the
+re-fetch): no Linux build, and a free personal-use tier limited to 2 schematic sheets and 4
+signal layers. **Verdict:** a PCB track is feasible free and headless on KiCad alone — the
+DRC/ERC exit code as the deterministic check, the exported STL through the existing
+preflight (e.g. board-in-enclosure fit). Not started: no trigger yet.
+
 ### 3.3 `earthtojake/text-to-cad` — the largest adjacent project
 
 Analysed 2026-07-20, figures re-verified 2026-07-25. **The initial research sweep missed
@@ -921,3 +938,7 @@ and stated in the PR.
 [tracepublic]: https://github.com/buildwithtrace/trace-public
 [tracecli]: https://docs.buildwithtrace.com/resources/cli/
 [tracereview]: https://docs.buildwithtrace.com/concepts/design-review/
+[kicadcli]: https://docs.kicad.org/9.0/en/cli/cli.html
+[kicadmcp]: https://github.com/mixelpixx/kicad-mcp-server
+[eagleeol]: https://www.autodesk.com/products/fusion-360/blog/eagle-to-autodesk-fusion-transition/
+[fusionelectron]: https://help.autodesk.com/cloudhelp/ENU/Fusion-360-API/files/ElectronicsIntro.htm
