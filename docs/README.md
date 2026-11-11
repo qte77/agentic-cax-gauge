@@ -1,7 +1,7 @@
 # Docs map
 
-M2 code is complete (`caxgauge check`: preflight, browser load, render, report); M2 closes
-when the owner reviews a real part's report — see the plan's opening status. There are five
+M2 is closed (`caxgauge check`: preflight, browser load, render, report); M3 (adoption) is
+next — see the plan's opening status. There are five
 docs here — three are reference material you do not need to build.
 Development workflow lives in [`../CONTRIBUTING.md`](../CONTRIBUTING.md), agent rules in
 [`../AGENTS.md`](../AGENTS.md).
