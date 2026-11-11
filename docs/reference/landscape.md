@@ -393,10 +393,11 @@ The most active agent bridge is [`mixelpixx/kicad-mcp-server`][kicadmcp] (MIT); 
 would use the CLI. **Autodesk Fusion's electronics workspace** (EAGLE's successor — EAGLE
 access was "scheduled to end on June 7, 2026", per [Autodesk's blog][eagleeol]) fails the bar:
 its [electronics API][fusionelectron] "is in preview and is read-only for modifying the
-design", so a script can read design data but cannot trigger a design-rule check, and Fusion
-needs a desktop install. Agent-reported, not re-checked here (Autodesk's pages blocked the
-re-fetch): no Linux build, and a free personal-use tier limited to 2 schematic sheets and 4
-signal layers. **Verdict:** a PCB track is feasible free and headless on KiCad alone — the
+design", so a script can read design data but cannot trigger a design-rule check. Fusion's
+[system requirements][fusionsysreq] (2026-10-20) list Windows, macOS and a web browser — no
+Linux. The free [personal-use tier][fusioncompare] includes PCB design capped at 2 sheets per
+schematic and 4 signal layers, board area unlimited (both re-fetched with polyfetch's headed
+browser, which Autodesk's bot block lets through). **Verdict:** a PCB track is feasible free and headless on KiCad alone — the
 DRC/ERC exit code as the deterministic check, the exported STL through the existing
 preflight (e.g. board-in-enclosure fit). Not started: no trigger yet.
 
@@ -942,3 +943,5 @@ and stated in the PR.
 [kicadmcp]: https://github.com/mixelpixx/kicad-mcp-server
 [eagleeol]: https://www.autodesk.com/products/fusion-360/blog/eagle-to-autodesk-fusion-transition/
 [fusionelectron]: https://help.autodesk.com/cloudhelp/ENU/Fusion-360-API/files/ElectronicsIntro.htm
+[fusionsysreq]: https://www.autodesk.com/support/technical/article/caas/sfdcarticles/sfdcarticles/System-requirements-for-Autodesk-Fusion-360.html
+[fusioncompare]: https://www.autodesk.com/products/fusion-360/personal/compare
