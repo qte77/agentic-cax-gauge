@@ -26,4 +26,9 @@ exclude = [
     # polyfetch --tier patchright --headed under xvfb-run (fusion-compute-mcp,
     # autodesk-assistant-script-execute-update). The Fusion blog path only, not the host
     "^https://www\\.autodesk\\.com/products/fusion-360/blog/",
+    # Same Akamai 403; both pages confirmed live 2026-11-11 with polyfetch --tier patchright
+    # --headed under xvfb-run (Fusion personal-use compare table, Fusion system requirements).
+    # Exact URLs only
+    "^https://www\\.autodesk\\.com/products/fusion-360/personal/compare$",
+    "^https://www\\.autodesk\\.com/support/technical/article/caas/sfdcarticles/sfdcarticles/System-requirements-for-Autodesk-Fusion-360\\.html$",
 ]
