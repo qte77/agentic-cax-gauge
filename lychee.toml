@@ -36,8 +36,11 @@ exclude = [
     # --headed under xvfb-run (Fusion personal-use compare table, Fusion system requirements).
     # Exact URLs only
     "^https://www\\.autodesk\\.com/products/fusion-360/personal/compare$",
+    "^https://www\\.autodesk\\.com/support/technical/article/caas/sfdcarticles/sfdcarticles/System-requirements-for-Autodesk-Fusion-360\\.html$",
     # SEC EDGAR 403s clients without a declared User-Agent; Cadence's Q3 2026 10-Q confirmed
     # live 2026-11-12 with polyfetch --tier curl_cffi. Exact URL only
     "^https://www\\.sec\\.gov/Archives/edgar/data/0000813672/000081367226000121/cdns-20260930\\.htm$",
-    "^https://www\\.autodesk\\.com/support/technical/article/caas/sfdcarticles/sfdcarticles/System-requirements-for-Autodesk-Fusion-360\\.html$",
+    # 403 to the CI runner's lychee (passed locally the same day); confirmed live 2026-11-12
+    # with polyfetch --tier patchright --headed under xvfb-run. Exact URL only
+    "^https://www\\.cadence\\.com/en_US/home/company/newsroom/press-releases/pr/2026/cadence-completes-acquisition-of-hexagons-design-and-engineering\\.html$",
 ]
