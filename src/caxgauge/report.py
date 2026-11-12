@@ -1,7 +1,8 @@
 """One human review artifact per part: render beside per-check verdicts (plan §7.1 wave 3).
 
-The verdict is only ever `fail` (some check failed) or `review` (nothing obviously broken —
-a human looks at the render and decides). There is no `pass` and never "verified"
+The verdict is only ever `fail` (some check failed), `review` (nothing obviously broken —
+a human looks at the render and decides) or `preflight-only` (nothing failed, but there is no
+render, so there is nothing for a human to decide on). There is no `pass` and never "verified"
 (`.claude/rules/verification-honesty.md`). Writes `report.json` for machines and
 `report.html` for the human.
 """
@@ -24,7 +25,7 @@ from caxgauge.verify.types import (
     Status,
 )
 
-Verdict = Literal["fail", "review"]
+Verdict = Literal["fail", "review", "preflight-only"]
 
 
 class Report(BaseModel):
@@ -53,7 +54,10 @@ def build_report(
     *,
     source: Path | None = None,
 ) -> Report:
-    """Combine all results; any `FAIL` makes the verdict `fail`, otherwise `review`.
+    """Combine all results into a verdict.
+
+    Any `FAIL` makes it `fail`; otherwise a skipped render makes it `preflight-only` (the
+    primary gate did not run); otherwise `review`.
 
     `source` is the part's design script, shown beside the renders so the human can compare
     intent with result. It informs the review only: it is never a check and never gates.
@@ -63,13 +67,18 @@ def build_report(
         CheckResult(name="browser_load", status=browser.status, detail=browser.detail),
         CheckResult(name="render", status=render.status, detail=render.detail),
     )
-    failed = any(c.status is Status.FAIL for c in checks)
+    render_skipped = render.status is Status.SKIP
+    verdict: Verdict = "review"
+    if any(c.status is Status.FAIL for c in checks):
+        verdict = "fail"
+    elif render_skipped:
+        verdict = "preflight-only"
     return Report(
         mesh=mesh,
-        verdict="fail" if failed else "review",
+        verdict=verdict,
         checks=checks,
         views=render.views,
-        render_skipped=render.status is Status.SKIP,
+        render_skipped=render_skipped,
         source=source,
     )
 
@@ -107,6 +116,7 @@ body { font: 14px/1.5 system-ui, sans-serif; margin: 16px; color: #1d1d1f; backg
 h1 { overflow-wrap: anywhere; }
 .verdict { font-size: 20px; font-weight: 600; padding: 8px 12px; border-radius: 4px; }
 .fail { background: #fde2e1; } .review { background: #fff4d6; }
+.preflight-only { background: #e8e8ed; }
 .label, .norender { padding: 8px 12px; border-left: 4px solid #b26b00; background: #fff; }
 .norender { border-color: #c0392b; font-weight: 600; }
 .checks { overflow-x: auto; }

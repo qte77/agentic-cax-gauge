@@ -74,15 +74,27 @@ def test_report_names_the_bounds_that_were_not_supplied(tmp_path: Path):
     assert "--volume-band" in html
 
 
-def test_skipped_render_is_shown_loudly(tmp_path: Path):
-    render = RenderResult(
-        status=Status.SKIP, detail="no render: polyfetch unavailable", requested_views=("iso",)
-    )
-    browser = BrowserResult(status=Status.SKIP, detail="polyfetch unavailable")
-    report = build_report(MESH, _ALL_PASS, browser, render)
-    assert report.verdict == "review"
-    html = write_report(report, tmp_path)[1].read_text()
+_NO_RENDER = RenderResult(
+    status=Status.SKIP, detail="no render: polyfetch unavailable", requested_views=("iso",)
+)
+_NO_BROWSER = BrowserResult(status=Status.SKIP, detail="polyfetch unavailable")
+
+
+def test_without_a_render_the_verdict_is_preflight_only_never_review(tmp_path: Path):
+    # `review` means "a human looks at the render and decides"; with no render there is nothing
+    # to look at, so the run must not borrow that name (plan §5: preflight alone is not a gate).
+    report = build_report(MESH, _ALL_PASS, _NO_BROWSER, _NO_RENDER)
+    assert report.verdict == "preflight-only"
+    json_path, html_path = write_report(report, tmp_path)
+    assert json.loads(json_path.read_text())["verdict"] == "preflight-only"
+    html = html_path.read_text()
+    assert "Verdict: preflight-only" in html
     assert "No render" in html
+
+
+def test_a_failed_check_still_fails_without_a_render():
+    preflight = _preflight(("watertight", Status.FAIL, "open edges"))
+    assert build_report(MESH, preflight, _NO_BROWSER, _NO_RENDER).verdict == "fail"
 
 
 def test_html_shows_each_view_by_relative_path(tmp_path: Path):

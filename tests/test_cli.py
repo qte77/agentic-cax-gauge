@@ -8,6 +8,7 @@ import trimesh
 
 from caxgauge import cli
 from caxgauge.verify.substrate import POLYFETCH_ENV
+from caxgauge.verify.types import BrowserResult, RenderedView, RenderResult, Status
 
 FIXTURES = Path(__file__).parent / "fixtures"
 GOOD = FIXTURES / "good.stl"  # 20 x 15 x 10 box, volume 3000
@@ -19,10 +20,27 @@ def _no_polyfetch(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv(POLYFETCH_ENV, raising=False)
 
 
+@pytest.fixture
+def rendered(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Stand in for a working browser + render, for tests about the rest of the run."""
+
+    def render(mesh: Path, out: Path) -> RenderResult:
+        view = RenderedView(name="iso", path=out / f"{mesh.stem}-iso.png")
+        return RenderResult(
+            status=Status.PASS, detail="1 view(s)", requested_views=("iso",), views=(view,)
+        )
+
+    monkeypatch.setattr(cli, "render_views", render)
+    monkeypatch.setattr(
+        cli, "browser_load_check", lambda _mesh: BrowserResult(status=Status.PASS, detail="ok")
+    )
+
+
 def _report(out: Path) -> dict[str, object]:
     return json.loads((out / "report.json").read_text())
 
 
+@pytest.mark.usefixtures("rendered")
 def test_bounded_good_part_is_review_exit_0(tmp_path: Path, capsys: pytest.CaptureFixture[str]):
     code = cli.main(
         ["check", str(GOOD), "--envelope", "21,16,11", "--volume-band", "2990,3010",
@@ -51,6 +69,7 @@ def test_headline_silent_fusion_loss_fails_through_the_cli(tmp_path: Path):
     assert volume["status"] == "fail"
 
 
+@pytest.mark.usefixtures("rendered")
 def test_unbounded_run_names_the_absent_bounds_and_is_not_green(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ):
@@ -70,17 +89,24 @@ def test_no_render_skips_the_browser_legs_without_running_them(
 
     monkeypatch.setattr(cli, "render_views", boom)
     monkeypatch.setattr(cli, "browser_load_check", boom)
-    assert cli.main(["check", str(GOOD), "--no-render", "--out", str(tmp_path)]) == 0
+    assert cli.main(["check", str(GOOD), "--no-render", "--out", str(tmp_path)]) == 3
+    assert _report(tmp_path)["verdict"] == "preflight-only"
     checks = {c["name"]: c for c in _report(tmp_path)["checks"]}  # type: ignore[union-attr]
     assert checks["render"]["status"] == "skip"
     assert "--no-render" in checks["render"]["detail"]
 
 
-def test_without_polyfetch_the_render_is_skipped_loudly(tmp_path: Path):
-    cli.main(["check", str(GOOD), "--out", str(tmp_path)])
+def test_without_polyfetch_the_run_is_preflight_only_exit_3(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+):
+    # Not `review`/0: nothing was rendered, so there is nothing for a human to decide on.
+    assert cli.main(["check", str(GOOD), "--out", str(tmp_path)]) == 3
+    assert _report(tmp_path)["verdict"] == "preflight-only"
+    assert "verdict: preflight-only" in capsys.readouterr().out
     assert "No render" in (tmp_path / "report.html").read_text()
 
 
+@pytest.mark.usefixtures("rendered")
 def test_source_option_puts_the_design_script_in_the_report(tmp_path: Path):
     source = tmp_path / "part.py"
     source.write_text("Box(20, 15, 10)\n")

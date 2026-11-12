@@ -55,10 +55,12 @@ report: reports/part/report.html
 | `--volume-band MIN,MAX` | Two-sided volume band (mm³); without it the volume check is `SKIP` |
 | `--source FILE` | The part's design script (e.g. the build123d `.py`), shown escaped beside the renders so the reviewer compares intent with result; not a check, never changes the verdict |
 | `--out DIR` | Report directory (default `reports/<stem>`): `report.html`, `report.json`, one PNG per view |
-| `--no-render` | Skip the browser load check and the render (the report says so loudly) |
+| `--no-render` | Skip the browser load check and the render (the report says so loudly; the verdict is `preflight-only`) |
 
 The verdict is `fail` (exit 1) if any check failed, otherwise `review` (exit 0) — a human
-looks at the render and decides. There is no "pass". Usage errors exit 2. An unsupplied
+looks at the render and decides. A run with no render (`--no-render`, or no polyfetch) is
+`preflight-only` (exit 3): nothing failed, but there is nothing for a human to decide on, so
+it never borrows `review`'s exit 0. There is no "pass". Usage errors exit 2. An unsupplied
 bound reports `SKIP`, never `PASS`, and is listed in the output and the report.
 
 Python 3.12 + `uv`. Rendering and browser-side checks run through
