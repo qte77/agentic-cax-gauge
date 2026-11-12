@@ -140,7 +140,8 @@ modelling" lead lacked a URL; the one Astra+BIM article found on this topic
 neither a facade example nor the term "vibe modelling" — that term is already recorded in
 this file from an unrelated 2026-10-26 `rhino-mcp` entry, so the lead may be the same meme
 recurring, not new evidence. A Molitor knowledge-graph lead also lacked a URL and could not
-be matched to a specific first-party source.
+be matched to a specific first-party source — **resolved 2026-11-12:** it is his whitepaper's
+context-management chapter (§3.2, the Molitor entries).
 
 ### 3.1 Backend decision
 
@@ -342,6 +343,54 @@ physics simulation) and [Neural Concept with Antolin][neuralantolin] (2026-02-24
 copilots" scaling from a 2024 pilot into Antolin's existing simulation environment). Both are
 simulation-side; neither checks CAD geometry. The post's line about "results engineers can
 validate" names no method. Nothing to adopt.
+
+**Added 2026-11-12 — the map's in-scope names, audited.** A read-only audit read all 26 video
+frames and grepped about 205 legible names against this file, `vendor-ai.md` and `cae.md`:
+the CAD/CAE incumbents were already covered; most other names are cloud, LLM, robotics,
+automotive, life-science or chip companies — context, out of scope. The in-scope gaps,
+checked at the vendors' own sites (AVEVA, Hexagon and the sale re-checked here; the rest
+agent-checked, not re-read): **[AVEVA][avevaai]** — in Unified Engineering E3D, "Generative
+AI produces multiple clash-free options in minutes" for plant layouts, and "Point Cloud
+Intelligence" classifies and tags laser scans; **[Hexagon][hexagonmentor]** (2025-06-16) —
+"Metrology Mentor" "automatically generates ISO- and ASME-compliant inspection programmes
+directly from CAD" (the page does not call this AI), and Hexagon
+[agreed to sell][hexagoncadence] its Design & Engineering business (ex-MSC Software) to
+Cadence for about €2.7bn (2025-09-04; closing not confirmed — Cadence's newsroom would not
+load). **Deterministic part checks, no AI label:** Paperless Parts (feature detection and
+"manufacturability warnings" on uploaded part files), Materialise MiniMagics (free STL/3MF
+viewer to "verify part printability"). **Adjacent, no AI on CAD geometry:** Lumafield (AI on
+CT scan data), nTop ("Physics AI" evaluates generated variants), Flexcompute ("GeometryAI"
+prepares geometry for simulation), CADDi (drawing and CAD search), Akselos (reduced-basis FE
+marketed as "Physics AI"), AVL, CoreTechnologie, Monolith.
+
+**Added 2026-11-12 — Molitor's own whitepaper (Molitor et al., Accenture / DFKI / Fraunhofer
+ISST, 2025, [PDF][molitorwp], read at source).** "AI in New Product Development: Connecting
+Data & Unlocking Knowledge" — 125 pages, Molitor first of six authors — proposes a
+five-pillar framework for scaling AI in engineering (data quality, interoperability, AI
+platform, context management, federated governance) with use cases from requirements to
+release. Its context-management chapter (pp. 25–27) builds on knowledge graphs that an LLM
+assembles from engineering artifacts — the knowledge-graph lead noted in §3.0 — used for
+retrieval and traceability, not for checking geometry. The one concrete output check is an
+Accenture case on p. 48: a Technical Drawing Assistant that "integrates 2D and 3D drawing
+checks directly into the engineering workflow", combining image processing with
+"rule-based validation techniques to automatically identify design errors and formal
+inconsistencies" — rule-based checking of engineering output, the same family as this
+project's preflight. Elsewhere the paper cites (not re-checked here) CAD agent loops whose
+reviewer agents critique the same system's output — the auto-critique pattern
+`.claude/rules/verification-honesty.md` rejects. His LinkedIn profile itself returned
+LinkedIn's bot block (HTTP 999), so further posts he lists ("Part 3: Engineering gets
+Compilable", a Mistral post) are unconfirmed and not cited.
+
+**Added 2026-11-12 — OpenAI on AI for hardware engineering ([OpenAI, 2026-11-03][openaieng]),
+read at source.** OpenAI reports that GPT‑6 Astra designed a test device — enclosure, PCB
+and firmware — "without any direct human edits", and a contract manufacturer built
+prototypes within a month; but readying it for production took several review rounds,
+because "Astra did not consistently account for the manufacturer's production limits,
+tolerances, or details required for assembly". Its benchmark BenchCAD 2.0 (reconstructing 3D
+parts and assemblies, circuit-board connections) scores an internal model at 0.875 against
+Astra's 0.594, and industry partners' engineers "review model outputs for accuracy and
+practical use". The model vendor itself documents the gap this project targets: generated
+geometry that looks complete and still misses manufacturing constraints, caught by humans.
 
 **Added 2026-10-26 — [tanishqbhattad/rhino-mcp][rhinomcp], from a LinkedIn "vibe modelling"
 post; repo checked via the GitHub API.** MIT, created 2026-05-12, last pushed 2026-10-12. A
@@ -1076,6 +1125,11 @@ and stated in the PR.
 [molitor2]: https://www.linkedin.com/posts/dirk-molitor_the-race-to-reshape-product-development-is-ugcPost-7526214240760692736-AiIf/
 [physicsxmsft]: https://www.physicsx.ai/resources/physicsx-forges-strategic-collaboration-with-microsoft-to-accelerate-engineering-innovation-with-ai-for-science-platform
 [neuralantolin]: https://www.neuralconcept.com/industry-stories/antolin-neural-concept-automotive-interior
+[avevaai]: https://www.aveva.com/en/solutions/digital-transformation/artificial-intelligence/industrial-ai-for-engineering/
+[hexagonmentor]: https://hexagon.com/company/newsroom/press-releases/2025/hexagon-unveils-autonomous-metrology-suite-to-deliver-manufacturing-quality-at-speed
+[hexagoncadence]: https://hexagon.com/company/divisions/manufacturing-intelligence/msc-software
+[molitorwp]: https://www.isst.fraunhofer.de/content/dam/isst/publikationen/whitepaper/AI-in-New-Product_Development_Whitepaper.pdf
+[openaieng]: https://openai.com/index/accelerating-engineering-for-the-physical-world/
 [onshapefsmcp]: https://www.ptc.com/en/news/2026/onshape-launches-featurescript-mcp-server
 [rhinomcp]: https://github.com/tanishqbhattad/rhino-mcp
 [rhino8req]: https://www.rhino3d.com/8/system-requirements
