@@ -50,6 +50,9 @@ four design defects found by reading its design source beside the renders.
   it out at desktop width and shrank it. Added the tag; the checks table scrolls sideways
   instead of overflowing. A long file-name heading now wraps instead of running off the
   screen.
+- **`bench/run.sh` logged every non-zero exit as `fail`**: a crash, a usage error or a broken
+  `uv` showed up in `runs.tsv` as a gauge verdict. Now only exit 1 is `fail`; any other
+  non-zero is logged as `error-exit-<code>`.
 
 ## [0.2.1] - 2026-10-19
 

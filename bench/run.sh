@@ -105,7 +105,13 @@ for brief in "$repo"/bench/briefs/$brief_glob.md; do
 				[ -n "$envelope" ] && args+=(--envelope "$envelope")
 				[ -n "$band" ] && args+=(--volume-band "$band")
 				rc=0; uv run --directory "$repo" caxgauge "${args[@]}" || rc=$?
-				verdict="$([ "$rc" -eq 0 ] && echo review || echo fail)"
+				# Only exit 1 is a `fail` verdict; anything else unknown (a crash, a usage error,
+				# a broken uv) is logged with its exit code, never as a gauge verdict.
+				case "$rc" in
+				0) verdict=review ;;
+				1) verdict=fail ;;
+				*) verdict="error-exit-$rc" ;;
+				esac
 				stl=yes
 			else
 				verdict="no-output"; stl=no
