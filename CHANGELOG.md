@@ -30,12 +30,19 @@ four design defects found by reading its design source beside the renders.
   Machine (`bench/fly/launch.sh`), scored preflight-only there and re-scored with the render
   locally (`bench/rescore.sh`). Adds the `solidcraft` tool to `bench/run.sh` and the
   `BENCH_TMP` / `BENCH_NO_RENDER` env vars; runs now keep `part.stl`.
-
 - **`caxgauge check --source FILE`**: the report shows the part's design script (escaped,
   inert) beside the renders, so the reviewer compares intent with result. Informational —
   never a check, never changes the verdict. `make site` and the benchmark scripts pass it.
   Prompted by the so101 pipette mount: green checks and a plausible render, but reading its
   script next to the views showed four design defects.
+
+### Documentation
+
+- **Research record (`docs/reference/`)**: `vendor-ai.md` (what CAD incumbents shipped in AI
+  and what checks it); `landscape.md` updates on free BIM tools, LEAP71/PicoGK, Rhino, Blender,
+  PCB (KiCad vs Fusion), Molitor's posts and whitepaper, and OpenAI's hardware-engineering
+  post; new `engineering-ai-map.md` listing the out-of-scope companies on Molitor's
+  partnership map, with reasons and homepages.
 
 ### Fixed
 
