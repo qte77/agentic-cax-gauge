@@ -332,6 +332,17 @@ review, workflow automation and data lineage respectively — none verify CAD ge
 vendors' features themselves — what shipped, usage patterns, and what checks the output — are
 in [`vendor-ai.md`](vendor-ai.md).
 
+**Added 2026-11-12 — same author, follow-up ([Molitor, LinkedIn, 2026-11-11][molitor2]).** A
+partnership map, "Who Builds Engineering AI With Whom?" — 273 collaborations among 247
+companies, with NVIDIA at the centre — recasting the vendor war as an ecosystem race. Its
+video is a silent 65 s sequence of network-diagram cards (frames read here; no software runs,
+nothing is generated or checked). Two partnerships not logged before, confirmed on the
+vendors' own pages: [PhysicsX with Microsoft Discovery][physicsxmsft] (2025-05-19, AI-accelerated
+physics simulation) and [Neural Concept with Antolin][neuralantolin] (2026-02-24, "AI design
+copilots" scaling from a 2024 pilot into Antolin's existing simulation environment). Both are
+simulation-side; neither checks CAD geometry. The post's line about "results engineers can
+validate" names no method. Nothing to adopt.
+
 **Added 2026-10-26 — [tanishqbhattad/rhino-mcp][rhinomcp], from a LinkedIn "vibe modelling"
 post; repo checked via the GitHub API.** MIT, created 2026-05-12, last pushed 2026-10-12. A
 Rhino 8 MCP server for architectural modelling ("128 tools") with post-condition checks —
@@ -1062,6 +1073,9 @@ and stated in the PR.
 [solidcraft]: https://github.com/tangency-labs/solidcraft
 [solidcraftoracle]: https://github.com/tangency-labs/solidcraft/blob/main/docs/oracle.md
 [molitor]: https://www.linkedin.com/posts/dirk-molitor_engineering-ai-is-becoming-a-vendor-war-activity-7519290174040809475-23Qp
+[molitor2]: https://www.linkedin.com/posts/dirk-molitor_the-race-to-reshape-product-development-is-ugcPost-7526214240760692736-AiIf/
+[physicsxmsft]: https://www.physicsx.ai/resources/physicsx-forges-strategic-collaboration-with-microsoft-to-accelerate-engineering-innovation-with-ai-for-science-platform
+[neuralantolin]: https://www.neuralconcept.com/industry-stories/antolin-neural-concept-automotive-interior
 [onshapefsmcp]: https://www.ptc.com/en/news/2026/onshape-launches-featurescript-mcp-server
 [rhinomcp]: https://github.com/tanishqbhattad/rhino-mcp
 [rhino8req]: https://www.rhino3d.com/8/system-requirements
