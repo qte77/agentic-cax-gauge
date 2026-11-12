@@ -344,6 +344,15 @@ copilots" scaling from a 2024 pilot into Antolin's existing simulation environme
 simulation-side; neither checks CAD geometry. The post's line about "results engineers can
 validate" names no method. Nothing to adopt.
 
+**Added 2026-11-12 — [PhysicsX Ai.rplane][physicsxairplane]** (the page is dated 04/12/2024
+and retires the demo). A web tool, not a built aircraft: a generative geometry model (LGM-Aero)
+proposes aircraft shapes, a deep-learning surrogate trained on CFD and FEA results predicts
+pressure, lift-to-drag, stability and stress in seconds, and the shape exports as STL. The only
+check is that surrogate, with a stated uncertainty; independent validation is left to the user
+(conventional calculation, or print it and see whether it flies), and no flight test is
+reported. The design and its check both come from the vendor's own models, the pattern
+`vendor-ai.md` records for CAD vendors. Nothing to adopt.
+
 **Added 2026-11-12 — the map's in-scope names, audited.** A read-only audit read all 26 video
 frames and grepped about 205 legible names against this file, `vendor-ai.md` and `cae.md`:
 the CAD/CAE incumbents were already covered; most other names are cloud, LLM, robotics,
@@ -1147,6 +1156,7 @@ and stated in the PR.
 [solidcraftoracle]: https://github.com/tangency-labs/solidcraft/blob/main/docs/oracle.md
 [molitor]: https://www.linkedin.com/posts/dirk-molitor_engineering-ai-is-becoming-a-vendor-war-activity-7519290174040809475-23Qp
 [molitor2]: https://www.linkedin.com/posts/dirk-molitor_the-race-to-reshape-product-development-is-ugcPost-7526214240760692736-AiIf/
+[physicsxairplane]: https://www.physicsx.ai/newsroom/welcome-to-airplane
 [physicsxmsft]: https://www.physicsx.ai/resources/physicsx-forges-strategic-collaboration-with-microsoft-to-accelerate-engineering-innovation-with-ai-for-science-platform
 [neuralantolin]: https://www.neuralconcept.com/industry-stories/antolin-neural-concept-automotive-interior
 [avevaai]: https://www.aveva.com/en/solutions/digital-transformation/artificial-intelligence/industrial-ai-for-engineering/
