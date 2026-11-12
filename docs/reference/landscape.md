@@ -123,24 +123,24 @@ against. This would belong on the render/human-judged side of the trust boundary
 CAE — never a gate — if it is ever built at all.
 
 **2026-11-12 — owner-screenshot leads, first-party re-sourced.** 15 social-media leads swept;
-findings landed in §3.2 (BenchCAD 2.0, NVIDIA SimReady Central, MeltFlex) and
-[`vendor-ai.md`](vendor-ai.md) PTC section (two more first-party Onshape blog posts). **Searched,
+findings landed in §3.2 (BenchCAD 2.0, NVIDIA SimReady Central, MeltFlex, Kyrall) and
+[`vendor-ai.md`](vendor-ai.md) PTC section (two first-party Onshape blog posts). **Searched,
 empty or dropped:** AW-0 (UC Berkeley/NVIDIA robotics world-action model, arXiv:2610.30136 —
 confirmed robot-manipulation only, no CAD/OpenUSD tie despite a direct check); Nominal.io
 (confirmed as a real hardware test/telemetry platform, but its claimed agent-driven
-CAD↔HPC↔surrogate loop-closure was not stated on its own site); Kyrall (confirmed as a real
-intent-to-parametric-CAD startup via a second-party interview, but the specific claim — STL
-mesh to feature tree, exported to Onshape — could not be confirmed); "Generative Engineering"
+CAD↔HPC↔surrogate loop-closure was not stated on its own site); "Generative Engineering"
 (Joe Griston), "Facade Studio" (Chiang Ning), and a PTC/Onshape × Gemma/AAS/dataspace claim —
 no first-party source found for any of the three despite a direct search. **Already
 covered, not re-added:** two of the leads were duplicates of case studies already in this
 file — the 222M-token/472-call run matches [Steenken, 2026-10-07][steenkencase] exactly, and
 the Pi4-housing/missing-draft-angles run matches [Steenken, 2026-09-29][steenkenrun1]
-exactly. **Thematically covered, not independently added:** an "Astra builds Rhino models,
-called vibe modelling" lead and a Molitor knowledge-graph lead both lack a URL and could not
-be matched to a specific first-party source; "vibe modelling" is already a recorded term in
-this file (the 2026-10-26 `rhino-mcp` entry, attributed there to a different, unnamed
-agent) — the lead may be the same meme recurring, not new evidence.
+exactly. **Checked and not confirmed:** an "Astra builds Rhino models, called vibe
+modelling" lead lacked a URL; the one Astra+BIM article found on this topic
+([AEC Magazine, 2026-10-11][aecastra], read directly) covers Rhino/Grasshopper tests but
+neither a facade example nor the term "vibe modelling" — that term is already recorded in
+this file from an unrelated 2026-10-26 `rhino-mcp` entry, so the lead may be the same meme
+recurring, not new evidence. A Molitor knowledge-graph lead also lacked a URL and could not
+be matched to a specific first-party source.
 
 ### 3.1 Backend decision
 
@@ -446,9 +446,10 @@ to runs from 2026-11-05 on, not retroactively) the line "would read 0.4222 and i
 0.5893" — the measurer correcting its own published number, a small instance of this
 project's own thesis that scoring is never done once.
 
-*Not independently fetched this session — the OpenAI post itself could not be retrieved
-directly; the following is search-engine synthesis of secondary coverage, not a verbatim
-read, and should be treated as approximate:* [OpenAI's 2026-11-03 blog post][openaiphysical]
+*Not independently fetched this session — a direct fetch of the OpenAI post returned
+HTTP 403 (consistent with this file's existing `openai.com` lychee exclusion, below); the
+following is search-engine synthesis of secondary coverage, not a verbatim read, and should
+be treated as approximate:* [OpenAI's 2026-11-03 blog post][openaiphysical]
 is reported to cite "0.594" for "GPT-6 Astra at its highest reasoning setting" on
 "BenchCAD 2.0" — a figure that matches BenchCAD's own measured `gpt-6-astra` "max" line
 above almost exactly. The same post is reported to also claim **0.875** for a separate,
@@ -472,34 +473,62 @@ as the Steenken case studies above, from a different vendor and a different tool
 **Added 2026-11-12 — [NVIDIA-Omniverse/simready-central][simready], a render+physics gate on
 agent-submitted assets, verified directly via the GitHub API.** Apache-2.0. NVIDIA's intake
 pipeline for OEM-contributed "SimReady" OpenUSD assets (robotics/digital-twin simulation
-props), published alongside Hugging Face's SimReady Central Library (NVIDIA's own 2026-10-21
-announcement reports "2,000+" assets, via search synthesis — not independently fetched).
-The repo ships its own `CLAUDE.md`/`AGENTS.md` and expects an agent to drive submission
-through a documented skill. Its acceptance criteria (`docs/acceptance-criteria.md`, read
-directly) are mostly package/licence/metadata linting (`SUB.*`, `SCAN.*`) — but one rule,
-**REVIEW.006**, is a genuine geometry+physics check: "The root USD must open and render in an
-RTX renderer such as Isaac Sim, and an asset with physics must survive a simple drop onto the
-ground with the PhysX engine without falling apart, exploding or passing through the ground."
-**Why it matters here:** different domain (robotics sim assets, not mechanical CAD; OpenUSD,
-not STEP/STL/IFC — out of this project's scope, no action triggered), but it is a second
-real-world instance (after this project's own design) of a load+physics gate on
-agent-produced 3D content, independent of an LLM judge. Worth knowing exists, not worth
-building toward.
+props), published alongside [Hugging Face's SimReady Central Library blog post][hfsimready]
+(NVIDIA-authored, 2026-10-21, read directly): "more than 2,000 simulation-ready (SimReady)
+OpenUSD assets on Hugging Face," and Hugging Face "integrated USD Search into their platform
+search" — the post does **not** say the Hub added native OpenUSD viewing, and states no
+licence for the library as a whole, nor does it name specific OEM dataset repos. Two OEM
+repos were confirmed directly instead: [`LGElectronics/simready-assets`][lgsimready]
+(CC BY 4.0, 21 USD assets, 539 MB, empty README) and [`Vertiv/simready-assets`][vertivsimready]
+(CC BY 4.0, 41 USD assets, 1.52 GB — "NVIDIA SimReady packages for Vertiv datacenter
+equipment ... source of the packages submitted to SimReady Central").
 
-**Added 2026-11-12 — [MeltFlex][meltflex], generation-only, Claude-Code-native.** Verified
-directly via the npm registry (`npm view meltflex-mcp`, not just the listing page):
+The `simready-central` repo ships its own `CLAUDE.md`/`AGENTS.md` and expects an agent to
+drive submission through a documented skill. Its acceptance criteria
+(`docs/acceptance-criteria.md`, read directly) are mostly package/licence/metadata linting
+(`SUB.*`, `SCAN.*`) — but one rule, **REVIEW.006**, is a genuine geometry+physics check: "The
+root USD must open and render in an RTX renderer such as Isaac Sim, and an asset with physics
+must survive a simple drop onto the ground with the PhysX engine without falling apart,
+exploding or passing through the ground." **Why it matters here:** different domain
+(robotics sim assets, not mechanical CAD; OpenUSD, not STEP/STL/IFC — out of this project's
+scope, no action triggered), but it is a second real-world instance (after this project's
+own design) of a load+physics gate on agent-produced 3D content, independent of an LLM
+judge. Worth knowing exists, not worth building toward.
+
+**Added 2026-11-12 — [MeltFlex][meltflex] (MeltFlex s.r.o.), generation-only,
+Claude-Code-native.** Verified directly via the npm registry (`npm view meltflex-mcp`):
 `meltflex-mcp@0.6.0`, MIT licensed, published by `meltflexai`, depending on the official
-`@modelcontextprotocol/sdk`. Its own description, from the registry: "MeltFlex AI — generate
-photorealistic interior designs from your AI agent. MCP server + CLI."
+`@modelcontextprotocol/sdk`. Its own registry description: "MeltFlex AI — generate
+photorealistic interior designs from your AI agent. MCP server + CLI." The `meltflexai.com`
+CLI page (read directly) confirms the CLI turns a room photo into a redesign and the same
+binary also runs as an MCP server for Claude Code and Cursor (`npm install -g meltflex-mcp`)
+— a thin client over the paid MeltFlex API; the website itself states no licence for the
+service (the MIT licence above is the npm package metadata, not a site claim), and its only
+public GitHub link is the companion skills repo, `MeltFlexDevs/skills`.
 
-*The rest is from package-listing pages (npm/MCP directories), not from the registry read
-above or an independent fetch of MeltFlex's own site — treat as reported, not confirmed:*
-the CLI/MCP server is said to turn a 2D floorplan image into a GLB 3D model, driven from
-Claude Code, Cursor, Codex, or any MCP-compatible client; the generation service itself
-needs a paid subscription, though the server package is MIT and open. No verification or
-checking step was found for the floorplan→GLB conversion in anything read — and MeltFlex's
-separate AI-BIM-model product page was not read at all this session, so its presence or
-absence of a check is simply unknown, not confirmed absent.
+A separate product, MeltFlex's AI-BIM-software page (read directly), builds a BIM model and
+"exports as IFC4" — explicitly "concept stage only," with no automated model checking: "It
+does not check building permits." Generation-side only, same shape as everything else in
+this table.
+
+**Added 2026-11-12 — Kyrall (Munich), intent-to-parametric-CAD, one claim corrected.** An
+owner lead described Kyrall as parametrizing STL meshes into editable CAD feature trees
+exported to Onshape; neither a Xometry interview with co-founder Osama Atwi (read directly
+this session, but not linked here — the page 403s to automated link checks) nor
+[DEVELOP3D's launch coverage][kyralld3d] (trade press, already a source elsewhere in this
+file) mentions STL, mesh, scan, or point-cloud input anywhere — the claim does not hold.
+What is confirmed instead, from Atwi's own words in those two sources: the product "turns
+engineering intent into native, editable parametric CAD
+models," by generating a script that generates the model (code-gen, not scan-to-CAD); it
+"can currently read and write Onshape files," and can additionally *read* (not yet write)
+CATIA, NX, SolidWorks and Creo. Its "Context Manager" lets a user upload specs/rules so
+output follows house data; it is "building DFM tests first for three-axis milling and FDM,
+SLA, and SLS printing" where "a user picks the manufacturing method, and the tool modifies
+the part to pass the checks" — an auto-correct-to-pass loop, the same shape as the
+CADCodeVerify/Query2CAD pattern this project's own red-team already weighed and rejected for
+itself (§2), not a new consideration, but worth knowing another vendor is building toward
+it. **Medium overlap** — same shelf as AdamCAD/Backflip above, generation-side, no
+independent (human- or render-gated) verification described.
 
 ### 3.3 `earthtojake/text-to-cad` — the largest adjacent project
 
@@ -920,9 +949,14 @@ and stated in the PR.
 | [BIM-Edit benchmark][bimedit] | Benchmark for LLMs editing IFC data |
 | [BenchCAD-org/benchcad-2-main][benchcad2] | BenchCAD 2.0 scoring harness, read directly (tasks, metrics, license, reference lines) |
 | [BenchCAD-org/benchcad-2][benchcad2data] | BenchCAD 2.0 data pipeline repo, read directly (license) |
-| [OpenAI — accelerating engineering for the physical world][openaiphysical] | OpenAI's own BenchCAD 2.0 claim (0.875); not independently fetched, via search synthesis |
+| [OpenAI — accelerating engineering for the physical world][openaiphysical] | OpenAI's own BenchCAD 2.0 claim (0.875); confirmed 403 to direct fetch, cited via search synthesis only |
 | [NVIDIA-Omniverse/simready-central][simready] | SimReady Central intake pipeline, read directly (acceptance criteria, REVIEW.006) |
-| [MeltFlex AI — MCP server + CLI][meltflex] | `meltflex-mcp` package, read directly via `npm view` against the registry |
+| [Hugging Face — SimReady Central Library][hfsimready] | NVIDIA's own HF blog post, read directly |
+| [LGElectronics/simready-assets][lgsimready] | HF dataset, read directly (CC BY 4.0, 21 assets) |
+| [Vertiv/simready-assets][vertivsimready] | HF dataset, read directly (CC BY 4.0, 41 assets) |
+| [MeltFlex AI — MCP server + CLI][meltflex] | `meltflex-mcp` package (npm registry) and the CLI/AI-BIM pages, read directly |
+| [DEVELOP3D — Kyrall launch coverage][kyralld3d] | Trade press, read directly; a separate Xometry co-founder interview (read directly, same session) is cited in prose only — its page 403s to lychee |
+| [AEC Magazine — GPT-6 Astra and BIM modelling][aecastra] | Read directly |
 
 [blind]: https://arxiv.org/abs/2407.06581
 [blink]: https://arxiv.org/abs/2404.12390
@@ -1055,3 +1089,8 @@ and stated in the PR.
 [openaiphysical]: https://openai.com/index/accelerating-engineering-for-the-physical-world/
 [simready]: https://github.com/NVIDIA-Omniverse/simready-central
 [meltflex]: https://www.meltflexai.com/mcp
+[hfsimready]: https://huggingface.co/blog/nvidia/simready-central-assets-robotics-ai-factories
+[lgsimready]: https://huggingface.co/datasets/LGElectronics/simready-assets
+[vertivsimready]: https://huggingface.co/datasets/Vertiv/simready-assets
+[kyralld3d]: https://develop3d.com/cad/kyrall-launches-its-ai-automated-cad-modeller/
+[aecastra]: https://aecmag.com/bim/gpt-6-astra-and-the-future-of-bim-modelling/
