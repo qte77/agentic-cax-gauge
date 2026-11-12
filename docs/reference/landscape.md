@@ -2,8 +2,8 @@
 title: Landscape — evidence, competitors, backend choice, contribution stance
 purpose: The research behind the design decisions, split out of plan 001 so the plan stays a plan
 created: 2026-07-20
-updated: 2026-10-09
-validated_links: 2026-10-09
+updated: 2026-11-12
+validated_links: 2026-11-12
 status: reference — dated, not needed to build
 ---
 
@@ -121,6 +121,26 @@ all be wrong while a solver exits 0) still applies in full, plus the surrogate's
 training-distribution coverage on top, with no grid-convergence-index analog to sanity-check
 against. This would belong on the render/human-judged side of the trust boundary, same as
 CAE — never a gate — if it is ever built at all.
+
+**2026-11-12 — owner-screenshot leads, first-party re-sourced.** 15 social-media leads swept;
+findings landed in §3.2 (BenchCAD 2.0, NVIDIA SimReady Central, MeltFlex) and
+[`vendor-ai.md`](vendor-ai.md) PTC section (two more first-party Onshape blog posts). **Searched,
+empty or dropped:** AW-0 (UC Berkeley/NVIDIA robotics world-action model, arXiv:2610.30136 —
+confirmed robot-manipulation only, no CAD/OpenUSD tie despite a direct check); Nominal.io
+(confirmed as a real hardware test/telemetry platform, but its claimed agent-driven
+CAD↔HPC↔surrogate loop-closure was not stated on its own site); Kyrall (confirmed as a real
+intent-to-parametric-CAD startup via a second-party interview, but the specific claim — STL
+mesh to feature tree, exported to Onshape — could not be confirmed); "Generative Engineering"
+(Joe Griston), "Facade Studio" (Chiang Ning), and a PTC/Onshape × Gemma/AAS/dataspace claim —
+no first-party source found for any of the three despite a direct search. **Already
+covered, not re-added:** two of the leads were duplicates of case studies already in this
+file — the 222M-token/472-call run matches [Steenken, 2026-10-07][steenkencase] exactly, and
+the Pi4-housing/missing-draft-angles run matches [Steenken, 2026-09-29][steenkenrun1]
+exactly. **Thematically covered, not independently added:** an "Astra builds Rhino models,
+called vibe modelling" lead and a Molitor knowledge-graph lead both lack a URL and could not
+be matched to a specific first-party source; "vibe modelling" is already a recorded term in
+this file (the 2026-10-26 `rhino-mcp` entry, attributed there to a different, unnamed
+agent) — the lead may be the same meme recurring, not new evidence.
 
 ### 3.1 Backend decision
 
@@ -400,6 +420,86 @@ schematic and 4 signal layers, board area unlimited (both re-fetched with polyfe
 browser, which Autodesk's bot block lets through). **Verdict:** a PCB track is feasible free and headless on KiCad alone — the
 DRC/ERC exit code as the deterministic check, the exported STL through the existing
 preflight (e.g. board-in-enclosure fit). Not started: no trigger yet.
+
+**Added 2026-11-12 — [BenchCAD 2.0][benchcad2], a benchmark for exactly this question,
+scored differently.** Verified directly against its two GitHub repos — the scoring harness
+[BenchCAD-org/benchcad-2-main][benchcad2] and the data pipeline [BenchCAD-org/benchcad-2][benchcad2data]
+— not from marketing copy. Six tasks, 100 "Core" cases: a model gets a part drawing, STEP
+parts plus an assembly drawing, rendered views, or PCB photos, and writes CadQuery code or a
+schematic in a sandbox; scoring is "executed geometry against the reference, deterministic,
+with no LLM judge" (per-task metrics `part_v1`/`asm_v1`/`ecad_v2`, the PCB task literally
+named `t6_pcb2schematic` in the repo). The dataset pipeline and v1 scoring repos both state
+Code MIT / released dataset artifacts CC BY 4.0; the 2.0 harness repo's own `LICENSE` file
+404'd via the GitHub API, so that specific repo's licence was not independently confirmed.
+The Core case set itself is gated behind a Hugging Face access request, so the benchmark is
+not fully open.
+
+This is the closest sibling to this project's own `bench/`: same target task (agentic
+programmatic CAD generation), same no-LLM-judge principle, a different verification shape —
+execution-grounded geometric similarity (voxel IoU) against a reference answer, rather than
+render+human-decides against unstated intent. Its published reference line
+(`results/core_reference.json`, read directly) scores `openai/gpt-6-astra` at **0.5943** and
+`anthropic/claude-opus-5-5` at **0.5662**, both at "max" reasoning effort (3 reps and 1 rep
+respectively). The same repo's README flags that this exact 0.5943 line has one Task-6 cell
+scored by a since-retired fallback rule, and that under the corrected scoring rule (applied
+to runs from 2026-11-05 on, not retroactively) the line "would read 0.4222 and its line
+0.5893" — the measurer correcting its own published number, a small instance of this
+project's own thesis that scoring is never done once.
+
+*Not independently fetched this session — the OpenAI post itself could not be retrieved
+directly; the following is search-engine synthesis of secondary coverage, not a verbatim
+read, and should be treated as approximate:* [OpenAI's 2026-11-03 blog post][openaiphysical]
+is reported to cite "0.594" for "GPT-6 Astra at its highest reasoning setting" on
+"BenchCAD 2.0" — a figure that matches BenchCAD's own measured `gpt-6-astra` "max" line
+above almost exactly. The same post is reported to also claim **0.875** for a separate,
+unnamed, unreleased internal OpenAI model on "BenchCAD 2.0". That 0.875 figure does not
+appear in BenchCAD's own `core_reference.json` (which lists only Claude and `gpt-6-astra`
+lines) — but BenchCAD's **live leaderboard at benchcad.com was not checked this session**,
+and one secondary source states the leaderboard does list an unreleased OpenAI internal
+model with an estimated per-case cost, so "absent from `core_reference.json`" should not be
+read as "BenchCAD does not acknowledge the claim at all." BenchCAD's own leaderboard
+convention (its sibling v1 repo's `LEADERBOARD.md`, read directly) marks exactly this
+situation with a `†`: "self-reported by the provider, not re-graded by us." **Treat 0.875,
+and the claim that OpenAI's post cites BenchCAD 2.0 at all, as unverified secondary
+reporting; treat 0.5943/0.5662 as BenchCAD-measured, read directly from its own repo.**
+
+Also via the same unverified secondary reporting: OpenAI's post reportedly says GPT-6 Astra
+designed a Codex hardware test device "in under a week," but that manufacturing readiness
+still needed several rounds of review because the model did not consistently account for
+manufacturer constraints and tolerances — if accurate, the same DFM/tolerance failure class
+as the Steenken case studies above, from a different vendor and a different tool.
+
+**Added 2026-11-12 — [NVIDIA-Omniverse/simready-central][simready], a render+physics gate on
+agent-submitted assets, verified directly via the GitHub API.** Apache-2.0. NVIDIA's intake
+pipeline for OEM-contributed "SimReady" OpenUSD assets (robotics/digital-twin simulation
+props), published alongside Hugging Face's SimReady Central Library (NVIDIA's own 2026-10-21
+announcement reports "2,000+" assets, via search synthesis — not independently fetched).
+The repo ships its own `CLAUDE.md`/`AGENTS.md` and expects an agent to drive submission
+through a documented skill. Its acceptance criteria (`docs/acceptance-criteria.md`, read
+directly) are mostly package/licence/metadata linting (`SUB.*`, `SCAN.*`) — but one rule,
+**REVIEW.006**, is a genuine geometry+physics check: "The root USD must open and render in an
+RTX renderer such as Isaac Sim, and an asset with physics must survive a simple drop onto the
+ground with the PhysX engine without falling apart, exploding or passing through the ground."
+**Why it matters here:** different domain (robotics sim assets, not mechanical CAD; OpenUSD,
+not STEP/STL/IFC — out of this project's scope, no action triggered), but it is a second
+real-world instance (after this project's own design) of a load+physics gate on
+agent-produced 3D content, independent of an LLM judge. Worth knowing exists, not worth
+building toward.
+
+**Added 2026-11-12 — [MeltFlex][meltflex], generation-only, Claude-Code-native.** Verified
+directly via the npm registry (`npm view meltflex-mcp`, not just the listing page):
+`meltflex-mcp@0.6.0`, MIT licensed, published by `meltflexai`, depending on the official
+`@modelcontextprotocol/sdk`. Its own description, from the registry: "MeltFlex AI — generate
+photorealistic interior designs from your AI agent. MCP server + CLI."
+
+*The rest is from package-listing pages (npm/MCP directories), not from the registry read
+above or an independent fetch of MeltFlex's own site — treat as reported, not confirmed:*
+the CLI/MCP server is said to turn a 2D floorplan image into a GLB 3D model, driven from
+Claude Code, Cursor, Codex, or any MCP-compatible client; the generation service itself
+needs a paid subscription, though the server package is MIT and open. No verification or
+checking step was found for the floorplan→GLB conversion in anything read — and MeltFlex's
+separate AI-BIM-model product page was not read at all this session, so its presence or
+absence of a check is simply unknown, not confirmed absent.
 
 ### 3.3 `earthtojake/text-to-cad` — the largest adjacent project
 
@@ -818,6 +918,11 @@ and stated in the PR.
 | [MCP4IFC][mcp4ifc] | MCP tool-use framework for LLMs manipulating IFC |
 | [BIMScript][bimscript] | Structured BIM commands, validated Revit add-in + IFC4 export |
 | [BIM-Edit benchmark][bimedit] | Benchmark for LLMs editing IFC data |
+| [BenchCAD-org/benchcad-2-main][benchcad2] | BenchCAD 2.0 scoring harness, read directly (tasks, metrics, license, reference lines) |
+| [BenchCAD-org/benchcad-2][benchcad2data] | BenchCAD 2.0 data pipeline repo, read directly (license) |
+| [OpenAI — accelerating engineering for the physical world][openaiphysical] | OpenAI's own BenchCAD 2.0 claim (0.875); not independently fetched, via search synthesis |
+| [NVIDIA-Omniverse/simready-central][simready] | SimReady Central intake pipeline, read directly (acceptance criteria, REVIEW.006) |
+| [MeltFlex AI — MCP server + CLI][meltflex] | `meltflex-mcp` package, read directly via `npm view` against the registry |
 
 [blind]: https://arxiv.org/abs/2407.06581
 [blink]: https://arxiv.org/abs/2404.12390
@@ -945,3 +1050,8 @@ and stated in the PR.
 [fusionelectron]: https://help.autodesk.com/cloudhelp/ENU/Fusion-360-API/files/ElectronicsIntro.htm
 [fusionsysreq]: https://www.autodesk.com/support/technical/article/caas/sfdcarticles/sfdcarticles/System-requirements-for-Autodesk-Fusion-360.html
 [fusioncompare]: https://www.autodesk.com/products/fusion-360/personal/compare
+[benchcad2]: https://github.com/BenchCAD-org/benchcad-2-main
+[benchcad2data]: https://github.com/BenchCAD-org/benchcad-2
+[openaiphysical]: https://openai.com/index/accelerating-engineering-for-the-physical-world/
+[simready]: https://github.com/NVIDIA-Omniverse/simready-central
+[meltflex]: https://www.meltflexai.com/mcp
