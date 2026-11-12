@@ -36,6 +36,13 @@ four design defects found by reading its design source beside the renders.
   Prompted by the so101 pipette mount: green checks and a plausible render, but reading its
   script next to the views showed four design defects.
 
+### Changed
+
+- **New verdict `preflight-only` (exit 3) for a run without a render.** `--no-render`, or
+  no polyfetch, used to give `review` with exit 0, though there was no render for a human
+  to review. `fail` still wins over it. Scripts that treated exit 0 from a `--no-render`
+  run as success need to accept 3; `bench/run.sh` logs it as `preflight-only`.
+
 ### Documentation
 
 - **Research record (`docs/reference/`)**: `vendor-ai.md` (what CAD incumbents shipped in AI

@@ -2,7 +2,8 @@
 
 Wiring only, no check logic. Writes `report.json` + `report.html` and exits `0` for
 `review` (nothing obviously broken — a human decides), `1` for `fail`, `2` for a usage
-error. There is no "pass" exit: green is necessary, not sufficient.
+error, `3` for `preflight-only` (nothing failed, but no render, so nothing to decide on).
+There is no "pass" exit: green is necessary, not sufficient.
 """
 
 import argparse
@@ -16,6 +17,7 @@ from caxgauge.verify.render import render_views
 from caxgauge.verify.types import NECESSARY_NOT_SUFFICIENT, BrowserResult, RenderResult, Status
 
 _NO_RENDER = "skipped: --no-render given"
+_EXIT = {"review": 0, "fail": 1, "preflight-only": 3}
 
 
 def _floats(text: str, count: int, name: str) -> tuple[float, ...]:
@@ -76,7 +78,8 @@ def main(argv: list[str] | None = None) -> int:
         argv: Arguments without the program name (default: `sys.argv[1:]`).
 
     Returns:
-        0 for a `review` verdict, 1 for `fail` (usage errors exit 2 via argparse).
+        0 for `review`, 1 for `fail`, 3 for `preflight-only` (usage errors exit 2 via
+        argparse).
     """
     args = _parser().parse_args(argv)
     mesh: Path = args.mesh
@@ -98,7 +101,7 @@ def main(argv: list[str] | None = None) -> int:
     for check in report.skipped:
         print(f"  SKIP {check.name}: {check.detail}")
     print(f"report: {html_path}")
-    return 1 if report.verdict == "fail" else 0
+    return _EXIT[report.verdict]
 
 
 if __name__ == "__main__":
