@@ -110,6 +110,7 @@ for brief in "$repo"/bench/briefs/$brief_glob.md; do
 				case "$rc" in
 				0) verdict=review ;;
 				1) verdict=fail ;;
+				3) verdict=preflight-only ;;  # BENCH_NO_RENDER=1: no render, nothing to review
 				*) verdict="error-exit-$rc" ;;
 				esac
 				stl=yes
