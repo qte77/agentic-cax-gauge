@@ -500,34 +500,42 @@ execution-grounded geometric similarity (voxel IoU) against a reference answer, 
 render+human-decides against unstated intent. Its published reference line
 (`results/core_reference.json`, read directly) scores `openai/gpt-6-astra` at **0.5943** and
 `anthropic/claude-opus-5-5` at **0.5662**, both at "max" reasoning effort (3 reps and 1 rep
-respectively). The same repo's README flags that this exact 0.5943 line has one Task-6 cell
-scored by a since-retired fallback rule, and that under the corrected scoring rule (applied
-to runs from 2026-11-05 on, not retroactively) the line "would read 0.4222 and its line
+respectively). The same repo's README flags that this exact line has one Task-6 cell scored
+by a since-retired fallback rule, and that under the corrected scoring rule (applied to runs
+from 2026-11-05 on, not retroactively) "its T6 column would read 0.4222 and its line
 0.5893" — the measurer correcting its own published number, a small instance of this
 project's own thesis that scoring is never done once.
 
-*Not independently fetched this session — a direct fetch of the OpenAI post returned
-HTTP 403 (consistent with this file's existing `openai.com` lychee exclusion, below); the
-following is search-engine synthesis of secondary coverage, not a verbatim read, and should
-be treated as approximate:* [OpenAI's 2026-11-03 blog post][openaiphysical]
-is reported to cite "0.594" for "GPT-6 Astra at its highest reasoning setting" on
-"BenchCAD 2.0" — a figure that matches BenchCAD's own measured `gpt-6-astra` "max" line
-above almost exactly. The same post is reported to also claim **0.875** for a separate,
-unnamed, unreleased internal OpenAI model on "BenchCAD 2.0". That 0.875 figure does not
-appear in BenchCAD's own `core_reference.json` (which lists only Claude and `gpt-6-astra`
-lines) — but BenchCAD's **live leaderboard at benchcad.com was not checked this session**,
-and one secondary source states the leaderboard does list an unreleased OpenAI internal
-model with an estimated per-case cost, so "absent from `core_reference.json`" should not be
-read as "BenchCAD does not acknowledge the claim at all." BenchCAD's own leaderboard
-convention (its sibling v1 repo's `LEADERBOARD.md`, read directly) marks exactly this
-situation with a `†`: "self-reported by the provider, not re-graded by us." **Treat 0.875,
-and the claim that OpenAI's post cites BenchCAD 2.0 at all, as unverified secondary
-reporting; treat 0.5943/0.5662 as BenchCAD-measured, read directly from its own repo.**
+**Corrected 2026-11-12 — read directly, not search synthesis.** A plain fetch of the OpenAI
+post 403s (consistent with this file's existing `openai.com` lychee exclusion), but a
+browser-TLS-fingerprint fetch returns HTTP 200 for the same URL — the 403 is a bot-block, not
+a dead or access-gated page. [OpenAI's 2026-11-03 blog post][openaiphysical] does name
+"BenchCAD 2.0" and states, verbatim: "BenchCAD 2.0 tests whether models can reconstruct 3D
+parts and assemblies and identify connections in circuit boards. A newer internal model
+achieved an average score of 0.875, compared with 0.594 for GPT‑6 Astra at its highest
+reasoning setting." The 0.594 figure matches BenchCAD's own measured `gpt-6-astra` "max" line
+(0.5943) above almost exactly. The 0.875 figure, for an unnamed, unreleased internal OpenAI
+model, still does not appear in BenchCAD's own `core_reference.json` (which lists only Claude
+and `gpt-6-astra` lines) — but, checked this session, the **live leaderboard at benchcad.com**
+does list it: "OpenAI internal model · setting 4 · Codex · 0.875 · credit to OpenAI, from its
+post; unreleased, placed at the post date," with a News item dated 2026-11-03, "OpenAI on
+BenchCAD 2.0: a newer internal model scores 0.875." BenchCAD's own leaderboard convention
+(its sibling v1 repo `BenchCAD/BenchCAD-main`'s `LEADERBOARD.md`, read directly) names exactly
+this situation with a `†`: "self-reported by the provider, not re-graded by us" — the 2.0
+site's own attribution text ("credit to OpenAI, from its post") carries the same meaning
+without the symbol. **That OpenAI's post cites BenchCAD 2.0, and that BenchCAD's own site
+acknowledges the 0.875 figure, are both now confirmed by direct read; the figure itself
+remains self-reported by OpenAI, not independently re-graded by BenchCAD. Treat 0.5943/0.5662
+as BenchCAD-measured, read directly from its own repo; treat 0.875 as OpenAI-measured, listed
+on BenchCAD's site with that self-reported caveat, read directly from both.**
 
-Also via the same unverified secondary reporting: OpenAI's post reportedly says GPT-6 Astra
-designed a Codex hardware test device "in under a week," but that manufacturing readiness
-still needed several rounds of review because the model did not consistently account for
-manufacturer constraints and tolerances — if accurate, the same DFM/tolerance failure class
+Also confirmed by the same direct read: the post describes GPT-6 Astra designing the
+enclosure, PCB and software integrations for a hardware device used to talk to Codex —
+"Two team members designed this test device with Astra in under a week while working on it
+as a side project. A contract manufacturer built a small batch of prototypes in under a
+month" — but "Getting the device ready for manufacturing still required several rounds of
+review and iteration. Astra did not consistently account for the manufacturer's production
+limits, tolerances, or details required for assembly" — the same DFM/tolerance failure class
 as the Steenken case studies above, from a different vendor and a different tool.
 
 **Added 2026-11-12 — [NVIDIA-Omniverse/simready-central][simready], a render+physics gate on
@@ -560,35 +568,47 @@ Claude-Code-native.** Verified directly via the npm registry (`npm view meltflex
 `meltflex-mcp@0.6.0`, MIT licensed, published by `meltflexai`, depending on the official
 `@modelcontextprotocol/sdk`. Its own registry description: "MeltFlex AI — generate
 photorealistic interior designs from your AI agent. MCP server + CLI." The `meltflexai.com`
-CLI page (read directly) confirms the CLI turns a room photo into a redesign and the same
-binary also runs as an MCP server for Claude Code and Cursor (`npm install -g meltflex-mcp`)
-— a thin client over the paid MeltFlex API; the website itself states no licence for the
-service (the MIT licence above is the npm package metadata, not a site claim), and its only
-public GitHub link is the companion skills repo, `MeltFlexDevs/skills`.
+`/cli` page (read directly) confirms the CLI turns a room photo into a redesign, installed
+with `npm install -g meltflex-mcp` exactly as the page states; the same domain's `/mcp` page
+(the page this entry links) confirms the same binary also runs as an MCP server for Claude
+Code and Cursor — among others; the page's own client tabs name eight, including Codex, VS
+Code and Windsurf, so this is a representative pair, not the full list — a thin client over
+the paid MeltFlex API; the website itself states no licence for the service (the MIT licence
+above is the npm package metadata, not a site claim), and its only public GitHub link is the
+companion skills repo, `MeltFlexDevs/skills`.
 
 A separate product, MeltFlex's AI-BIM-software page (read directly), builds a BIM model and
-"exports as IFC4" — explicitly "concept stage only," with no automated model checking: "It
-does not check building permits." Generation-side only, same shape as everything else in
-this table.
+"exports as IFC4" — **corrected 2026-11-12**: the page's own words are "the generator is for
+the concept stage" (not "concept stage only," which over-quoted it) — with no automated model
+checking: "It does not check building permits." Generation-side only, same shape as
+everything else in this table.
 
 **Added 2026-11-12 — Kyrall (Munich), intent-to-parametric-CAD, one claim corrected.** An
 owner lead described Kyrall as parametrizing STL meshes into editable CAD feature trees
-exported to Onshape; neither a Xometry interview with co-founder Osama Atwi (read directly
-this session, but not linked here — the page 403s to automated link checks) nor
+exported to Onshape; neither a Xometry interview with co-founder Osama Atwi (its page
+403s to automated link checks, so it is cited in prose, not linked; **re-read 2026-11-12**
+via the site's own public WordPress REST endpoint,
+`xometry.pro/en/wp-json/wp/v2/articles?slug=ai-interviews-kyrall`, which does not 403) nor
 [DEVELOP3D's launch coverage][kyralld3d] (trade press, already a source elsewhere in this
-file) mentions STL, mesh, scan, or point-cloud input anywhere — the claim does not hold.
-What is confirmed instead, from Atwi's own words in those two sources: the product "turns
-engineering intent into native, editable parametric CAD
-models," by generating a script that generates the model (code-gen, not scan-to-CAD); it
-"can currently read and write Onshape files," and can additionally *read* (not yet write)
-CATIA, NX, SolidWorks and Creo. Its "Context Manager" lets a user upload specs/rules so
-output follows house data; it is "building DFM tests first for three-axis milling and FDM,
-SLA, and SLS printing" where "a user picks the manufacturing method, and the tool modifies
-the part to pass the checks" — an auto-correct-to-pass loop, the same shape as the
-CADCodeVerify/Query2CAD pattern this project's own red-team already weighed and rejected for
-itself (§2), not a new consideration, but worth knowing another vendor is building toward
-it. **Medium overlap** — same shelf as AdamCAD/Backflip above, generation-side, no
-independent (human- or render-gated) verification described.
+file) describes Kyrall itself taking an STL mesh, scan, or point cloud as generation input —
+the claim does not hold. **Corrected 2026-11-12:** the original wording here ("mentions STL,
+mesh, scan, or point-cloud input anywhere") overstated the absence — the Xometry interview
+does mention STL once, as the input to a hypothetical third-party app built on Kyrall's API
+("an app that takes an STL file of a tool and builds a shadow box around it"), not as
+Kyrall's own mesh-to-CAD path; that distinction, not a blanket absence, is what rules the
+owner lead's claim out. What is confirmed instead, from Atwi's own words in the Xometry
+interview: the product aims to preserve what Atwi calls "design intent" — the sequence of
+decisions behind a part, which he says a STEP or STL export loses — by generating a script
+that generates the model (code-gen, not scan-to-CAD); "as of now we can read and write in
+Onshape," and can additionally *read* (not yet write) CATIA, NX, SolidWorks and Creo. Its
+"Context Manager" (per DEVELOP3D) lets a user upload specs/rules so output follows house
+data; Atwi says Kyrall is "embedding DFM tests right now, focusing first on three-axis
+milling and FDM, SLA, and SLS printing," where "the user chooses the
+manufacturing method, and the part is altered to meet the checks" — an auto-correct-to-pass
+loop, the same shape as the CADCodeVerify/Query2CAD pattern this project's own red-team
+already weighed and rejected for itself (§2), not a new consideration, but worth knowing
+another vendor is building toward it. **Medium overlap** — same shelf as AdamCAD/Backflip
+above, generation-side, no independent (human- or render-gated) verification described.
 
 ### 3.3 `earthtojake/text-to-cad` — the largest adjacent project
 
@@ -1009,13 +1029,13 @@ and stated in the PR.
 | [BIM-Edit benchmark][bimedit] | Benchmark for LLMs editing IFC data |
 | [BenchCAD-org/benchcad-2-main][benchcad2] | BenchCAD 2.0 scoring harness, read directly (tasks, metrics, license, reference lines) |
 | [BenchCAD-org/benchcad-2][benchcad2data] | BenchCAD 2.0 data pipeline repo, read directly (license) |
-| [OpenAI — accelerating engineering for the physical world][openaiphysical] | OpenAI's own BenchCAD 2.0 claim (0.875); confirmed 403 to direct fetch, cited via search synthesis only |
+| [OpenAI — accelerating engineering for the physical world][openaiphysical] | OpenAI's own BenchCAD 2.0 claim (0.594/0.875) and Codex test-device case study, read directly (plain fetch 403s; TLS-fingerprint block, not access-gated); the 0.875 figure cross-checked live on benchcad.com's own leaderboard, also read directly |
 | [NVIDIA-Omniverse/simready-central][simready] | SimReady Central intake pipeline, read directly (acceptance criteria, REVIEW.006) |
 | [Hugging Face — SimReady Central Library][hfsimready] | NVIDIA's own HF blog post, read directly |
 | [LGElectronics/simready-assets][lgsimready] | HF dataset, read directly (CC BY 4.0, 21 assets) |
 | [Vertiv/simready-assets][vertivsimready] | HF dataset, read directly (CC BY 4.0, 41 assets) |
 | [MeltFlex AI — MCP server + CLI][meltflex] | `meltflex-mcp` package (npm registry) and the CLI/AI-BIM pages, read directly |
-| [DEVELOP3D — Kyrall launch coverage][kyralld3d] | Trade press, read directly; a separate Xometry co-founder interview (read directly, same session) is cited in prose only — its page 403s to lychee |
+| [DEVELOP3D — Kyrall launch coverage][kyralld3d] | Trade press, read directly; a separate Xometry co-founder interview is cited in prose only — its page 403s to lychee, so it was re-read via `xometry.pro/en/wp-json/wp/v2/articles?slug=ai-interviews-kyrall`, which does not |
 | [AEC Magazine — GPT-6 Astra and BIM modelling][aecastra] | Read directly |
 
 [blind]: https://arxiv.org/abs/2407.06581
