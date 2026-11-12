@@ -347,7 +347,8 @@ validate" names no method. Nothing to adopt.
 **Added 2026-11-12 — the map's in-scope names, audited.** A read-only audit read all 26 video
 frames and grepped about 205 legible names against this file, `vendor-ai.md` and `cae.md`:
 the CAD/CAE incumbents were already covered; most other names are cloud, LLM, robotics,
-automotive, life-science or chip companies — context, out of scope. The in-scope gaps,
+automotive, life-science or chip companies — context, out of scope (all 204, with the reason
+per category and their homepages, in [`engineering-ai-map.md`](engineering-ai-map.md)). The in-scope gaps,
 checked at the vendors' own sites (AVEVA, Hexagon and the sale re-checked here; the rest
 agent-checked, not re-read): **[AVEVA][avevaai]** — in Unified Engineering E3D, "Generative
 AI produces multiple clash-free options in minutes" for plant layouts, and "Point Cloud
@@ -355,8 +356,10 @@ Intelligence" classifies and tags laser scans; **[Hexagon][hexagonmentor]** (202
 "Metrology Mentor" "automatically generates ISO- and ASME-compliant inspection programmes
 directly from CAD" (the page does not call this AI), and Hexagon
 [agreed to sell][hexagoncadence] its Design & Engineering business (ex-MSC Software) to
-Cadence for about €2.7bn (2025-09-04; closing not confirmed — Cadence's newsroom would not
-load). **Deterministic part checks, no AI label:** Paperless Parts (feature detection and
+Cadence for about €2.7bn (2025-09-04), and Cadence [completed it][cadencehexagon] on
+2026-02-23 (also in Cadence's [10-Q][cadence10q] for Q3 2026: "On February 23, 2026, we
+completed our acquisition of the design and engineering ('D&E') business of Hexagon") — so
+MSC Nastran and Adams now sit in an EDA vendor's simulation portfolio. **Deterministic part checks, no AI label:** Paperless Parts (feature detection and
 "manufacturability warnings" on uploaded part files), Materialise MiniMagics (free STL/3MF
 viewer to "verify part printability"). **Adjacent, no AI on CAD geometry:** Lumafield (AI on
 CT scan data), nTop ("Physics AI" evaluates generated variants), Flexcompute ("GeometryAI"
@@ -375,11 +378,12 @@ Accenture case on p. 48: a Technical Drawing Assistant that "integrates 2D and 3
 checks directly into the engineering workflow", combining image processing with
 "rule-based validation techniques to automatically identify design errors and formal
 inconsistencies" — rule-based checking of engineering output, the same family as this
-project's preflight. Elsewhere the paper cites (not re-checked here) CAD agent loops whose
-reviewer agents critique the same system's output — the auto-critique pattern
-`.claude/rules/verification-honesty.md` rejects. His LinkedIn profile itself returned
-LinkedIn's bot block (HTTP 999), so further posts he lists ("Part 3: Engineering gets
-Compilable", a Mistral post) are unconfirmed and not cited.
+project's preflight. Its model-generation survey (p. 49) cites CAD-Coder, CAD-Judge, LLM4CAD
+and a five-agent framework (Panta et al. 2025: design expert, script writer, executor,
+script-execution reviewer, CAD-image reviewer) that refines its own CAD scripts from visual
+feedback — reviewer agents inside the generating system, the auto-critique pattern
+`.claude/rules/verification-honesty.md` rejects. Other posts listed on his LinkedIn profile
+could not be read at source and are not cited.
 
 **Added 2026-11-12 — OpenAI on AI for hardware engineering ([OpenAI, 2026-11-03][openaieng]),
 read at source.** OpenAI reports that GPT‑6 Astra designed a test device — enclosure, PCB
@@ -1128,6 +1132,8 @@ and stated in the PR.
 [avevaai]: https://www.aveva.com/en/solutions/digital-transformation/artificial-intelligence/industrial-ai-for-engineering/
 [hexagonmentor]: https://hexagon.com/company/newsroom/press-releases/2025/hexagon-unveils-autonomous-metrology-suite-to-deliver-manufacturing-quality-at-speed
 [hexagoncadence]: https://hexagon.com/company/divisions/manufacturing-intelligence/msc-software
+[cadencehexagon]: https://www.cadence.com/en_US/home/company/newsroom/press-releases/pr/2026/cadence-completes-acquisition-of-hexagons-design-and-engineering.html
+[cadence10q]: https://www.sec.gov/Archives/edgar/data/0000813672/000081367226000121/cdns-20260930.htm
 [molitorwp]: https://www.isst.fraunhofer.de/content/dam/isst/publikationen/whitepaper/AI-in-New-Product_Development_Whitepaper.pdf
 [openaieng]: https://openai.com/index/accelerating-engineering-for-the-physical-world/
 [onshapefsmcp]: https://www.ptc.com/en/news/2026/onshape-launches-featurescript-mcp-server

@@ -7,7 +7,13 @@ accept = [200, 201, 204, 429]
 timeout = 30
 max_retries = 2
 
-exclude_path = [".venv", ".claude", "node_modules", ".pytest_cache", ".complexipy_cache"]
+exclude_path = [
+    ".venv", ".claude", "node_modules", ".pytest_cache", ".complexipy_cache",
+    # A dated record of ~180 company homepages, each confirmed on 2026-11-12 with polyfetch
+    # (bulk + browser tier). About 20 corporate sites 403 or reset lychee's client, so checking
+    # this file in CI would fail on bot filtering, not dead links. Re-validate with polyfetch.
+    "docs/reference/engineering-ai-map.md",
+]
 
 # Exclusions are evidence-based, not pre-emptive: each host below returned 403 to lychee
 # but the cited page was confirmed live on 2026-10-09. An exclusion also hides a real dead
@@ -30,5 +36,8 @@ exclude = [
     # --headed under xvfb-run (Fusion personal-use compare table, Fusion system requirements).
     # Exact URLs only
     "^https://www\\.autodesk\\.com/products/fusion-360/personal/compare$",
+    # SEC EDGAR 403s clients without a declared User-Agent; Cadence's Q3 2026 10-Q confirmed
+    # live 2026-11-12 with polyfetch --tier curl_cffi. Exact URL only
+    "^https://www\\.sec\\.gov/Archives/edgar/data/0000813672/000081367226000121/cdns-20260930\\.htm$",
     "^https://www\\.autodesk\\.com/support/technical/article/caas/sfdcarticles/sfdcarticles/System-requirements-for-Autodesk-Fusion-360\\.html$",
 ]
