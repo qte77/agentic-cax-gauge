@@ -2,7 +2,8 @@
 title: Incumbent CAD vendors' AI features — what shipped, how it is used, what it checks
 purpose: Reference for the vendor AI tools named in the 2026-10-23 "vendor war" timeline; not needed to build
 created: 2026-10-23
-validated_links: 2026-10-23
+updated: 2026-11-12
+validated_links: 2026-11-12
 status: reference
 ---
 
@@ -118,6 +119,22 @@ approximate; corrected dates below come from first-party sources.
   comparison found in this survey.
 - **Onshape FeatureScript MCP Server** — shipped 2026-08-13 (`landscape.md` §3.2). **Onshape
   AI Agents** — announced 2026-07-14 under Onshape Labs as "expected soon"; not shipped.
+- **Onshape's own "5 Ways Teams Can Leverage the Onshape FeatureScript MCP Server"**
+  (2026-09-30, read directly — corrects an earlier search-synthesis date of 2026-08-20).
+  Five use cases for the same MCP server above (text → FeatureScript): standards-encoded
+  parametric custom features, reusable function libraries, specialised-workflow features,
+  consolidating many features into one parametric feature ("consolidate those 60 features
+  into a single parametric feature"), and integrated analysis. Names the LLMs it works with
+  as "Claude, Microsoft Copilot, Gemini, and Perplexity." **No robot-assembly use case** —
+  generation-side, same as the MCP server itself, no new verification capability.
+- **Onshape × NVIDIA Isaac Sim, multi-agent CAD-to-robotics prep** (2026-06-01, read
+  directly). A pipeline that uses "the Onshape MCP (Model Context Protocol) server" and
+  multiple specialised agents for "verifying geometry, inferring mates, correcting issues,
+  and delivering a simulation-ready asset" — in the post's own words — "without manual
+  intervention." **Not independent verification of the resulting model** — it prepares a
+  simulation input, the same shape as the SimReady Central pipeline (`landscape.md` §3.2),
+  not a check of whether the CAD design itself is correct. Also not a robot-assembly use
+  case specifically, despite the name — it's geometry-to-simulation prep.
 - **Creo AI Assistant** (Creo 13, 2026-06-10) — *Advise* (free, documentation answers, "does
   not analyze model context") and *Assist* (beta, Advanced AI licence, model-aware). PTC
   Community, 2026-06-15 ✓ (second-party): "Only Creo AI Advise is going to work. The Creo AI
@@ -142,7 +159,8 @@ community post][d-ci]. Siemens — [NX Summer 2025][s-nx], [CES 2026 copilots][s
 [Fusion Data MCP][a-data], [Assistant script execute][a-script] ✓, [neural CAD
 announcement][a-neural], [AU 2026 workflows][a-au26]. Ansys — [GeomAI][an-geomai],
 [latent space blog][an-latent], [2025 R2 release][an-r2]. PTC — [Onshape AI Advisor][p-adv],
-[in-model Advisor][p-adv2], [Onshape Labs][p-labs], [Creo 13][p-creo].
+[in-model Advisor][p-adv2], [Onshape Labs][p-labs], [Creo 13][p-creo], [FeatureScript MCP
+Server 5 use cases][p-mcp5] ✓, [Onshape × Isaac Sim multi-agent orchestration][p-isaac] ✓.
 
 Second-party: [DEVELOP3D on CATIA R2026x][2-d3d], [GoEngineer on AI in CATIA][2-goeng],
 [Onshape forum, in-model Advisor][2-onforum], [PTC Community, Creo AI beta][2-creo] ✓.
@@ -167,6 +185,8 @@ Second-party: [DEVELOP3D on CATIA R2026x][2-d3d], [GoEngineer on AI in CATIA][2-
 [p-adv2]: https://www.ptc.com/en/news/2025/ptc-announces-latest-Onshape-AI-advisor-release
 [p-labs]: https://www.ptc.com/en/news/2026/onshapelabs
 [p-creo]: https://www.ptc.com/en/news/2026/ptc-brings-ai-powered-guidance-to-the-design-environment-with-creo-13
+[p-mcp5]: https://www.onshape.com/en/blog/featurescript-mcp-server-use-cases-text-code-cad
+[p-isaac]: https://www.onshape.com/en/blog/multi-agent-orchestration-cad-robotics-ptc-onshape-nvidia
 [2-d3d]: https://develop3d.com/cad/catia-r2026x-adds-aura-ai-and-browser-version/
 [2-goeng]: https://www.goengineer.com/blog/ai-in-catia
 [2-onforum]: https://forum.onshape.com/discussion/28972
