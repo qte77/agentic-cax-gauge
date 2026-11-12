@@ -47,8 +47,8 @@ four design defects found by reading its design source beside the renders.
 
 - **Research record (`docs/reference/`)**: `vendor-ai.md` (what CAD incumbents shipped in AI
   and what checks it); `landscape.md` updates on free BIM tools, LEAP71/PicoGK, Rhino, Blender,
-  PCB (KiCad vs Fusion), Molitor's posts and whitepaper, and OpenAI's hardware-engineering
-  post; new `engineering-ai-map.md` listing the out-of-scope companies on Molitor's
+  PCB (KiCad vs Fusion), Molitor's posts and whitepaper, OpenAI's hardware-engineering
+  post, and PhysicsX's Ai.rplane demo; new `engineering-ai-map.md` listing the out-of-scope companies on Molitor's
   partnership map, with reasons and homepages.
 
 ### Fixed
