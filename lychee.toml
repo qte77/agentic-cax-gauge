@@ -43,4 +43,8 @@ exclude = [
     # 403 to the CI runner's lychee (passed locally the same day); confirmed live 2026-11-12
     # with polyfetch --tier patchright --headed under xvfb-run. Exact URL only
     "^https://www\\.cadence\\.com/en_US/home/company/newsroom/press-releases/pr/2026/cadence-completes-acquisition-of-hexagons-design-and-engineering\\.html$",
+    # 403 to the CI runner's lychee on two runs 2026-11-13 (passed on 2026-11-12); both
+    # confirmed live the same day by a local lychee run (200). Exact URLs only
+    "^https://hexagon\\.com/company/divisions/manufacturing-intelligence/msc-software$",
+    "^https://hexagon\\.com/company/newsroom/press-releases/2025/hexagon-unveils-autonomous-metrology-suite-to-deliver-manufacturing-quality-at-speed$",
 ]
