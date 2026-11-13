@@ -6,6 +6,14 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ## [Unreleased]
 
+### Added
+
+- **Review rubric (`bench/rubric.md`)**: one fixed rubric for the benchmark labels and the M3
+  defect table, to be fixed before anyone labels. The verdict is `yes`, `no` or `unsure`
+  (when the views can't settle it). Reason codes: `phantom-feature`, `mechanism`,
+  `load-path` and `interface`, from the pipette mount's four defects, plus `dimension`,
+  `printability` and `other`. `bench/blind.py` accepts `unsure`.
+
 ## [0.3.0] - 2026-11-13
 
 **M2 closed (#16):** the owner's review of the so101 pipette mount report — all checks green,

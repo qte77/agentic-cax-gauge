@@ -2,7 +2,8 @@
 
 `make`: copy each run's four renders under an anonymous ID into `site/bench-blind/`, with the
 brief's prompt and nothing else — no tool name, no script, no check results — plus a sheet
-`bench/labels-blind.csv` for the human to fill (`accept` yes/no, `reject_reason`). The
+`bench/labels-blind.csv` for the human to fill (`accept` yes/no/unsure, `reject_reason` —
+reason codes from `bench/rubric.md`). The
 ID -> run key goes to `bench/blind-key.csv`; don't open it until the sheet is filled.
 
 `unblind`: copy the filled sheet's answers into `bench/labels.csv` (accept, note).
@@ -26,6 +27,7 @@ SHEET = REPO / "bench" / "labels-blind.csv"
 KEY = REPO / "bench" / "blind-key.csv"
 LABELS = REPO / "bench" / "labels.csv"
 VIEWS = ("iso", "front", "right", "top")
+_VERDICTS = ("yes", "no", "unsure")  # bench/rubric.md
 
 
 def _prompt(brief: Path) -> str:
@@ -80,7 +82,8 @@ def make(seed: int) -> None:
         "<h1>Benchmark pilot: blind labelling</h1>"
         "<p>Each ID is one run, in random order, with the brief the agent was given and its "
         "four views. Tool names, scripts and check results are hidden. Record accept "
-        "(yes/no) and, for a no, the reason, in <code>bench/labels-blind.csv</code>. "
+        "(yes, no or unsure) and the rubric's reason codes (bench/rubric.md) in "
+        "<code>bench/labels-blind.csv</code>; use unsure when the views can't settle it. "
         "Curves drawn as visible facets can hint at the tool; judge the part, not the "
         "mesh.</p>" + "".join(items) + "</body></html>\n"
     )
@@ -101,9 +104,11 @@ def unblind() -> None:
         key = {r["id"]: r for r in csv.DictReader(f)}
     with SHEET.open() as f:
         answers = list(csv.DictReader(f))
-    missing = [a["id"] for a in answers if a["accept"].strip().lower() not in ("yes", "no")]
+    missing = [a["id"] for a in answers if a["accept"].strip().lower() not in _VERDICTS]
     if missing:
-        raise SystemExit(f"blind.py: accept must be yes/no; unfilled: {', '.join(missing)}")
+        raise SystemExit(
+            f"blind.py: accept must be yes, no or unsure; unfilled: {', '.join(missing)}"
+        )
     by_run = {
         (key[a["id"]]["brief"], key[a["id"]]["tool"], key[a["id"]]["run"]): a for a in answers
     }
