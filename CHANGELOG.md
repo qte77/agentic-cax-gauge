@@ -6,6 +6,16 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ## [Unreleased]
 
+### Added
+
+- **Control parts for the benchmark briefs (`tests/test_bench_controls.py`, BENCH-3 item 2)**:
+  parts made from `trimesh` primitives, never by a contestant tool, checked against every
+  brief's bounds in CI. An empty part fails. A box filling the envelope fails the volume
+  band, except on the two cuboid BIM briefs, where it is a correct answer. A slab with the
+  right volume passes preflight, which is the shape blind spot the render must cover.
+  Independent known-good parts for the box, cylinder and plate-with-boss land inside their
+  bands.
+
 ## [0.3.0] - 2026-11-13
 
 **M2 closed (#16):** the owner's review of the so101 pipette mount report — all checks green,
