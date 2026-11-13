@@ -1,0 +1,60 @@
+{
+  "mesh": "../so101-biolab-automation/hardware/stl/labware/96well_plate_holder.stl",
+  "verdict": "review",
+  "label": "Green is necessary, not sufficient: these checks cannot see local defects. Look at the render and decide.",
+  "checks": [
+    {
+      "name": "file_integrity",
+      "status": "pass",
+      "detail": "binary STL: header present, 2028 triangles, file length matches 84 + 50*n"
+    },
+    {
+      "name": "watertight",
+      "status": "pass",
+      "detail": "watertight=True, winding_consistent=True, euler_number=10 (reported only, not asserted \u2014 plan \u00a77.2)"
+    },
+    {
+      "name": "bbox",
+      "status": "skip",
+      "detail": "no --envelope given"
+    },
+    {
+      "name": "volume",
+      "status": "skip",
+      "detail": "no --volume-band given"
+    },
+    {
+      "name": "browser_load",
+      "status": "pass",
+      "detail": "viewer reported body[data-state]=rendered"
+    },
+    {
+      "name": "render",
+      "status": "pass",
+      "detail": "4 view(s) captured at 800x600"
+    }
+  ],
+  "skipped": [
+    "bbox",
+    "volume"
+  ],
+  "views": [
+    {
+      "name": "front",
+      "path": "96well_plate_holder-front.png"
+    },
+    {
+      "name": "iso",
+      "path": "96well_plate_holder-iso.png"
+    },
+    {
+      "name": "top",
+      "path": "96well_plate_holder-top.png"
+    },
+    {
+      "name": "right",
+      "path": "96well_plate_holder-right.png"
+    }
+  ],
+  "source": "../so101-biolab-automation/src/hardware/cad/labware/plate_holder.py"
+}

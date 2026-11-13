@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>caxgauge: tip_ejection_bar.stl</title><style>
+body { font: 14px/1.5 system-ui, sans-serif; margin: 16px; color: #1d1d1f; background: #fafafa; }
+h1 { overflow-wrap: anywhere; }
+.verdict { font-size: 20px; font-weight: 600; padding: 8px 12px; border-radius: 4px; }
+.fail { background: #fde2e1; } .review { background: #fff4d6; }
+.preflight-only { background: #e8e8ed; }
+.label, .norender { padding: 8px 12px; border-left: 4px solid #b26b00; background: #fff; }
+.norender { border-color: #c0392b; font-weight: 600; }
+.checks { overflow-x: auto; }
+table { border-collapse: collapse; margin: 12px 0; }
+td, th { border: 1px solid #ddd; padding: 4px 8px; text-align: left; vertical-align: top; }
+.views { display: flex; flex-wrap: wrap; gap: 12px; }
+.views figure { margin: 0; } .views img { max-width: 400px; width: 100%; border: 1px solid #ccc; }
+.source pre { overflow-x: auto; padding: 8px 12px; background: #fff; border: 1px solid #ddd; }
+</style></head><body><h1>tip_ejection_bar.stl</h1><p class="verdict review">Verdict: review</p><p class="label">Green is necessary, not sufficient: these checks cannot see local defects. Look at the render and decide.</p><div class="views"><figure><img src="tip_ejection_bar-front.png" alt="front view"><figcaption>front</figcaption></figure><figure><img src="tip_ejection_bar-iso.png" alt="iso view"><figcaption>iso</figcaption></figure><figure><img src="tip_ejection_bar-top.png" alt="top view"><figcaption>top</figcaption></figure><figure><img src="tip_ejection_bar-right.png" alt="right view"><figcaption>right</figcaption></figure></div><section class="source"><h2>Design source: tip_ejection_bar.py</h2><p>The intent as written, for comparison with the renders. Not checked.</p><pre><code>&quot;&quot;&quot;Tip ejection post — fixed post for mechanical tip removal.
+
+The dPette/dPette+ uses a top-mounted push-button ejector: thumb presses
+a button on top of the handle → internal rod pushes ejector sleeve down
+→ tip pops off the cone. Spring returns the mechanism.
+
+For robotic automation, the pipette is positioned so the ejector button
+presses DOWN against a fixed post or crossbar. The gantry/arm lowers
+the pipette onto the post, which activates the ejector.
+
+Design: an inverted-T post — vertical post with a rounded tip at the
+correct height to contact the ejector button, plus a wide base for
+mounting to the waste bin frame.
+
+Works with both XZ gantry (lower Z onto post) and SO-101 (arm pushes
+pipette down onto post).
+
+Usage:
+    uv run --group cad python hardware/cad/dpette/tip_ejection_bar.py
+&quot;&quot;&quot;
+
+# Shared export helper (standalone mode)
+import sys
+from pathlib import Path
+
+from build123d import Box, Cone, Cylinder, Pos
+
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+from util.export import export_part
+
+sys.path.pop()
+
+# --- Parameters (all in mm) ---
+# Post dimensions (contacts the top-mounted ejector button)
+POST_DIAMETER = 8.0  # Rounded post tip — fits inside button recess
+POST_HEIGHT = 60.0  # Must clear the tip + nozzle below the button
+POST_TIP_RADIUS = 3.0  # Rounded top to center on button
+
+# Base plate (bolts to frame, straddles waste bin)
+BASE_LENGTH = 60.0
+BASE_WIDTH = 40.0
+BASE_THICKNESS = 4.0
+
+# Gusset (triangular reinforcement, post-to-base)
+GUSSET_HEIGHT = 20.0
+GUSSET_THICKNESS = 3.0
+
+# Mounting
+BOLT_HOLE_D = 4.2  # M4 clearance
+BOLT_SPACING_X = 40.0
+BOLT_SPACING_Y = 20.0
+
+# Waste bin opening in base (tips fall through)
+WASTE_HOLE_D = 25.0
+
+
+def build_tip_ejection_bar():
+    &quot;&quot;&quot;Build tip ejection post with base plate.
+
+    The post sticks up from the base. The pipette is lowered so its
+    ejector button contacts the rounded post top, pressing it down
+    to eject the tip. The tip falls through the waste hole in the base.
+    &quot;&quot;&quot;
+    # Base plate
+    base = Box(BASE_LENGTH, BASE_WIDTH, BASE_THICKNESS)
+
+    # Waste hole in center of base (tips fall through)
+    waste_hole = Cylinder(WASTE_HOLE_D / 2, BASE_THICKNESS + 1)
+    base = base - waste_hole
+
+    # Mounting holes (4x M4 at corners)
+    bolt_positions = [
+        (-BOLT_SPACING_X / 2, -BOLT_SPACING_Y / 2),
+        (BOLT_SPACING_X / 2, -BOLT_SPACING_Y / 2),
+        (-BOLT_SPACING_X / 2, BOLT_SPACING_Y / 2),
+        (BOLT_SPACING_X / 2, BOLT_SPACING_Y / 2),
+    ]
+    for bx, by in bolt_positions:
+        bolt = Pos(bx, by, 0) * Cylinder(BOLT_HOLE_D / 2, BASE_THICKNESS + 1)
+        base = base - bolt
+
+    # Vertical post (offset from waste hole so tip falls clear)
+    post = Pos(0, 0, BASE_THICKNESS / 2) * Cylinder(POST_DIAMETER / 2, POST_HEIGHT)
+
+    # Chamfered post tip (cone for self-centering on button)
+    tip_cone = Pos(0, 0, BASE_THICKNESS / 2 + POST_HEIGHT) * Cone(
+        POST_DIAMETER / 2, POST_TIP_RADIUS, POST_TIP_RADIUS * 2
+    )
+
+    return base + post + tip_cone
+
+
+def export(part) -&gt; None:
+    &quot;&quot;&quot;Export to STL and SVG.&quot;&quot;&quot;
+    export_part(part, &quot;dpette&quot;, &quot;tip_ejection_bar&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    export(build_tip_ejection_bar())
+</code></pre></section><div class="checks"><table><tr><th>Check</th><th>Status</th><th>Detail</th></tr><tr><td>file_integrity</td><td>PASS</td><td>binary STL: header present, 4308 triangles, file length matches 84 + 50*n</td></tr><tr><td>watertight</td><td>PASS</td><td>watertight=True, winding_consistent=True, euler_number=-4 (reported only, not asserted — plan §7.2)</td></tr><tr><td>bbox</td><td>SKIP</td><td>no --envelope given</td></tr><tr><td>volume</td><td>SKIP</td><td>no --volume-band given</td></tr><tr><td>browser_load</td><td>PASS</td><td>viewer reported body[data-state]=rendered</td></tr><tr><td>render</td><td>PASS</td><td>4 view(s) captured at 800x600</td></tr></table></div></body></html>

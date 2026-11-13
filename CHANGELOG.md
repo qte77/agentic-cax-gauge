@@ -11,6 +11,10 @@ four design defects found by reading its design source beside the renders.
 
 ### Added
 
+- **M3 review campaign (`bench/m3-so101.sh`)**: a report with renders and design source for
+  every so101 part with an exported STL (16 of 20; four deferred parts have none), under
+  `site/m3/`, and `bench/m3-review.csv` for the owner's per-part defects. No bounds are
+  declared in so101, so bbox and volume are `SKIP`; the render is the gate.
 - **Sample reports on GitHub Pages (M2.6)**: `make site` renders the good box, the intended
   and feature-absorbed boss, and one real so101 part (no declared bounds, so bbox/volume
   `SKIP`) into a committed `site/`; `pages.yml` deploys it. The target checks Chromium first

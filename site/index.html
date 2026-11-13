@@ -37,6 +37,30 @@ Look at the render and decide.</p>
     It has no declared envelope or volume band, so those checks report <code>SKIP</code> &mdash;
     nothing was checked there, and the report says so.</li>
 </ul>
+<h2>M3 review campaign: every so101 part</h2>
+<p>Each so101 part with an exported STL (so101 <code>fab9acc</code>), checked with its design
+script beside the renders. so101 declares no envelope or volume band, so those checks report
+<code>SKIP</code>; every part is <code>review</code>, which means only that nothing was
+obviously broken. The defects found by reading each script beside its views are recorded in
+<code>bench/m3-review.csv</code>. No exported STL, so not checked: fridge_hook, tool_cone_hook, xz_gantry_frame, xz_carriage_pipette_dock.</p>
+<ul>
+  <li><a href="m3/tip_rack_holder/report.html">tip_rack_holder</a><span class="verdict review">review</span></li>
+  <li><a href="m3/gripper_tips/report.html">gripper_tips</a><span class="verdict review">review</span></li>
+  <li><a href="m3/plate_holder/report.html">plate_holder</a><span class="verdict review">review</span></li>
+  <li><a href="m3/tool_dock/report.html">tool_dock</a><span class="verdict review">review</span></li>
+  <li><a href="m3/pipette_mount/report.html">pipette_mount</a><span class="verdict review">review</span></li>
+  <li><a href="m3/tool_cone_robot/report.html">tool_cone_robot</a><span class="verdict review">review</span></li>
+  <li><a href="m3/tool_cone_pipette/report.html">tool_cone_pipette</a><span class="verdict review">review</span></li>
+  <li><a href="m3/tool_cone_gripper/report.html">tool_cone_gripper</a><span class="verdict review">review</span></li>
+  <li><a href="m3/dpette_single_cradle/report.html">dpette_single_cradle</a><span class="verdict review">review</span></li>
+  <li><a href="m3/dpette_multi_cradle/report.html">dpette_multi_cradle</a><span class="verdict review">review</span></li>
+  <li><a href="m3/tip_ejection_post/report.html">tip_ejection_post</a><span class="verdict review">review</span></li>
+  <li><a href="m3/dpette_handle/report.html">dpette_handle</a><span class="verdict review">review</span></li>
+  <li><a href="m3/dpette_cam_arm/report.html">dpette_cam_arm</a><span class="verdict review">review</span></li>
+  <li><a href="m3/dpette_tip_release/report.html">dpette_tip_release</a><span class="verdict review">review</span></li>
+  <li><a href="m3/dpette_multi_handle/report.html">dpette_multi_handle</a><span class="verdict review">review</span></li>
+  <li><a href="m3/dpette_ejector_lever/report.html">dpette_ejector_lever</a><span class="verdict review">review</span></li>
+</ul>
 <h2>Benchmark pilot: build123d vs OpenSCAD</h2>
 <p>Five written briefs, each with bounds declared before any run; an agent
 (<code>claude -p</code>, Claude Sonnet 5.5) wrote each part three times in each tool. All 30
