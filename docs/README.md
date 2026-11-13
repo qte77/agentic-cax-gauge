@@ -13,6 +13,7 @@ Development workflow lives in [`../CONTRIBUTING.md`](../CONTRIBUTING.md), agent 
 | [`reference/landscape.md`](reference/landscape.md) | Reference | Research evidence, competitors, backend choice, contribution stance, BIM/IFC toolchain (§3.7.1, verified 2026-10-06); not needed to build |
 | [`reference/vendor-ai.md`](reference/vendor-ai.md) | Reference | What Dassault, Siemens, Autodesk, Ansys and PTC shipped in AI (2025–26), how it is used, and what checks its output (nothing independent). Includes the Fusion Compute MCP route relevant to the benchmark |
 | [`reference/engineering-ai-map.md`](reference/engineering-ai-map.md) | Reference | The companies on Dirk Molitor's 2026-11-11 engineering-AI partnership map that this project deliberately does not cover, grouped by why, with verified homepages |
+| [`reference/benchmarking.md`](reference/benchmarking.md) | Reference | What the literature (ABC, BetterBench, construct-validity review, LiveCodeBench, CAD benchmarks) and Berkeley RDI ask of a benchmark, and where `bench/` stands; the evidence behind BENCH-3 and the 2026-11-13 re-gating |
 | [`reference/cae.md`](reference/cae.md) | Reference | The owed CAE research. Read §1 before touching `verify/sim.py` — it disproved the plan's own reason for reserving that seam. Not needed to build v0 |
 
 ## Start here
