@@ -6,6 +6,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-13
+
 **M2 closed (#16):** the owner's review of the so101 pipette mount report — all checks green,
 four design defects found by reading its design source beside the renders.
 
