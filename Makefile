@@ -108,7 +108,8 @@ SO101 ?= ../so101-biolab-automation
 
 # Sample reports for GitHub Pages (pages.yml deploys site/). Needs real renders, so it refuses
 # to run without polyfetch + Chromium, and each part must get its expected verdict (exit 0 =
-# review, 1 = fail) — a broken environment would otherwise publish all-`fail` pages.
+# review, 1 = fail; 3 = preflight-only, no render, is never expected) — a broken environment
+# would otherwise publish all-`fail` or render-less pages.
 site: ## Regenerate site/ sample reports (needs CAXGAUGE_POLYFETCH_DIR + the so101 checkout)
 	set -e
 	if [ -z "$$CAXGAUGE_POLYFETCH_DIR" ] || [ ! -d "$$CAXGAUGE_POLYFETCH_DIR" ]; then

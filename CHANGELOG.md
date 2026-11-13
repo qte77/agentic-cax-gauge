@@ -15,6 +15,10 @@ four design defects found by reading its design source beside the renders.
   every so101 part with an exported STL (16 of 20; four deferred parts have none), under
   `site/m3/`, and `bench/m3-review.csv` for the owner's per-part defects. No bounds are
   declared in so101, so bbox and volume are `SKIP`; the render is the gate.
+- **Blind labelling for the benchmark pilot (`bench/blind.py`)**: the 30 runs' renders under
+  random IDs with only the brief (no tool name, script or check results), a sheet to fill
+  (`bench/labels-blind.csv`: accept yes/no, reject reason) and a key; `unblind` writes the
+  answers into `bench/labels.csv`.
 - **Sample reports on GitHub Pages (M2.6)**: `make site` renders the good box, the intended
   and feature-absorbed boss, and one real so101 part (no declared bounds, so bbox/volume
   `SKIP`) into a committed `site/`; `pages.yml` deploys it. The target checks Chromium first
@@ -64,6 +68,9 @@ four design defects found by reading its design source beside the renders.
 - **`bench/run.sh` logged every non-zero exit as `fail`**: a crash, a usage error or a broken
   `uv` showed up in `runs.tsv` as a gauge verdict. Now only exit 1 is `fail`; any other
   non-zero is logged as `error-exit-<code>`.
+- **`bench/rescore.sh` left the ledger stale**: it re-scored Fly runs with the render but never
+  touched `runs.tsv`, so those rows kept their preflight-only verdict. It now writes the new
+  verdict into the run's last ledger row.
 
 ## [0.2.1] - 2026-10-19
 
