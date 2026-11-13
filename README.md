@@ -12,8 +12,9 @@
 **Status:** M2 closed — `caxgauge check` runs preflight, a browser load check and a
 four-view render, and writes a review report. Its first real review (the so101 pipette mount:
 every check green, four design defects found by the human) is the gate working as designed.
-M3 (adoption) is next. **[Sample reports](https://qte77.github.io/agentic-cax-gauge/)** —
-two fixtures, the silent-fusion defect, and one real so101 part. Start here: [`docs/README.md`](docs/README.md), the map of what to
+M3 (adoption) has started: every so101 part with an exported STL now has a report, awaiting
+the human's per-part review. **[Sample reports](https://qte77.github.io/agentic-cax-gauge/)** —
+two fixtures, the silent-fusion defect, the so101 parts, and the benchmark pilot. Start here: [`docs/README.md`](docs/README.md), the map of what to
 read and in what order.
 
 ## What
