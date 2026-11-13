@@ -60,6 +60,9 @@ four design defects found by reading its design source beside the renders.
 - **`bench/run.sh` logged every non-zero exit as `fail`**: a crash, a usage error or a broken
   `uv` showed up in `runs.tsv` as a gauge verdict. Now only exit 1 is `fail`; any other
   non-zero is logged as `error-exit-<code>`.
+- **`bench/rescore.sh` left the ledger stale**: it re-scored Fly runs with the render but never
+  touched `runs.tsv`, so those rows kept their preflight-only verdict. It now writes the new
+  verdict into the run's last ledger row.
 
 ## [0.2.1] - 2026-10-19
 
