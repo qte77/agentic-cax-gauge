@@ -7,7 +7,7 @@
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-M2%20closed%2C%20M3%20next-blue.svg)](docs/plans/001-v0.md)
-![Version](https://img.shields.io/badge/version-0.2.1-blue.svg)
+![Version](https://img.shields.io/badge/version-0.3.0-blue.svg)
 
 **Status:** M2 closed — `caxgauge check` runs preflight, a browser load check and a
 four-view render, and writes a review report. Its first real review (the so101 pipette mount:
