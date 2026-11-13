@@ -21,6 +21,13 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
   Independent known-good parts for the box, cylinder and plate-with-boss land inside their
   bands.
 
+### Documentation
+
+- **`docs/reference/benchmarking.md`**: what ABC, BetterBench, the construct-validity review,
+  LiveCodeBench, HELM, the CAD benchmarks (Text2CAD, CAD-Recode, CADPrompt, CADTests) and
+  Berkeley RDI's AgentBeats tutorial ask of a benchmark, and where `bench/` stands. The plan
+  re-gates benchmark rounds 2 and BIM, and most of BENCH-3, behind the pilot labels.
+
 ## [0.3.0] - 2026-11-13
 
 **M2 closed (#16):** the owner's review of the so101 pipette mount report — all checks green,
