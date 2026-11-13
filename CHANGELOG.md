@@ -8,6 +8,11 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Added
 
+- **Band-recompute test (`tests/test_bench_bands.py`, BENCH-3 item 1)**: each bounded brief
+  now declares its exact `volume:` as an arithmetic expression in the hidden front matter. The
+  test evaluates it (numbers, operators and `pi` only), checks that the `Bounds:` prose states
+  the same number, that the band contains it, and that the band edges match the stated
+  tolerance where the brief states it exactly.
 - **Review rubric (`bench/rubric.md`)**: one fixed rubric for the benchmark labels and the M3
   defect table, to be fixed before anyone labels. The verdict is `yes`, `no` or `unsure`
   (when the views can't settle it). Reason codes: `phantom-feature`, `mechanism`,

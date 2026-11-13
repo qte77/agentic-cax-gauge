@@ -1,6 +1,7 @@
 ---
 envelope: 6001,4001,251
 volume_band: 5940000000,6060000000
+volume: 6000*4000*250
 ---
 
 # Brief: floor slab

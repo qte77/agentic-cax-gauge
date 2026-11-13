@@ -1,6 +1,7 @@
 ---
 envelope: 21,16,11
 volume_band: 2990,3010
+volume: 20*15*10
 ---
 
 # Brief: box

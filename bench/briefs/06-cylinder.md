@@ -1,6 +1,7 @@
 ---
 envelope: 31,31,51
 volume_band: 34812,35697
+volume: pi*15**2*50
 ---
 
 # Brief: plain cylinder

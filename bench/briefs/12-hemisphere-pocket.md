@@ -1,6 +1,7 @@
 ---
 envelope: 51,51,21
 volume_band: 42287,43361
+volume: 50*50*20 - 2/3*pi*15**3
 ---
 
 # Brief: block with a hemispherical pocket

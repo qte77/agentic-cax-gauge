@@ -1,6 +1,7 @@
 ---
 envelope: 81,51,11
 volume_band: 36215,37135
+volume: 80*50*10 - 6*(pi*5**2*5.5 + pi*2.75**2*4.5)
 ---
 
 # Brief: plate with counterbored holes

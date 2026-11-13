@@ -1,6 +1,7 @@
 ---
 envelope: 101,101,11
 volume_band: 65757,67427
+volume: pi*(50**2 - 15**2)*10 - 6*pi*5**2*10
 ---
 
 # Brief: round flange with a bolt circle
