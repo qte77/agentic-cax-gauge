@@ -8,6 +8,11 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Added
 
+- **Review rubric (`bench/rubric.md`)**: one fixed rubric for the benchmark labels and the M3
+  defect table, to be fixed before anyone labels. The verdict is `yes`, `no` or `unsure`
+  (when the views can't settle it). Reason codes: `phantom-feature`, `mechanism`,
+  `load-path` and `interface`, from the pipette mount's four defects, plus `dimension`,
+  `printability` and `other`. `bench/blind.py` accepts `unsure`.
 - **Control parts for the benchmark briefs (`tests/test_bench_controls.py`, BENCH-3 item 2)**:
   parts made from `trimesh` primitives, never by a contestant tool, checked against every
   brief's bounds in CI. An empty part fails. A box filling the envelope fails the volume
