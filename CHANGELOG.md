@@ -8,6 +8,10 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Added
 
+- **Per-run provenance (`bench/provenance.py`, BENCH-3 item 5)**: `bench/run.sh` writes each
+  run's `provenance.json`: the harness commit and whether the tree was dirty, the brief's
+  SHA-256, the tool version and the Claude Code version. The `runs.tsv` columns are unchanged.
+  The 30 pilot runs predate it.
 - **Band-recompute test (`tests/test_bench_bands.py`, BENCH-3 item 1)**: each bounded brief
   now declares its exact `volume:` as an arithmetic expression in the hidden front matter. The
   test evaluates it (numbers, operators and `pi` only), checks that the `Bounds:` prose states

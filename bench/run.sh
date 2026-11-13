@@ -87,6 +87,9 @@ for brief in "$repo"/bench/briefs/$brief_glob.md; do
 				--system-prompt "$(system_for "$tool")" --max-budget-usd "$run_usd" \
 				--no-session-persistence --output-format json > run.json) || true
 			mkdir -p "$out"
+			# Harness commit, brief hash, tool + Claude Code versions (BENCH-3 item 5).
+			python3 -I "$repo/bench/provenance.py" --brief "$brief" --tool "$tool" --model "$model" \
+				> "$out/provenance.json" || echo '{}' > "$out/provenance.json"
 			cp "$work/run.json" "$out/run.json" 2>/dev/null || echo '{}' > "$out/run.json"
 			cp "$work"/part.py "$work"/part.scad "$work"/part.ifc "$work"/part.json "$out/" 2>/dev/null || true
 			# The BIM track writes IFC; the gauge scores its tessellated STL like any part.
