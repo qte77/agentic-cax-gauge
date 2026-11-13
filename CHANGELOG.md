@@ -11,6 +11,10 @@ four design defects found by reading its design source beside the renders.
 
 ### Added
 
+- **Blind labelling for the benchmark pilot (`bench/blind.py`)**: the 30 runs' renders under
+  random IDs with only the brief (no tool name, script or check results), a sheet to fill
+  (`bench/labels-blind.csv`: accept yes/no, reject reason) and a key; `unblind` writes the
+  answers into `bench/labels.csv`.
 - **Sample reports on GitHub Pages (M2.6)**: `make site` renders the good box, the intended
   and feature-absorbed boss, and one real so101 part (no declared bounds, so bbox/volume
   `SKIP`) into a committed `site/`; `pages.yml` deploys it. The target checks Chromium first
