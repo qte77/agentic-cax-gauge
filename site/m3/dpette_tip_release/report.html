@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>caxgauge: dpette_tip_release.stl</title><style>
+body { font: 14px/1.5 system-ui, sans-serif; margin: 16px; color: #1d1d1f; background: #fafafa; }
+h1 { overflow-wrap: anywhere; }
+.verdict { font-size: 20px; font-weight: 600; padding: 8px 12px; border-radius: 4px; }
+.fail { background: #fde2e1; } .review { background: #fff4d6; }
+.preflight-only { background: #e8e8ed; }
+.label, .norender { padding: 8px 12px; border-left: 4px solid #b26b00; background: #fff; }
+.norender { border-color: #c0392b; font-weight: 600; }
+.checks { overflow-x: auto; }
+table { border-collapse: collapse; margin: 12px 0; }
+td, th { border: 1px solid #ddd; padding: 4px 8px; text-align: left; vertical-align: top; }
+.views { display: flex; flex-wrap: wrap; gap: 12px; }
+.views figure { margin: 0; } .views img { max-width: 400px; width: 100%; border: 1px solid #ccc; }
+.source pre { overflow-x: auto; padding: 8px 12px; background: #fff; border: 1px solid #ddd; }
+</style></head><body><h1>dpette_tip_release.stl</h1><p class="verdict review">Verdict: review</p><p class="label">Green is necessary, not sufficient: these checks cannot see local defects. Look at the render and decide.</p><div class="views"><figure><img src="dpette_tip_release-front.png" alt="front view"><figcaption>front</figcaption></figure><figure><img src="dpette_tip_release-iso.png" alt="iso view"><figcaption>iso</figcaption></figure><figure><img src="dpette_tip_release-top.png" alt="top view"><figcaption>top</figcaption></figure><figure><img src="dpette_tip_release-right.png" alt="right view"><figcaption>right</figcaption></figure></div><section class="source"><h2>Design source: dpette_tip_release.py</h2><p>The intent as written, for comparison with the renders. Not checked.</p><pre><code>&quot;&quot;&quot;Tip ejector station for dPette+ — universal single/multi-channel.
+
+L-bracket with a horizontal finger that presses the side-mounted tip
+ejector lever. Wide waste slot fits both single-channel and 8-channel
+tip ejection. Robot moves pipette laterally into the finger.
+
+Usage:
+    uv run --group cad python src/hardware/cad/dpette/dpette_tip_release.py
+
+Ported from Antonio Lamb&#x27;s CadQuery source (PR #48) to build123d;
+geometry and parameters preserved verbatim.
+&quot;&quot;&quot;
+
+import sys
+from pathlib import Path
+
+from build123d import Box, Cylinder, Pos
+
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+from util.export import export_part
+
+sys.path.pop()
+
+# --- Contact finger ---
+FINGER_WIDTH = 12.0
+FINGER_DEPTH = 15.0
+FINGER_THICK = 5.0
+
+# --- Vertical arm ---
+ARM_HEIGHT = 75.0
+ARM_WIDTH = 20.0
+ARM_THICK = 6.0
+
+# --- Base plate ---
+BASE_X = 100.0
+BASE_Y = 45.0
+BASE_Z = 5.0
+
+# --- Waste slot (wide enough for 8 tips @ 9 mm pitch) ---
+WASTE_SLOT_W = 80.0
+WASTE_SLOT_D = 18.0
+
+# --- Mounting (4x M4) ---
+M4_CLEARANCE = 4.2
+BOLT_SPACING_X = 80.0
+BOLT_SPACING_Y = 28.0
+
+
+def build_tip_release():
+    &quot;&quot;&quot;L-bracket: base + arm + finger. Tips fall through waste slot.&quot;&quot;&quot;
+    # Base plate minus waste slot
+    base = Box(BASE_X, BASE_Y, BASE_Z)
+    base = base - Box(WASTE_SLOT_W, WASTE_SLOT_D, BASE_Z + 2)
+
+    # 4x M4 through-holes
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            hole = Pos(sx * BOLT_SPACING_X / 2, sy * BOLT_SPACING_Y / 2, 0) * Cylinder(
+                M4_CLEARANCE / 2, BASE_Z + 2
+            )
+            base = base - hole
+
+    # Vertical arm flush with back edge of base
+    arm_y = -BASE_Y / 2 + ARM_THICK / 2
+    arm_z = BASE_Z / 2 + ARM_HEIGHT / 2
+    arm = Pos(0, arm_y, arm_z) * Box(ARM_WIDTH, ARM_THICK, ARM_HEIGHT)
+
+    # Horizontal finger extending forward from the top of the arm
+    finger_y = arm_y + ARM_THICK / 2 + FINGER_DEPTH / 2
+    finger_z = BASE_Z / 2 + ARM_HEIGHT - FINGER_THICK / 2
+    finger = Pos(0, finger_y, finger_z) * Box(FINGER_WIDTH, FINGER_DEPTH, FINGER_THICK)
+
+    return base + arm + finger
+
+
+if __name__ == &quot;__main__&quot;:
+    export_part(build_tip_release(), &quot;dpette&quot;, &quot;dpette_tip_release&quot;)
+</code></pre></section><div class="checks"><table><tr><th>Check</th><th>Status</th><th>Detail</th></tr><tr><td>file_integrity</td><td>PASS</td><td>binary STL: header present, 2096 triangles, file length matches 84 + 50*n</td></tr><tr><td>watertight</td><td>PASS</td><td>watertight=True, winding_consistent=True, euler_number=-8 (reported only, not asserted — plan §7.2)</td></tr><tr><td>bbox</td><td>SKIP</td><td>no --envelope given</td></tr><tr><td>volume</td><td>SKIP</td><td>no --volume-band given</td></tr><tr><td>browser_load</td><td>PASS</td><td>viewer reported body[data-state]=rendered</td></tr><tr><td>render</td><td>PASS</td><td>4 view(s) captured at 800x600</td></tr></table></div></body></html>

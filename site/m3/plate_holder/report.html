@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>caxgauge: 96well_plate_holder.stl</title><style>
+body { font: 14px/1.5 system-ui, sans-serif; margin: 16px; color: #1d1d1f; background: #fafafa; }
+h1 { overflow-wrap: anywhere; }
+.verdict { font-size: 20px; font-weight: 600; padding: 8px 12px; border-radius: 4px; }
+.fail { background: #fde2e1; } .review { background: #fff4d6; }
+.preflight-only { background: #e8e8ed; }
+.label, .norender { padding: 8px 12px; border-left: 4px solid #b26b00; background: #fff; }
+.norender { border-color: #c0392b; font-weight: 600; }
+.checks { overflow-x: auto; }
+table { border-collapse: collapse; margin: 12px 0; }
+td, th { border: 1px solid #ddd; padding: 4px 8px; text-align: left; vertical-align: top; }
+.views { display: flex; flex-wrap: wrap; gap: 12px; }
+.views figure { margin: 0; } .views img { max-width: 400px; width: 100%; border: 1px solid #ccc; }
+.source pre { overflow-x: auto; padding: 8px 12px; background: #fff; border: 1px solid #ddd; }
+</style></head><body><h1>96well_plate_holder.stl</h1><p class="verdict review">Verdict: review</p><p class="label">Green is necessary, not sufficient: these checks cannot see local defects. Look at the render and decide.</p><div class="views"><figure><img src="96well_plate_holder-front.png" alt="front view"><figcaption>front</figcaption></figure><figure><img src="96well_plate_holder-iso.png" alt="iso view"><figcaption>iso</figcaption></figure><figure><img src="96well_plate_holder-top.png" alt="top view"><figcaption>top</figcaption></figure><figure><img src="96well_plate_holder-right.png" alt="right view"><figcaption>right</figcaption></figure></div><section class="source"><h2>Design source: plate_holder.py</h2><p>The intent as written, for comparison with the renders. Not checked.</p><pre><code>&quot;&quot;&quot;96-well plate holder with alignment pins.
+
+SBS/ANSI standard footprint: 127.76 x 85.48 mm.
+Reference: https://en.wikipedia.org/wiki/Microplate#Standards
+
+Usage:
+    uv run --group cad python hardware/cad/labware/plate_holder.py
+
+Exports:
+    hardware/stl/labware/96well_plate_holder.stl
+    hardware/svg/labware/96well_plate_holder.svg
+&quot;&quot;&quot;
+
+# Shared export helper (standalone mode)
+import sys
+from pathlib import Path
+
+from build123d import Box, Cylinder, Pos
+
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+from util.export import export_part
+
+sys.path.pop()
+
+# --- Parameters (all in mm) ---
+# SBS standard plate footprint
+PLATE_LENGTH = 127.76
+PLATE_WIDTH = 85.48
+PLATE_HEIGHT = 14.35  # Standard microplate height
+
+# Holder dimensions
+WALL_THICKNESS = 2.0
+BASE_THICKNESS = 3.0
+HOLDER_CLEARANCE = 0.5  # Gap between plate and holder walls
+PIN_DIAMETER = 3.0
+PIN_HEIGHT = 5.0
+PIN_INSET = 5.0  # Distance from corner to pin center
+
+# Derived
+INNER_LENGTH = PLATE_LENGTH + HOLDER_CLEARANCE * 2
+INNER_WIDTH = PLATE_WIDTH + HOLDER_CLEARANCE * 2
+OUTER_LENGTH = INNER_LENGTH + WALL_THICKNESS * 2
+OUTER_WIDTH = INNER_WIDTH + WALL_THICKNESS * 2
+WALL_HEIGHT = PLATE_HEIGHT * 0.6  # Walls don&#x27;t need to be full height
+
+
+def build_plate_holder():
+    &quot;&quot;&quot;Build 96-well plate holder with alignment pins.
+
+    Returns:
+        build123d solid with the plate holder.
+    &quot;&quot;&quot;
+    # Base plate
+    holder = Pos(0, 0, BASE_THICKNESS / 2) * Box(OUTER_LENGTH, OUTER_WIDTH, BASE_THICKNESS)
+
+    # Cut inner pocket for plate (leave 1mm floor)
+    pocket_depth = BASE_THICKNESS - 1.0
+    pocket = Pos(0, 0, BASE_THICKNESS - pocket_depth / 2) * Box(
+        INNER_LENGTH, INNER_WIDTH, pocket_depth
+    )
+    holder = holder - pocket
+
+    # Add walls
+    walls = Pos(0, 0, BASE_THICKNESS + WALL_HEIGHT / 2) * Box(
+        OUTER_LENGTH, OUTER_WIDTH, WALL_HEIGHT
+    )
+    inner_cut = Pos(0, 0, BASE_THICKNESS + WALL_HEIGHT / 2) * Box(
+        INNER_LENGTH, INNER_WIDTH, WALL_HEIGHT + 1
+    )
+    walls = walls - inner_cut
+    holder = holder + walls
+
+    # Add alignment pins at corners
+    pin_positions = [
+        (INNER_LENGTH / 2 - PIN_INSET, INNER_WIDTH / 2 - PIN_INSET),
+        (-INNER_LENGTH / 2 + PIN_INSET, INNER_WIDTH / 2 - PIN_INSET),
+        (INNER_LENGTH / 2 - PIN_INSET, -INNER_WIDTH / 2 + PIN_INSET),
+        (-INNER_LENGTH / 2 + PIN_INSET, -INNER_WIDTH / 2 + PIN_INSET),
+    ]
+    for x, y in pin_positions:
+        pin = Pos(x, y, BASE_THICKNESS + PIN_HEIGHT / 2) * Cylinder(PIN_DIAMETER / 2, PIN_HEIGHT)
+        holder = holder + pin
+
+    return holder
+
+
+def export(holder) -&gt; None:
+    &quot;&quot;&quot;Export to STL and SVG.&quot;&quot;&quot;
+    export_part(holder, &quot;labware&quot;, &quot;96well_plate_holder&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    holder = build_plate_holder()
+    export(holder)
+</code></pre></section><div class="checks"><table><tr><th>Check</th><th>Status</th><th>Detail</th></tr><tr><td>file_integrity</td><td>PASS</td><td>binary STL: header present, 2028 triangles, file length matches 84 + 50*n</td></tr><tr><td>watertight</td><td>PASS</td><td>watertight=True, winding_consistent=True, euler_number=10 (reported only, not asserted — plan §7.2)</td></tr><tr><td>bbox</td><td>SKIP</td><td>no --envelope given</td></tr><tr><td>volume</td><td>SKIP</td><td>no --volume-band given</td></tr><tr><td>browser_load</td><td>PASS</td><td>viewer reported body[data-state]=rendered</td></tr><tr><td>render</td><td>PASS</td><td>4 view(s) captured at 800x600</td></tr></table></div></body></html>
