@@ -1,6 +1,7 @@
 ---
 envelope: 51,41,31
 volume_band: 15803,16205
+volume: 50*40*30 - 44*37*27
 ---
 
 # Brief: box open at the top and the front

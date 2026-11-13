@@ -1,6 +1,7 @@
 ---
 envelope: 41,31,21
 volume_band: 23374,23968
+volume: 40*30*18 + (936*2 + 62*2**2 + 4*2**3/3)
 ---
 
 # Brief: block with chamfered top edges

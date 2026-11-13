@@ -1,6 +1,7 @@
 ---
 envelope: 91,71,6
 volume_band: 29356,30102
+volume: 90*70*5 - 12*pi*3**2*5
 ---
 
 # Brief: plate with a grid of holes

@@ -1,6 +1,7 @@
 ---
 envelope: 61,41,21
 volume_band: 45051,46196
+volume: 60*40*20 - pi*6**2*20
 ---
 
 # Brief: block with a centred through hole

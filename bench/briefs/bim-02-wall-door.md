@@ -1,6 +1,7 @@
 ---
 envelope: 5001,201,3001
 volume_band: 2595780000,2648220000
+volume: 5000*200*3000 - 900*200*2100
 ---
 
 # Brief: wall with a door opening

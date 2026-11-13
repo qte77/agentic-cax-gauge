@@ -1,6 +1,7 @@
 ---
 envelope: 128,86,14
 volume_band: 40298,41112
+volume: 127*85*3 + (127*85 - 123*81)*10
 ---
 
 # Brief: tip rack holder

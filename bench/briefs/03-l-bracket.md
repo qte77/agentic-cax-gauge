@@ -1,6 +1,7 @@
 ---
 envelope: 41,31,31
 volume_band: 10590,11020
+volume: 40*30*5 + 40*5*25 - 2*pi*2.5**2*5
 ---
 
 # Brief: L-bracket

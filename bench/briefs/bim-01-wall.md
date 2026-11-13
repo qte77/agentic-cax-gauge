@@ -1,6 +1,7 @@
 ---
 envelope: 5001,201,3001
 volume_band: 2970000000,3030000000
+volume: 5000*200*3000
 ---
 
 # Brief: straight wall

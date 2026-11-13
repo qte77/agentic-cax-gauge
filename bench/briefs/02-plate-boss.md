@@ -1,6 +1,7 @@
 ---
 envelope: 41,41,14
 volume_band: 8540,8720
+volume: 40*40*5 + pi*5**2*8
 ---
 
 # Brief: plate with boss

@@ -1,6 +1,7 @@
 ---
 envelope: 61,51,31
 volume_band: 42478,43557
+volume: 60*50*5 + 15*1.5*50*25
 ---
 
 # Brief: finned heat sink
