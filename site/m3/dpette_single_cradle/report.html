@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>caxgauge: dpette_single_cradle.stl</title><style>
+body { font: 14px/1.5 system-ui, sans-serif; margin: 16px; color: #1d1d1f; background: #fafafa; }
+h1 { overflow-wrap: anywhere; }
+.verdict { font-size: 20px; font-weight: 600; padding: 8px 12px; border-radius: 4px; }
+.fail { background: #fde2e1; } .review { background: #fff4d6; }
+.preflight-only { background: #e8e8ed; }
+.label, .norender { padding: 8px 12px; border-left: 4px solid #b26b00; background: #fff; }
+.norender { border-color: #c0392b; font-weight: 600; }
+.checks { overflow-x: auto; }
+table { border-collapse: collapse; margin: 12px 0; }
+td, th { border: 1px solid #ddd; padding: 4px 8px; text-align: left; vertical-align: top; }
+.views { display: flex; flex-wrap: wrap; gap: 12px; }
+.views figure { margin: 0; } .views img { max-width: 400px; width: 100%; border: 1px solid #ccc; }
+.source pre { overflow-x: auto; padding: 8px 12px; background: #fff; border: 1px solid #ddd; }
+</style></head><body><h1>dpette_single_cradle.stl</h1><p class="verdict review">Verdict: review</p><p class="label">Green is necessary, not sufficient: these checks cannot see local defects. Look at the render and decide.</p><div class="views"><figure><img src="dpette_single_cradle-front.png" alt="front view"><figcaption>front</figcaption></figure><figure><img src="dpette_single_cradle-iso.png" alt="iso view"><figcaption>iso</figcaption></figure><figure><img src="dpette_single_cradle-top.png" alt="top view"><figcaption>top</figcaption></figure><figure><img src="dpette_single_cradle-right.png" alt="right view"><figcaption>right</figcaption></figure></div><section class="source"><h2>Design source: dpette_cradle.py</h2><p>The intent as written, for comparison with the renders. Not checked.</p><pre><code>&quot;&quot;&quot;Rest cradles for AELAB dPette 7016 (single) and DLAB dPette+ (8-channel).
+
+Holds pipette upright at known position. Steel inserts mate with dock magnets.
+
+Usage:
+    uv run --group cad python hardware/cad/dpette/dpette_cradle.py
+&quot;&quot;&quot;
+
+# Shared export helper (standalone mode)
+import sys
+from pathlib import Path
+
+from build123d import Box, Cylinder, Pos
+
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+from util.export import export_part
+
+sys.path.pop()
+
+# --- Common parameters (all in mm) ---
+WALL = 2.5
+BASE_THICKNESS = 4.0
+CRADLE_HEIGHT = 30.0
+CLEARANCE = 0.5
+
+# dPette 7016 single-channel barrel
+SINGLE_BARREL_D = 20.0
+SINGLE_OUTER_D = SINGLE_BARREL_D + CLEARANCE * 2 + WALL * 2
+
+# dPette+ 8-channel body (wider, must keep tips level)
+MULTI_BODY_W = 50.0
+MULTI_BODY_D = 25.0
+
+
+def build_dpette_single_cradle():
+    &quot;&quot;&quot;Build rest cradle for dPette 7016 single-channel.&quot;&quot;&quot;
+    # Cylindrical cradle with open top
+    outer = Cylinder(SINGLE_OUTER_D / 2, CRADLE_HEIGHT)
+    inner = Pos(0, 0, BASE_THICKNESS) * Cylinder(
+        (SINGLE_BARREL_D + CLEARANCE * 2) / 2, CRADLE_HEIGHT
+    )
+    cradle = outer - inner
+
+    # Flat base for stability
+    base = Box(SINGLE_OUTER_D + 10, SINGLE_OUTER_D + 10, BASE_THICKNESS)
+    return base + Pos(0, 0, BASE_THICKNESS / 2) * cradle
+
+
+def build_dpette_multi_cradle():
+    &quot;&quot;&quot;Build rest cradle for dPette+ 8-channel (must keep tips level).&quot;&quot;&quot;
+    inner_w = MULTI_BODY_W + CLEARANCE * 2
+    inner_d = MULTI_BODY_D + CLEARANCE * 2
+    outer_w = inner_w + WALL * 2
+    outer_d = inner_d + WALL * 2
+
+    # Rectangular cradle
+    outer = Box(outer_w, outer_d, CRADLE_HEIGHT + BASE_THICKNESS)
+    inner = Pos(0, 0, BASE_THICKNESS) * Box(inner_w, inner_d, CRADLE_HEIGHT + 1)
+    cradle = outer - inner
+
+    # Wide base for leveling (critical for 8-channel)
+    base = Box(outer_w + 20, outer_d + 20, BASE_THICKNESS)
+    return base + Pos(0, 0, BASE_THICKNESS / 2) * cradle
+
+
+def export_single(part) -&gt; None:
+    &quot;&quot;&quot;Export single-channel cradle to STL and SVG.&quot;&quot;&quot;
+    export_part(part, &quot;dpette&quot;, &quot;dpette_single_cradle&quot;)
+
+
+def export_multi(part) -&gt; None:
+    &quot;&quot;&quot;Export multi-channel cradle to STL and SVG.&quot;&quot;&quot;
+    export_part(part, &quot;dpette&quot;, &quot;dpette_multi_cradle&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    export_single(build_dpette_single_cradle())
+    export_multi(build_dpette_multi_cradle())
+</code></pre></section><div class="checks"><table><tr><th>Check</th><th>Status</th><th>Detail</th></tr><tr><td>file_integrity</td><td>PASS</td><td>binary STL: header present, 2024 triangles, file length matches 84 + 50*n</td></tr><tr><td>watertight</td><td>PASS</td><td>watertight=True, winding_consistent=True, euler_number=4 (reported only, not asserted — plan §7.2)</td></tr><tr><td>bbox</td><td>SKIP</td><td>no --envelope given</td></tr><tr><td>volume</td><td>SKIP</td><td>no --volume-band given</td></tr><tr><td>browser_load</td><td>PASS</td><td>viewer reported body[data-state]=rendered</td></tr><tr><td>render</td><td>PASS</td><td>4 view(s) captured at 800x600</td></tr></table></div></body></html>

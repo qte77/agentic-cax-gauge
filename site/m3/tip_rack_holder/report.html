@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>caxgauge: tip_rack_holder.stl</title><style>
+body { font: 14px/1.5 system-ui, sans-serif; margin: 16px; color: #1d1d1f; background: #fafafa; }
+h1 { overflow-wrap: anywhere; }
+.verdict { font-size: 20px; font-weight: 600; padding: 8px 12px; border-radius: 4px; }
+.fail { background: #fde2e1; } .review { background: #fff4d6; }
+.preflight-only { background: #e8e8ed; }
+.label, .norender { padding: 8px 12px; border-left: 4px solid #b26b00; background: #fff; }
+.norender { border-color: #c0392b; font-weight: 600; }
+.checks { overflow-x: auto; }
+table { border-collapse: collapse; margin: 12px 0; }
+td, th { border: 1px solid #ddd; padding: 4px 8px; text-align: left; vertical-align: top; }
+.views { display: flex; flex-wrap: wrap; gap: 12px; }
+.views figure { margin: 0; } .views img { max-width: 400px; width: 100%; border: 1px solid #ccc; }
+.source pre { overflow-x: auto; padding: 8px 12px; background: #fff; border: 1px solid #ddd; }
+</style></head><body><h1>tip_rack_holder.stl</h1><p class="verdict review">Verdict: review</p><p class="label">Green is necessary, not sufficient: these checks cannot see local defects. Look at the render and decide.</p><div class="views"><figure><img src="tip_rack_holder-front.png" alt="front view"><figcaption>front</figcaption></figure><figure><img src="tip_rack_holder-iso.png" alt="iso view"><figcaption>iso</figcaption></figure><figure><img src="tip_rack_holder-top.png" alt="top view"><figcaption>top</figcaption></figure><figure><img src="tip_rack_holder-right.png" alt="right view"><figcaption>right</figcaption></figure></div><section class="source"><h2>Design source: tip_rack_holder.py</h2><p>The intent as written, for comparison with the renders. Not checked.</p><pre><code>&quot;&quot;&quot;Pipette tip rack holder — fixed workspace position.
+
+Holds a standard 96-tip rack (SBS footprint variant).
+
+Usage:
+    uv run --group cad python hardware/cad/labware/tip_rack_holder.py
+&quot;&quot;&quot;
+
+# Shared export helper (standalone mode)
+import sys
+from pathlib import Path
+
+from build123d import Box, Pos
+
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+from util.export import export_part
+
+sys.path.pop()
+
+# --- Parameters (all in mm) ---
+# Standard tip rack (approximate — varies by manufacturer)
+RACK_LENGTH = 122.0
+RACK_WIDTH = 80.0
+WALL_THICKNESS = 2.0
+WALL_HEIGHT = 10.0
+BASE_THICKNESS = 3.0
+CLEARANCE = 0.5
+
+INNER_L = RACK_LENGTH + CLEARANCE * 2
+INNER_W = RACK_WIDTH + CLEARANCE * 2
+OUTER_L = INNER_L + WALL_THICKNESS * 2
+OUTER_W = INNER_W + WALL_THICKNESS * 2
+
+
+def build_tip_rack_holder():
+    &quot;&quot;&quot;Build tip rack holder tray.&quot;&quot;&quot;
+    base = Box(OUTER_L, OUTER_W, BASE_THICKNESS)
+
+    walls = Pos(0, 0, BASE_THICKNESS / 2 + WALL_HEIGHT / 2) * Box(OUTER_L, OUTER_W, WALL_HEIGHT)
+    inner = Pos(0, 0, BASE_THICKNESS / 2 + WALL_HEIGHT / 2) * Box(INNER_L, INNER_W, WALL_HEIGHT + 1)
+    walls = walls - inner
+
+    return base + walls
+
+
+def export(part) -&gt; None:
+    &quot;&quot;&quot;Export to STL and SVG.&quot;&quot;&quot;
+    export_part(part, &quot;labware&quot;, &quot;tip_rack_holder&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    export(build_tip_rack_holder())
+</code></pre></section><div class="checks"><table><tr><th>Check</th><th>Status</th><th>Detail</th></tr><tr><td>file_integrity</td><td>PASS</td><td>binary STL: header present, 28 triangles, file length matches 84 + 50*n</td></tr><tr><td>watertight</td><td>PASS</td><td>watertight=True, winding_consistent=True, euler_number=2 (reported only, not asserted — plan §7.2)</td></tr><tr><td>bbox</td><td>SKIP</td><td>no --envelope given</td></tr><tr><td>volume</td><td>SKIP</td><td>no --volume-band given</td></tr><tr><td>browser_load</td><td>PASS</td><td>viewer reported body[data-state]=rendered</td></tr><tr><td>render</td><td>PASS</td><td>4 view(s) captured at 800x600</td></tr></table></div></body></html>

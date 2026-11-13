@@ -11,6 +11,10 @@ four design defects found by reading its design source beside the renders.
 
 ### Added
 
+- **M3 review campaign (`bench/m3-so101.sh`)**: a report with renders and design source for
+  every so101 part with an exported STL (16 of 20; four deferred parts have none), under
+  `site/m3/`, and `bench/m3-review.csv` for the owner's per-part defects. No bounds are
+  declared in so101, so bbox and volume are `SKIP`; the render is the gate.
 - **Blind labelling for the benchmark pilot (`bench/blind.py`)**: the 30 runs' renders under
   random IDs with only the brief (no tool name, script or check results), a sheet to fill
   (`bench/labels-blind.csv`: accept yes/no, reject reason) and a key; `unblind` writes the
