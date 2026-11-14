@@ -1,8 +1,10 @@
 """Control parts for the benchmark briefs: test the gauge's bounds, not the contestants.
 
-Every part here is made from `trimesh` primitives, never by a contestant tool (OpenSCAD,
-build123d), so a brief's bounds are checked against parts its scorer did not shape (plan §5
-BENCH-3 item 2). Three controls per brief with bounds:
+The null part, the boxes and the known-good box and cylinder are made from `trimesh`
+primitives, never by a contestant tool, so a brief's bounds are checked against parts its
+scorer did not shape (plan §5 BENCH-3 item 2). The known-good plate with boss is the
+build123d-made test fixture (`tests/fixtures/make_fixtures.py`), not a benchmark run. Three
+controls per brief with bounds:
 
 - a null part (empty file) must fail;
 - a box filling the whole envelope must fail its volume band, unless the brief's part *is* a
@@ -11,7 +13,8 @@ BENCH-3 item 2). Three controls per brief with bounds:
   shape. That is the documented blind spot the render and the human cover. Green is
   necessary, not sufficient.
 
-Plus known-good parts, made independently, for the briefs whose part is a primitive.
+Plus known-good parts for 3 of the 18 briefs (box, cylinder, plate with boss); the others need
+booleans. All controls assert preflight results, not the full `caxgauge check` verdict.
 """
 
 from pathlib import Path

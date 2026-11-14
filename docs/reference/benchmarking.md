@@ -2,7 +2,7 @@
 title: Benchmark practice — what the literature and RDI ask of a benchmark, and where ours stands
 purpose: Evidence behind plan §5 BENCH-3 and the 2026-11-13 re-gating of the benchmark rows; not needed to build
 created: 2026-11-13
-updated: 2026-11-13
+updated: 2026-11-14
 validated_links: 2026-11-13
 status: reference
 ---
@@ -46,18 +46,21 @@ Most CAD benchmarks score shape distance against one reference. This project has
 model. Its oracle is a closed-form bound plus a human looking at the render, which is closer
 to CADTests' requirement checks.
 
-## 3. Where this repo stands (2026-11-13)
+## 3. Where this repo stands (2026-11-14)
 
 - **Met:**
   - bounds are declared in each brief before any run, and are two-sided
   - no model judges; the human labels blind (`bench/blind.py`)
   - a fresh scratch directory per run; pinned model; spend caps
   - each artifact is checked directly
-- **In progress (BENCH-3):** control parts against every brief's bounds
-  (`tests/test_bench_controls.py`) and a fixed review rubric (`bench/rubric.md`).
+  - control parts on all 18 bounded briefs, known-good parts for 3 of them
+    (`tests/test_bench_controls.py`)
+  - a fixed review rubric (`bench/rubric.md`)
+  - every band recomputed from its closed form (`tests/test_bench_bands.py`)
+  - per-run provenance (`bench/provenance.py`), from the next run on
 - **Open:** construct and task validity (every brief states its dimensions), no held-out
-  briefs, no second rater, no uncertainty reported, per-run provenance limited to the model,
-  no datasheet.
+  briefs, no second rater, no uncertainty reported, no datasheet. The 30 pilot runs have no
+  provenance, and it can't be backfilled.
 - **An independent review (Fable, 2026-11-13)** judged the benchmark the wrong priority while
   no labels exist. It also argued that the plan's own target case is a part regenerated
   against a stable contract (plan §3.1 ICP), not one-shot briefs. Its sharpest point: blind

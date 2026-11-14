@@ -8,6 +8,13 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Added
 
+- **M3 sheet pre-staged for the owner's sitting:** `bench/m3-review.csv` gains a `found_by`
+  column (`preflight`, `render` or `source`, per defect) and is ordered by source file.
+  `bench/rubric.md` adds a default decision rule, set before the sitting: if `source` found
+  more defects than `render`, the render-first claim is reopened before any new view is
+  built.
+- **`bench/provenance.py`** also records build123d's OCCT binding (OCP) version, and says that
+  versions come from the same unpinned `uv` resolution as the run.
 - **Per-run provenance (`bench/provenance.py`, BENCH-3 item 5)**: `bench/run.sh` writes each
   run's `provenance.json`: the harness commit and whether the tree was dirty, the brief's
   SHA-256, the tool version and the Claude Code version. The `runs.tsv` columns are unchanged.
@@ -43,6 +50,15 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
   - The MecAgent row in §3.2 is refreshed: SolidWorks only for now, no geometry checks described.
   - Constor goes in §3.7: PDF-based construction takeoffs, YC Fall 2026.
   - None of them changes a plan decision.
+- **Cleanup after a second Fable review (2026-11-14):**
+  - The landscape now ranks entries: adjacent ones are kept as "Rank: adjacent (low)". The
+    Claude for Manufacturing paragraph no longer calls it the plan's target case, and the
+    Constor line no longer generalises from one company.
+  - `docs/reference/benchmarking.md` §3 is current.
+  - The control and band tests' docstrings now match the code: the plate-with-boss fixture is
+    build123d-made, known-good parts cover 3 of 18 briefs, and an unsourced figure is gone.
+  - The plan's BENCH-3 row says what item 2 actually covers.
+  - The plan has a new row, VIEWS, for `--intent` and a section view.
 
 ## [0.3.0] - 2026-11-13
 

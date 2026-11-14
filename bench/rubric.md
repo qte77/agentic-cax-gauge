@@ -40,6 +40,19 @@ into "accepted".
 - Blind sheet: `accept` is `yes`, `no` or `unsure`. `reject_reason` holds the codes, separated
   by `;`, then optional words, e.g. `mechanism; screws parallel to split`. For `unsure`, give
   what you'd need, e.g. `needs: source`.
-- M3 table: put the codes and a short description in `defects`. Fill
-  `intent_view_would_help` and `section_view_would_help` with `yes` or `no` for each part.
-  Those two columns decide whether `--intent` and a section view get built.
+- M3 table: put the codes and a short description in `defects`. In `found_by`, say for each
+  defect, in the same order, what showed it: `preflight`, `render` or `source`, e.g.
+  `source; source; render`. Fill `intent_view_would_help` and `section_view_would_help` with
+  `yes` or `no` for each part. The rows are ordered by source file; review one file at a time,
+  and stop when two files in a row add no new reason code.
+
+## Deciding after the M3 sitting
+
+Default rule, set before the sitting so the answers can't shape it; the owner can override it:
+
+1. **Count `found_by` first.** If more defects were found by `source` than by `render`, the
+   plan's claim that the render is the primary gate is reopened, as an owner decision, before
+   any new view is built. More views can't fix a gate that isn't where defects are seen.
+2. **Otherwise build a view only on evidence:** `--intent` or the section view gets built
+   only if at least 4 reviewed parts say `yes` for it **and** at least one defect found by
+   `source` would have been visible in it.
