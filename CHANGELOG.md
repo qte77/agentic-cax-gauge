@@ -36,6 +36,13 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
   LiveCodeBench, HELM, the CAD benchmarks (Text2CAD, CAD-Recode, CADPrompt, CADTests) and
   Berkeley RDI's AgentBeats tutorial ask of a benchmark, and where `bench/` stands. The plan
   re-gates benchmark rounds 2 and BIM, and most of BENCH-3, behind the pilot labels.
+- **`docs/reference/landscape.md`, 2026-11-14 additions:**
+  - Anthropic's Claude for Manufacturing plugin goes in §3.5. Its `design-space-explore` skill
+    makes Fusion variants and checks only that they regenerate, plus mass, volume and bounding
+    box.
+  - The MecAgent row in §3.2 is refreshed: SolidWorks only for now, no geometry checks described.
+  - Constor goes in §3.7: PDF-based construction takeoffs, YC Fall 2026.
+  - None of them changes a plan decision.
 
 ## [0.3.0] - 2026-11-13
 
