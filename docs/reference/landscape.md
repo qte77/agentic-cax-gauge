@@ -66,6 +66,9 @@ twice, not a CAx-specific artifact.
 
 ## 3. Competitive landscape
 
+**Ranking (owner 2026-11-14):** entries adjacent to the project's scope are kept, marked
+**Rank: adjacent (low)**. Only an entry that changes a plan decision ranks high.
+
 ### 3.0 Sweep coverage — what was searched, and what was not
 
 Recorded so the next sweep does not redo the same ground. Re-swept 2026-07-25.
@@ -174,7 +177,7 @@ Sources: [CadQuery][cadquery], [build123d][build123d], [OpenSCAD][openscad],
 | [openscad-agent][openscadagent] | Claude-Code-powered generate/render/self-correct + STL manifold validation | **Highest overlap** |
 | [BlenderLLM][blenderllm] | Fine-tuned Qwen2.5-Coder-7B + CADBench | Low |
 | [ScadLM][scadlm] | Hackathon agentic text-to-OpenSCAD; authors report feedback approaches underperformed | Low, but a cautionary data point |
-| [MecAgent][mecagent] | Copilot app attached to an open CAD session, building native, editable features, assemblies and drawings from text, spec sheets, STEP files or PDF drawings. **Re-read 2026-11-14 (vendor pages):** only SolidWorks (2024–2026) is listed as available; Inventor, CATIA V5, 3DEXPERIENCE, Fusion, NX, Solid Edge, Onshape and Creo are listed as "soon"/end of 2026. Its home and about pages describe no check on generated geometry; no benchmark is cited | Medium |
+| [MecAgent][mecagent] | Copilot app attached to an open CAD session, building native, editable features, assemblies and drawings from text, spec sheets, STEP files or PDF drawings. **Re-read 2026-11-14 (vendor pages):** only SolidWorks (2024–2026) is listed as available; Inventor, CATIA V5, 3DEXPERIENCE, Fusion, NX, Solid Edge, Onshape and Creo are listed as "soon"/end of 2026. Its home and about pages describe no check on generated geometry; no benchmark is cited | Medium. Rank: adjacent (low) |
 
 Added by the 2026-07-25 marketplace sweep. All of these ship as agent skills:
 
@@ -754,7 +757,7 @@ reinforces the existing Fusion 360 API "Hold" verdict (§3.1, desktop-app depend
 differentiation argument above: even Autodesk's own first-party AI tooling ships zero
 verification philosophy.
 
-**Added 2026-11-14 — [Claude for Manufacturing][claudemfg]**, Anthropic's plugin (v1.0.0, a
+**Added 2026-11-14 — [Claude for Manufacturing][claudemfg]** (Rank: adjacent (low)), Anthropic's plugin (v1.0.0, a
 reference implementation marked not actively maintained; [announced][claudemfgpost]
 2026-11-12). It has 17 skills, mostly plant work: RFQ intake, quoting, NCR and 8D write-ups,
 breakdown diagnosis, the morning production report, and sourcing. Two skills touch CAD, both
@@ -771,9 +774,10 @@ through the Fusion MCP connector, the only connector the plugin declares:
 Read from its [`SKILL.md`][claudemfgdse]. Its checks are the same class as this repo's
 preflight: the part regenerated, and envelope, mass and volume fit. Nothing checks that the
 variant's features still do their job, and every skill ends with a person approving. It is
-also the closest outside instance of plan §3.1's target case: parts regenerated from a
-stable model. **Effect on the plan:** none yet. It is a possible input to the gauge (export
-each variant's STL and run it through the gauge), recorded here as a suggestion.
+*not* plan §3.1's target case: a parameter sweep makes parts that differ on purpose, so
+there's no fixed acceptance contract, and any per-variant band would come from the same
+model that made the variant. **Effect on the plan:** none. Relevant only if the owner has a
+Fusion model they would sweep and would review every variant's render.
 
 **Added 2026-09-19 — the same pattern recurring on Revit, not just Fusion.** Autodesk's own
 Revit 2026-2027 "what's new" blog (403'd on direct fetch, recovered via search + third-party
@@ -961,15 +965,15 @@ cross-check is not wired.
   alternative to it: it would turn raw PDFs/logs into the structured, retrievable records
   that retrieval layer requires, nothing more.
 
-**Added 2026-11-14 — [Constor][constor]** ([YC Fall 2026][constoryc], team of 3) does
+**Added 2026-11-14 — [Constor][constor]** (Rank: adjacent (low)) ([YC Fall 2026][constoryc], team of 3) does
 quantity takeoffs for construction subcontractors, starting with HVAC and insulation trades.
 It reads PDF drawings, extracts piping, duct, surface and equipment quantities into a table
 for a quote or ERP, and lifts the checked systems into 3D. Planned next: bidding, GC revision
 coordination and supplier pricing. It works on 2D PDFs, not IFC. The only check described is
 the user reviewing the quantities against the plans; no accuracy figure is published. Its
-LinkedIn page wasn't readable, so it isn't cited. **Effect on the plan:** none. It's a
-data point that construction AI starts from PDFs, not models, which bears on MB's open
-data gate (§5): a real user may have no IFC to give.
+LinkedIn page wasn't readable, so it isn't cited. **Effect on the plan:** none. One company
+is no trend, but it prompts a question for MB's data gate (§5): does the BIM user we'd ask
+have IFC files at all, or only PDFs?
 
 #### 3.7.1 IFC toolchain and standards — verified 2026-10-06
 

@@ -1,9 +1,11 @@
 """Per-run provenance for the benchmark (plan §5 BENCH-3 item 5).
 
 Prints one JSON object: which harness commit ran, a hash of the exact brief, and the versions
-of the CAD tool and of Claude Code. Without these a run can't be re-run or compared later,
-and they can't be backfilled. `bench/run.sh` writes it to each run's `provenance.json`; the
-ledger `runs.tsv` keeps its columns.
+of the CAD tool (for build123d, also its OCCT binding) and of Claude Code. Without these a
+run can't be re-run or compared later, and they can't be backfilled: the 30 pilot runs have
+none. `bench/run.sh` writes it to each run's `provenance.json`; the ledger `runs.tsv` keeps its
+columns. The Python tool versions come from the same unpinned `uv run --with` resolution the
+run uses, seconds before it, not from inside the run itself.
 
 Usage: python3 -I bench/provenance.py --brief BRIEF.md --tool TOOL --model MODEL
 """
@@ -18,10 +20,22 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 
 _PY_VERSION = "import {m}; print({m}.{attr})"
+_BUILD123D_VERSION = """
+from importlib import metadata
+import build123d
+ocp = "unknown"
+for name in ("cadquery-ocp-novtk", "cadquery-ocp"):
+    try:
+        ocp = metadata.version(name)
+        break
+    except metadata.PackageNotFoundError:
+        pass
+print(f"build123d {build123d.__version__}, OCP {ocp}")
+"""
 _TOOL_VERSION: dict[str, list[str]] = {
     "build123d": [
         *("uv", "run", "--no-project", "--with", "build123d", "python", "-c"),
-        _PY_VERSION.format(m="build123d", attr="__version__"),
+        _BUILD123D_VERSION,
     ],
     "ifcopenshell": [
         *("uv", "run", "--no-project", "--with", "ifcopenshell", "python", "-c"),

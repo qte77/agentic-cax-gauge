@@ -5,7 +5,7 @@ arithmetic expression (numbers, + - * / **, and `pi`), hidden from the agent lik
 the front matter. This test evaluates it and checks three things:
 
 - the number the brief's `Bounds:` line states matches the expression (prose and formula
-  can't drift apart, the way 5 of 12 expected values did in another repo's ground truth);
+  can't drift apart);
 - the band contains the exact volume;
 - the band's edges match the tolerance the `Bounds:` line states, when it states one exactly.
 
