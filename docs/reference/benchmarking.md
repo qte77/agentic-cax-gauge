@@ -2,8 +2,8 @@
 title: Benchmark practice — what the literature and RDI ask of a benchmark, and where ours stands
 purpose: Evidence behind plan §5 BENCH-3 and the 2026-11-13 re-gating of the benchmark rows; not needed to build
 created: 2026-11-13
-updated: 2026-11-14
-validated_links: 2026-11-13
+updated: 2026-11-15
+validated_links: 2026-11-15
 status: reference
 ---
 
@@ -66,6 +66,43 @@ to CADTests' requirement checks.
   against a stable contract (plan §3.1 ICP), not one-shot briefs. Its sharpest point: blind
   labelling hides the design source, yet the real defects so far were found by reading it.
   Hence the rubric's `unsure`.
+
+## 4. ArchLang's evaluation, the most developed one we found (read 2026-11-15)
+
+[ArchLang](https://github.com/ChanMeng666/archlang) (see [landscape §3.7](landscape.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate))
+measures whether a model writes valid, sound and intent-matching floor plans from a brief.
+This is read from its `eval/` and `dataset/` READMEs and `eval/results.md`. What it does that
+we don't yet do:
+
+- **Version the ruler.** Every result is stamped with the judge's version. A rate is never
+  compared across a judge change: fixing the judge alone moved its one-shot intent rate from
+  9% to 50%, with no model change.
+- **Separate the tool's dividend from the model's.** Tier L0 scores the model's first
+  output; L1 re-scores it after deterministic fix and repair, with no model involved.
+  Feedback loops (L2) are compared against equal-token-budget resampling, with the analysis
+  pre-registered before the one live run.
+- **Use infeasible briefs.** Some briefs can't be satisfied, and the correct answer is to
+  say so and name the conflicting requirements. A plan that passes the validator anyway scores
+  0, because it has quietly changed the user's numbers ("constraint laundering"). The
+  conflict set is derived arithmetically, not asserted in prose.
+- **Plant faults in CI.** Plans with known defects (a blocked doorway, an off-wall door,
+  furniture through a wall) must be caught.
+- **Be honest about contamination.** The eval briefs have been public in the repo, so they're
+  called "a public regression fixture, not a holdout". A synthetic dataset (CC0) carries a
+  fixed canary string so leakage into training data can be detected.
+- **Fix the rubric before the grades,** keep a pre-registered second rater with human
+  adjudication, and report Wilson intervals.
+
+Its offline scorecard (judge v2, 26 briefs): 26/26 compile, 23/26 match intent, 4/26 are
+lint-clean.
+
+**Ideas this suggests here, recorded only:**
+
+- an infeasible brief (bounds no part can meet) among the controls
+- a gauge-version stamp in each run's provenance, so verdicts aren't compared across gauge
+  changes
+- planted-defect parts in the blind sheet
+- calling the current public briefs a regression fixture, not a held-out set
 
 Not read at source, not cited: the SWE-bench Verified announcement, CAD-Coder,
 CAD-Assistant. An anonymous unpublished submission seen during the search is deliberately

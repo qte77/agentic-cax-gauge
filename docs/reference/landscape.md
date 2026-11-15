@@ -2,8 +2,8 @@
 title: Landscape — evidence, competitors, backend choice, contribution stance
 purpose: The research behind the design decisions, split out of plan 001 so the plan stays a plan
 created: 2026-07-20
-updated: 2026-11-14
-validated_links: 2026-11-14
+updated: 2026-11-15
+validated_links: 2026-11-15
 status: reference — dated, not needed to build
 ---
 
@@ -975,6 +975,26 @@ LinkedIn page wasn't readable, so it isn't cited. **Effect on the plan:** none. 
 is no trend, but it prompts a question for MB's data gate (§5): does the BIM user we'd ask
 have IFC files at all, or only PDFs?
 
+**Added 2026-11-15 — [ArchLang][archlang]** (Rank: adjacent (low); [repo][archlanggh], MIT,
+TypeScript, single maintainer, release v1.62.0 on 2026-11-15). It's a text DSL for 2D floor
+plans: an agent writes `.arch` source, and a deterministic compiler draws a dimensioned plan
+(SVG, DXF, PDF) and reports what's wrong.
+
+- **Checks:** reachability and area are errors; everything else is advisory lint, e.g. a
+  bedroom with no window, or a blocked doorway.
+- **3D:** a separate package extrudes the plan to a GLB and checks it before writing: closed
+  shells, every 3D element traceable to the plan, glTF-Validator clean.
+- **Limits it states itself:** no BIM or IFC, no permit drawings, no image reading.
+- **Where it ships:** CLI, MCP server, agent skill, VS Code extension, a
+  [playground][archlangplay], an 11-plan [gallery][archlanggallery] that is explicitly "not
+  a benchmark", and a [guide][archlangguide].
+
+It's the same shape as this repo: an agent generates, deterministic checks report, a human
+decides. It's for a different artefact, though: 2D plans, not meshes. Its evaluation method
+is the most developed we've seen, and is summarised in
+[`benchmarking.md`](benchmarking.md) §4. **Effect on the plan:** none. It isn't a consumer,
+since it checks its own output, and the gauge would duplicate its GLB checks.
+
 #### 3.7.1 IFC toolchain and standards — verified 2026-10-06
 
 Researched by four read-only subagents against primary sources, then the open questions
@@ -1163,6 +1183,11 @@ and stated in the PR.
 [claudemfgpost]: https://claude.com/resources/articles/claude-for-manufacturing
 [constor]: https://constor.ai/landing/en
 [constoryc]: https://www.ycombinator.com/companies/constor
+[archlang]: https://archlang.uk/
+[archlanggh]: https://github.com/ChanMeng666/archlang
+[archlangguide]: https://archlang.uk/guide
+[archlangplay]: https://playground.archlang.uk/
+[archlanggallery]: https://archlang.uk/gallery
 [sketch2bim]: https://arxiv.org/abs/2510.20838
 [text2bim]: https://arxiv.org/html/2408.08054v1
 [qwenbim]: https://arxiv.org/abs/2602.20812

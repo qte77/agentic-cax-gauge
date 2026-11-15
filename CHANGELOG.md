@@ -39,6 +39,11 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Documentation
 
+- **ArchLang (2026-11-15):** a landscape §3.7 entry ranked adjacent (low). It's an agent-written
+  floor-plan DSL with deterministic checks. `benchmarking.md` §4 summarises its evaluation
+  method: a versioned judge, a tool-versus-model tier split, infeasible briefs that catch
+  constraint laundering, planted faults in CI, and a contamination canary. Ideas for here
+  are recorded, not adopted.
 - **M3 consumer decided (owner 2026-11-15): none for now.** so101 and i3mega stay archived.
   The M3 row keeps only the owner's review of the 16 parts, which decides VIEWS. Wiring a
   consumer moves to the plan's Outlook as ADOPT. The upstream alternative (an issue-first
