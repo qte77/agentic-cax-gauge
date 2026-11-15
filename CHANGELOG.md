@@ -39,6 +39,13 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Documentation
 
+- **AutoCAD and Revit logs as evidence (landscape §3.7.2, 2026-11-15, ranked adjacent (low)):**
+  - What each tool logs, with the documented gaps: no published `accoreconsole` exit codes,
+    no Revit journal format, a Design Automation `success` that doesn't prove the output.
+  - How to check DWG/DXF without AutoCAD: ezdxf (MIT), LibreDWG (GPL-3.0), the ODA File
+    Converter (licence unverified).
+  - The project's own rules applied: a log is advisory, exit 0 without output is FAIL, a
+    log that wasn't produced is SKIP.
 - **ArchLang (2026-11-15):** a landscape §3.7 entry ranked adjacent (low). It's an agent-written
   floor-plan DSL with deterministic checks. `benchmarking.md` §4 summarises its evaluation
   method: a versioned judge, a tool-versus-model tier split, infeasible briefs that catch

@@ -1021,6 +1021,97 @@ covers disclosure to third parties (only its general scope was confirmable — t
 paywalled); ICC Code Connect pricing (not publicly priced); and behaviour on **real exported
 project data** — every empirical check above used a synthetic model.
 
+#### 3.7.2 AutoCAD and Revit logs as evidence — researched 2026-11-15
+
+**Rank: adjacent (low).** The owner asked how to handle and evaluate the logs AutoCAD and
+Revit write while DWG/DXF or IFC files are created, especially by an agent or a script with
+no user present. Two read-only subagents searched for this. **R** = read at the source,
+**S** = search snippet only. Licences marked **V** were checked on GitHub.
+
+##### AutoCAD
+
+- **Command-history log:** `LOGFILEMODE` turns it on, and it's off by default
+  ([R][acadlogmode]). `LOGFILEPATH` sets its folder ([S][acadlogpath]). Autodesk documents
+  no format; it's the command-line text.
+- **AUDIT:** it "corrects some errors" but not all; for the rest, use RECOVER
+  ([R][acadaudit]). With `AUDITCTL` = 1 it writes a `.adt` report of each problem and the
+  action taken ([S][acadauditctl]).
+- **Action Recorder:** records macros, not diagnostics ([S][acadactrec]).
+- **Headless runs with Core Console (`accoreconsole`):** commands that need a dialog are
+  unsupported, so use dash forms like `-LAYER`. Scripts must supply every input. `/l` pins
+  the language. Autodesk tells developers to log progress and failure points themselves
+  ([R][acadcore]). **No Autodesk source documents its exit codes**, so treat them as
+  unknown.
+- **Autodesk Platform Services Design Automation (AutoCAD):** runs `accoreconsole` in the
+  cloud. A work item returns a status and a `reportUrl` to `report.txt`
+  ([R][apscallbacks], [R][apsfield]). The report's errors look like
+  `ERROR: … ErrorStatus=434` and map to `Acad::ErrorStatus` ([R][apsacaderr]). A failure may
+  show only in the report (one forum thread, snippet only, not cited).
+- **Checking the file without AutoCAD:**
+  - [ezdxf][ezdxfrecover] (MIT **V**, pure Python, Linux): `recover.readfile` returns the
+    drawing plus an auditor's findings, for DXF only.
+  - [LibreDWG][libredwg] (GPL-3.0 **V**): `dwgread` and `dwg2dxf` command-line tools.
+  - [ODA File Converter][odafc]: DWG/DXF with an audit flag, Linux builds ([S]). Its licence
+    wasn't found and one index lists it as unfree, so check its EULA first.
+
+##### Revit
+
+- **Journals:** one per session, in a hidden per-user folder, recording "the actions taken by
+  the software during a session" ([R][rvtjournal]). Autodesk publishes no format and
+  supports journals only as "a replay mechanism for testing or reporting issues". Expect
+  "incompatibilities between versions", and a modal dialog can block replay
+  ([R][rvtreplay]). The folder path includes the user name. Whether the file itself holds
+  personal data wasn't checked.
+- **IFC export:** Revit writes "a log file for the export process" next to the IFC
+  ([R][rvtifclog]). Its name and content aren't documented.
+- **Design Automation (Revit):** documented statuses are `pending`, `inprogress`,
+  `cancelled`, `failedLimitProcessingTime`, `failedDownload`, `failedInstructions`,
+  `failedUpload`, `failedUploadOptional` and `success`. The `reportUrl` is valid for 24
+  hours, and status is kept for 3 days ([R][apsworkitem]). `success` doesn't say the output
+  is right, and `failedUploadOptional` means some outputs may be missing.
+
+**Published practice:** none found that's specific to CAD or BIM, either for treating tool
+logs as evidence or for evaluating agent sessions from AutoCAD or Revit logs. Near
+neighbours are generic MCP benchmarks, an IFC MCP framework and IFC Copilot (all [S]).
+OpenTelemetry's conventions for agent tool calls exist but are still in development, and
+only vendor summaries were read ([S]).
+
+**What it means here (our inference, applying existing rules):**
+
+- **A log is advisory evidence and never a gate** (`.claude/rules/verification-honesty.md`).
+  Gate on the artifact: it exists, isn't empty, parses (ezdxf or IFC), and passes preflight.
+- **Exit 0 without output is FAIL** (§11 of the plan, the i3mega/PrusaSlicer precedent).
+  Neither `accoreconsole` exit codes nor a `success` status prove a good file. Have the
+  script write its own end marker, and treat a missing marker as FAIL.
+- **A log that wasn't produced is SKIP, not PASS,** e.g. `AUDITCTL` or `LOGFILEMODE` off.
+- **Parse loosely:** pin the language (`/l en-US`), match `ERROR`/`ErrorStatus` lines,
+  record unparseable lines as "unparsed", not clean, and never infer success from the
+  absence of an error line. The §3.7 extraction note (GLiFormer) is one option for turning
+  log text into records.
+- **Keep logs per run in a unique path,** with a SHA-256 and the tool version (as
+  `bench/provenance.py` does). Save Design Automation reports before their 24-hour link
+  expires. Redact user names and paths before keeping anything.
+
+**Effect on the plan:** none. No plan row consumes DWG or Revit output today. MB (IFC) would
+gain the export-log and `failedUploadOptional` points if it activates.
+
+[acadlogmode]: https://help.autodesk.com/cloudhelp/2022/ENU/AutoCAD-LT/files/GUID-C0C25385-F210-4834-B7D4-B29C2592D36A.htm
+[acadlogpath]: https://help.autodesk.com/cloudhelp/2024/ENU/AutoCAD-LT/files/GUID-0E2D4DF2-4C26-48AC-ACBC-819E3C46CE59.htm
+[acadaudit]: https://help.autodesk.com/cloudhelp/2024/ENU/AutoCAD-LT/files/GUID-62DDB935-61B1-49DA-8238-3EF1CC45259B.htm
+[acadauditctl]: https://help.autodesk.com/cloudhelp/2022/ENU/AutoCAD-LT/files/GUID-05A7363C-4A43-4984-8262-DA7BEE7B860C.htm
+[acadactrec]: https://help.autodesk.com/cloudhelp/2022/ENU/AutoCAD-Core/files/GUID-6254B281-6523-4C56-AC9E-CDEE32A27606.htm
+[acadcore]: https://help.autodesk.com/cloudhelp/2026/ENU/AutoCAD-Core-Console/files/AUTOCAD_CORE_CONSOLE.html
+[apscallbacks]: https://aps.autodesk.com/en/docs/design-automation/v3/developers_guide/callbacks
+[apsfield]: https://aps.autodesk.com/en/docs/design-automation/v3/developers_guide/field-guide
+[apsacaderr]: https://aps.autodesk.com/blog/autocad-design-automation-error-codes
+[ezdxfrecover]: https://ezdxf.readthedocs.io/en/stable/drawing/recover.html
+[libredwg]: https://github.com/LibreDWG/libredwg
+[odafc]: https://www.opendesign.com/faq/question/are-there-command-line-examples-support-windows-and-linux-operating-systems-deb.md
+[rvtjournal]: https://help.autodesk.com/cloudhelp/2014/ENU/Revit/files/GUID-477C6854-2724-4B5D-8B95-9657B636C48D.htm
+[rvtreplay]: https://blog.autodesk.io/journal-file-replay/
+[rvtifclog]: https://help.autodesk.com/cloudhelp/2025/ENU/Revit-DocumentPresent/files/GUID-14037C31-EBAD-41A8-9099-E6DD65BB626E.htm
+[apsworkitem]: https://aps.autodesk.com/en/docs/design-automation/v3/reference/http/workitems-id-GET
+
 ## 4. Upstream contribution stance
 
 **Decided 2026-07-20: issue-first probe, commit no code yet.** Ask
