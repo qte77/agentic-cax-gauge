@@ -39,6 +39,11 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Documentation
 
+- **M3 consumer decided (owner 2026-11-15): none for now.** so101 and i3mega stay archived.
+  The M3 row keeps only the owner's review of the 16 parts, which decides VIEWS. Wiring a
+  consumer moves to the plan's Outlook as ADOPT. The upstream alternative (an issue-first
+  probe to `text-to-cad`, landscape §4) is documented there as UPSTREAM, not started. The
+  Positioning row and §8 say so.
 - **`docs/reference/benchmarking.md`**: what ABC, BetterBench, the construct-validity review,
   LiveCodeBench, HELM, the CAD benchmarks (Text2CAD, CAD-Recode, CADPrompt, CADTests) and
   Berkeley RDI's AgentBeats tutorial ask of a benchmark, and where `bench/` stands. The plan
