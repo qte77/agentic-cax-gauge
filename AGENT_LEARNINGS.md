@@ -13,6 +13,15 @@ below.
 
 ## Learned Patterns
 
+### `docs.blender.org` returns 403 to CI's link check (2 occurrences)
+
+PRs #106 and #107 (2026-11-14/15) failed "Lint MD and Links" only on
+`https://docs.blender.org/api/current` (403 to the GitHub runner). It's pre-existing in
+`docs/reference/landscape.md` and passed locally and on rerun both times. **Do:** rerun the
+failed job and check that the failing URL is one the PR didn't touch before merging. A
+lasting fix (excluding the URL or accepting 403 for that host in `lychee.toml`) is an owner
+call, still open.
+
 ### A missing check is not a passing check (2 occurrences)
 
 - **Context**: Before merging any PR, and when adding or changing a workflow.
