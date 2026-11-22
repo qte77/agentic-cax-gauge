@@ -13,8 +13,15 @@ controls per brief with bounds:
   shape. That is the documented blind spot the render and the human cover. Green is
   necessary, not sufficient.
 
-Plus known-good parts for 3 of the 18 briefs (box, cylinder, plate with boss); the others need
-booleans. All controls assert preflight results, not the full `caxgauge check` verdict.
+Plus known-good parts for 4 of the 18 briefs (box, cylinder, plate with boss, 80 mm wall
+bracket); the others need booleans. The two parts with holes are build123d-made test fixtures
+(`tests/fixtures/make_fixtures.py`), made once, not benchmark runs.
+
+Known-bad parts modelled on failures seen in agent-CAD videos (landscape §3.8). Each expected
+result is derived from the brief's closed form, not from the label "bad": a known-bad part
+fails only where its volume leaves the band, and otherwise passes preflight as a blind spot.
+
+All controls assert preflight results, not the full `caxgauge check` verdict.
 """
 
 from pathlib import Path
@@ -127,3 +134,58 @@ def test_known_good_plate_with_boss_is_inside_its_bounds(tmp_path: Path):
     part = trimesh.load(FIXTURES / "feature_absorbed_intended.stl", file_type="stl")
     assert isinstance(part, trimesh.Trimesh)
     assert _failed(_check(part, BRIEFS / "02-plate-boss.md", tmp_path)) == set()
+
+
+def test_known_good_wall_bracket_is_inside_its_bounds(tmp_path: Path):
+    # Brief 16's part, holes included: a build123d test fixture, not a benchmark run.
+    part = trimesh.load(FIXTURES / "wall_bracket_80.stl", file_type="stl")
+    assert isinstance(part, trimesh.Trimesh)
+    assert _failed(_check(part, BRIEFS / "16-wall-bracket.md", tmp_path)) == set()
+
+
+def test_known_bad_old_size_bracket_fails_the_new_briefs_volume_band(tmp_path: Path):
+    # "Change one number" left undone: the 80 mm part handed in for the 100 mm brief. Modelled
+    # on The Stack Underflow's cable clip, which stayed at its old size and was still called
+    # "valid" (landscape §3.8). It fits the wider envelope; only the volume band rejects it.
+    part = trimesh.load(FIXTURES / "wall_bracket_80.stl", file_type="stl")
+    assert isinstance(part, trimesh.Trimesh)
+    assert _failed(_check(part, BRIEFS / "17-wall-bracket-wide.md", tmp_path)) == {"volume"}
+
+
+def test_known_bad_half_density_hole_pattern_fails_the_volume_band(tmp_path: Path):
+    # Brief 10 with 6 of its 12 holes (a checkerboard of the 4 x 3 grid), like the pegboard
+    # pattern that came out at half density (landscape §3.8). Watertight, right extents;
+    # the missing holes put it ~1.8 % over the exact volume, above the band's +1 % edge.
+    part = trimesh.load(FIXTURES / "hole_grid_half_density.stl", file_type="stl")
+    assert isinstance(part, trimesh.Trimesh)
+    assert _failed(_check(part, BRIEFS / "10-hole-grid-plate.md", tmp_path)) == {"volume"}
+
+
+def _l_profile_bracket(width: float, depth: float, height: float, wall: float) -> trimesh.Trimesh:
+    """An L-bracket with no holes: the L profile (Y, Z) extruded along X. No boolean needed."""
+    profile = [(0, 0), (depth, 0), (depth, wall), (wall, wall), (wall, height), (0, height)]
+    triangles = [(0, 1, 2), (0, 2, 3), (0, 3, 4), (0, 4, 5)]
+    part = trimesh.creation.extrude_triangulation(profile, triangles, height=width)
+    # (u, v, w) -> (X, Y, Z) = (w, u, v): a proper rotation, so the normals stay outward.
+    part.apply_transform([[0, 0, 1, 0], [1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 0, 1]])
+    return _at_origin(part)
+
+
+def test_known_bad_l_bracket_missing_its_holes_passes_preflight_the_render_must_catch_it(
+    tmp_path: Path,
+):
+    # Brief 03 with both holes missing, like a cut that went through empty space and left the
+    # part unchanged (landscape §3.8). The holes are 1.8 % of the volume, inside the brief's
+    # ±2 % band, so preflight cannot see the missing feature: green is necessary, not sufficient.
+    part = _l_profile_bracket(width=40, depth=30, height=30, wall=5)
+    assert part.is_watertight
+    assert part.volume == pytest.approx(11000)
+    assert _failed(_check(part, BRIEFS / "03-l-bracket.md", tmp_path)) == set()
+
+
+def test_known_bad_wall_with_its_door_opening_dropped_fails_the_volume_band(tmp_path: Path):
+    # bim-02's wall exported without its door opening. An analogue, not the case itself: the
+    # video showed an IFC export silently dropping a whole floor slab (landscape §3.8), and no
+    # brief has two elements to drop one of. A dropped opening is the single-element version.
+    wall = _at_origin(trimesh.creation.box(extents=[5000, 200, 3000]))
+    assert _failed(_check(wall, BRIEFS / "bim-02-wall-door.md", tmp_path)) == {"volume"}
