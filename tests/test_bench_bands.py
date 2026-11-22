@@ -1,7 +1,7 @@
 """Every brief's volume band, recomputed from its closed form (plan §5 BENCH-3 item 1).
 
 Each bounded brief declares `volume:` in its front matter: the part's exact volume as an
-arithmetic expression (numbers, + - * / **, and `pi`), hidden from the agent like the rest of
+arithmetic expression (numbers, + - * / **, `pi` and `asin`), hidden from the agent like the rest of
 the front matter. This test evaluates it and checks three things:
 
 - the number the brief's `Bounds:` line states matches the expression (prose and formula
@@ -33,7 +33,7 @@ _BINARY: dict[type[ast.operator], Callable[[float, float], float]] = {
 
 
 def _evaluate(expr: str) -> float:
-    """Evaluate a closed-form volume: numbers, + - * / **, unary minus and `pi` only."""
+    """Evaluate a closed-form volume: numbers, + - * / **, unary minus, `pi` and `asin(x)`."""
 
     def walk(node: ast.AST) -> float:
         if isinstance(node, ast.Expression):
@@ -46,6 +46,14 @@ def _evaluate(expr: str) -> float:
             return _BINARY[type(node.op)](walk(node.left), walk(node.right))
         if isinstance(node, ast.UnaryOp) and isinstance(node.op, ast.USub):
             return -walk(node.operand)
+        if (  # circular segments (a slot meeting a round channel) need the arc sine
+            isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Name)
+            and node.func.id == "asin"
+            and len(node.args) == 1
+            and not node.keywords
+        ):
+            return math.asin(walk(node.args[0]))
         msg = f"not allowed in a volume expression: {ast.dump(node)}"
         raise ValueError(msg)
 
@@ -72,10 +80,18 @@ def test_the_evaluator_refuses_anything_but_arithmetic():
         _evaluate("__import__('os').getcwd()")
 
 
+def test_the_evaluator_allows_asin_for_circular_segments_and_no_other_call():
+    assert _evaluate("2*asin(1)") == pytest.approx(math.pi)
+    with pytest.raises(ValueError, match="not allowed"):
+        _evaluate("exp(1)")
+    with pytest.raises(ValueError, match="not allowed"):
+        _evaluate("asin(1, 2)")
+
+
 def test_every_banded_brief_declares_its_closed_form():
     missing = [p.stem for p in BANDED if "volume" not in _brief(p)[0]]
     assert missing == []
-    assert len(BANDED) == 18
+    assert len(BANDED) == 21
 
 
 @pytest.mark.parametrize("path", BANDED, ids=lambda p: p.stem)

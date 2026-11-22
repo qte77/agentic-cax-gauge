@@ -74,8 +74,8 @@ def _at_origin(part: trimesh.Trimesh) -> trimesh.Trimesh:
 
 
 def test_every_bounded_brief_is_covered():
-    # 15 CAD briefs, minus the open-design snap lid (envelope only), plus 4 BIM briefs.
-    assert len(BOUNDED) == 18
+    # 18 CAD briefs, minus the open-design snap lid (envelope only), plus 4 BIM briefs.
+    assert len(BOUNDED) == 21
 
 
 def test_a_null_part_fails(tmp_path: Path):

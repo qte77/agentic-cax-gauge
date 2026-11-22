@@ -8,6 +8,13 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Added
 
+- **Benchmark briefs 16–18** from The Stack Underflow's Apache-2.0 labs, rewritten in our own
+  words and credited in each brief with a commit-pinned link:
+  - 16 and 17: an L-shaped wall bracket at 80 mm and 100 mm wide, with the holes centred.
+    This is a "change one number" pair.
+  - 18: a cable clip for a 6 mm cable, whose closed form needs a circular segment.
+  The band test's evaluator now also allows `asin(x)`, and nothing else. The clip's formula
+  gives 2095.3 mm³, matching the lab's FreeCAD measurement of 2095.31 mm³.
 - **M3 sheet pre-staged for the owner's sitting:** `bench/m3-review.csv` gains a `found_by`
   column (`preflight`, `render` or `source`, per defect) and is ordered by source file.
   `bench/rubric.md` adds a default decision rule, set before the sitting: if `source` found
