@@ -234,13 +234,32 @@ error then, not a fact about the repos.
 the PicoGK 2.x library and its native runtime as submodules behind a new automated build;
 its README puts PicoGK 2.x "into maintenance mode while developing its successor, PicoGK.Core"
 and lists Windows x64 and macOS ARM64 as build targets (an experimental Linux package landed
-in a commit the same day). Its root has no licence file, but the README says both components
-keep their own licences (Apache-2.0). [`PicoGK.Core`][picogkcore] is a ground-up kernel
+in a commit the same day). It had no root licence file then; one (Apache-2.0) was added on
+2026-11-13. [`PicoGK.Core`][picogkcore] is a ground-up kernel
 rewrite (sparse signed-distance voxels, immutable meshes, a C ABI, .NET 10 / C# 14), the
 basis for PicoGK 3.x, and is marked "Early development — do not use yet"; `PicoGK.Geometry`
 and `PicoGK.Viewer` split off geometry interchange and viewing. None has a Python binding or
 CLI. LEAP71's commercial engineering model, Noyron, is proprietary and built on PicoGK
 ([leap71.com/noyron][noyron]); no first-party agent or MCP tooling was found.
+
+**The whole account, as of 2026-11-22: 21 public repos** (`users/leap71/repos`). Beyond the
+ones named above: `PicoGK_Examples` (licence detected as "Other"), `PicoGK_SimulationExample`,
+the `leap71` profile repo and the `leap71.github.io` blog (no licence detected for those three),
+and four new Apache-2.0 C# repos:
+
+- **Chondrite** (`Chondrite.Core`, `Chondrite.Store`, `Chondrite.Compile`, all created
+  2026-11-22, .NET 10, the Store and Compile READMEs say early development): a data store
+  with a schema compiler. Schemas in `.chondrite` files compile at
+  build time into C# record types, binary codecs and canonical schema outputs. Its tests
+  include a `Pascals` record, a unit carried in the type rather than in a bare `double`.
+- **`LEAP71.Semantics`** (created 2026-11-16): marker interfaces only, no implementation.
+  `IQuantityValue` tags a strongly typed quantity (their convention: a `u` prefix) and
+  `IIdentityValue` a typed identity.
+
+**Our reading, not LEAP71's claim:** a quantity whose type carries its unit is the structural
+fix for the unitless-`8` slip in §3.8 (a bare number that a tool took in the wrong unit).
+Nothing here is a Python dependency candidate (C#, §2); it is a design note for any future
+brief or check that takes parameters with units. **Rank: adjacent (low).**
 
 **Two findings for this project.** (1) `PicoGKUnitTests` asserts measured voxel volumes
 against closed-form values (a sphere's) — the same oracle pattern as our briefs' bounds.

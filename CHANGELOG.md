@@ -55,6 +55,11 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Documentation
 
+- **Landscape: LEAP71 as a whole (2026-11-22, ranked adjacent (low)):** all 21 public repos
+  listed, including the new Chondrite data store with schema compiler and `LEAP71.Semantics`
+  typed-quantity markers. Our reading: a unit carried in the type is the structural fix for
+  the unitless-`8` slip. PicoGK.Legacy's licence note corrected (Apache-2.0 file added
+  2026-11-13).
 - **Landscape §3.8 (2026-11-22):** the two videos without transcripts have captions turned
   off by the uploader (they had looked like timeouts). YouTube channel and uploads-playlist
   RSS feeds work without a login from this Codespace and from a GitHub-hosted runner, so
