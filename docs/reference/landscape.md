@@ -1166,11 +1166,18 @@ chapters only**:
   - **Stated limits:** the authors say constraint-heavy mechanical parts and drawings as input
     are weak spots, while patterned or organic shapes come easily (`xp52dUrZfiM`,
     `MrOUIC1TJGY`).
-  - **Known-bad candidates for this repo's controls, recorded only:**
-    - a half-density hole pattern, which is watertight with the right bbox, so it tests
-      whether the volume band catches it
-    - a part missing one feature
-    - an export that drops an element
+  - **Known-bad candidates, adopted as controls (owner 2026-11-22,
+    `tests/test_bench_controls.py`):**
+    - a half-density hole pattern (brief 10 with 6 of 12 holes): watertight with the right
+      bbox, and the volume band catches it
+    - a part missing one feature (brief 03 with no holes): the band can't see it, so it
+      passes preflight and is asserted as the render's job
+    - an export that drops an element: only an analogue fits, brief bim-02's wall with its
+      door opening dropped, which the band catches; no brief has two elements to drop one of
+    - the old size handed in after "change one number" (the 80 mm bracket for brief 17's
+      100 mm one), after the cable clip that kept its old size: the band catches it
+    - The Stack Underflow's lid and loft cases are deferred: brief 04 (the snap lid) has no
+      volume band and no brief has a loft, so no bounded brief can host them
   - **Two videos have no transcript:** `6rDDWx1hXH8` and `Gen8rG40ntA`. A retry on
     2026-11-22 showed why: QuickTube reports that the uploader turned captions off. They
     stay judged from title, description and chapters.

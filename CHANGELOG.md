@@ -8,6 +8,15 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Added
 
+- **Known-bad benchmark controls** (owner 2026-11-22), modelled on failures in agent-CAD
+  videos (landscape §3.8). Each expected result comes from the brief's closed form:
+  - brief 10 with half its holes fails the volume band
+  - brief 16's 80 mm bracket handed in for brief 17's 100 mm one fails the volume band
+  - bim-02's wall with its door opening dropped fails the volume band
+  - brief 03 with no holes passes preflight (the holes are inside the ±2 % band), so it is
+    asserted as a blind spot the render covers
+  Two build123d-made STL fixtures (`wall_bracket_80.stl`, `hole_grid_half_density.stl`);
+  the bracket is also a fourth known-good part, for brief 16.
 - **Benchmark briefs 16–18** from The Stack Underflow's Apache-2.0 labs, rewritten in our own
   words and credited in each brief with a commit-pinned link:
   - 16 and 17: an L-shaped wall bracket at 80 mm and 100 mm wide, with the holes centred.

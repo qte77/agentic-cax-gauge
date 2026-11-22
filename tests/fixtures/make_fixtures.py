@@ -7,9 +7,9 @@ script is how they were produced, for reproducibility):
     UV_PROJECT_ENVIRONMENT=/tmp/claude-1000/venv-wave1-preflight uv run \
         python tests/fixtures/make_fixtures.py
 
-Only the headline feature-absorbed pair needs `build123d` (the `cad` extra); the
-other three fixtures are built directly from `trimesh` primitives so most of this
-script runs with the core dependency alone.
+The headline feature-absorbed pair and the two benchmark control parts with holes need
+`build123d` (the `cad` extra); the other three fixtures are built directly from `trimesh`
+primitives so most of this script runs with the core dependency alone.
 """
 
 from pathlib import Path
@@ -91,9 +91,44 @@ def make_feature_absorbed() -> None:
     )
 
 
+def make_bench_controls() -> None:
+    """Export the benchmark control parts with holes via build123d (test_bench_controls.py).
+
+    - `wall_bracket_80.stl`: brief 16's part (good there), also handed in for brief 17's 100 mm
+      bracket as the known-bad "old size" part.
+    - `hole_grid_half_density.stl`: brief 10's plate with 6 of its 12 holes, a checkerboard of
+      the 4 x 3 grid: the known-bad half-density pattern.
+
+    Run alone (`python -c "import make_fixtures as m; m.make_bench_controls()"` from this
+    directory) so the other committed fixtures are not rewritten.
+    """
+    from build123d import Align, Box, Cylinder, Pos, Rot, export_stl
+
+    low = (Align.MIN, Align.MIN, Align.MIN)
+    bracket = Box(80, 60, 4, align=low) + Pos(0, 56, 4) * Box(80, 4, 46, align=low)
+    for x in (20, 60):  # 40 mm apart, centred across the width, 35 mm above the bottom
+        bracket -= Pos(x, 58, 35) * Rot(90, 0, 0) * Cylinder(radius=2.5, height=10)
+
+    plate = Box(90, 70, 5, align=low)
+    for i, x in enumerate((15, 35, 55, 75)):
+        for j, y in enumerate((15, 35, 55)):
+            if (i + j) % 2 == 0:
+                plate -= Pos(x, y, 2.5) * Cylinder(radius=3, height=10)
+
+    for name, part in (("wall_bracket_80", bracket), ("hole_grid_half_density", plate)):
+        path = FIXTURES / f"{name}.stl"
+        export_stl(part, str(path))
+        mesh = trimesh.load(path)
+        print(
+            f"{name}: watertight={mesh.is_watertight} volume={mesh.volume:.1f}",
+            f"extents={mesh.extents}",
+        )
+
+
 if __name__ == "__main__":
     make_good()
     make_oversize()
     make_non_manifold()
     make_feature_absorbed()
+    make_bench_controls()
     print("fixtures written to", FIXTURES)
