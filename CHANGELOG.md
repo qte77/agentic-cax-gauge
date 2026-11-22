@@ -77,6 +77,11 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
   - The plan's BENCH-3 row says what item 2 actually covers.
   - The plan has a new row, VIEWS, for `--intent` and a section view.
 
+### Changed
+
+- Claude Code `.claude/settings.json` sets `BASH_MAX_OUTPUT_LENGTH` to `15000` and
+  `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE` to `50` ([docs](https://code.claude.com/docs/en/env-vars))
+
 ## [0.3.0] - 2026-11-13
 
 **M2 closed (#16):** the owner's review of the so101 pipette mount report — all checks green,
