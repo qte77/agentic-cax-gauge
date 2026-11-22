@@ -1112,6 +1112,81 @@ gain the export-log and `failedUploadOptional` points if it activates.
 [rvtifclog]: https://help.autodesk.com/cloudhelp/2025/ENU/Revit-DocumentPresent/files/GUID-14037C31-EBAD-41A8-9099-E6DD65BB626E.htm
 [apsworkitem]: https://aps.autodesk.com/en/docs/design-automation/v3/reference/http/workitems-id-GET
 
+### 3.8 Videos, transcripts and model repositories — researched 2026-11-22
+
+**Rank: adjacent (low).** The owner asked what can be learned from videos of agents doing
+CAD, how to get their transcripts, and whether model sites such as Thingiverse help. Read-only
+subagents and polyfetch tests from this Codespace. **R** = read at source, **S** = search
+snippet only.
+
+#### Agent-CAD videos on YouTube
+
+YouTube blocks this Codespace ("Sign in to confirm you're not a bot") for playback and
+captions. That holds on polyfetch's browser tier, both headless and headed, and on yt-dlp
+2026.10.26. Title and channel still come from YouTube's oEmbed endpoint, and the watch page
+still gives the description and chapters. So these are judged from **title, description and
+chapters only**:
+
+- **Six Claude + FreeCAD (MCP) videos the owner supplied:** Make Form `6trAkQY5_kc` and
+  `xh-VzN6aqV4`, Joseph Wu `6rDDWx1hXH8`, `MrOUIC1TJGY`, CAD Creatives `Vk5udhBfj4w`, and
+  The Stack Underflow `afRByXEssXk`. Only the last, with 771 views, shows the part being
+  checked ("Check it with FreeCAD's numbers"; "8 is not 8 mm").
+- **Ten more found by search** (oEmbed-confirmed). The most relevant:
+  - The Stack Underflow `868tnyHR_ks`: "SolidCraft vs FreeCAD in Claude Code: Same Bracket,
+    Two Different Failures"
+  - Türkişi Engineering `hIVY_jWk_I8`: five agentic tools build one design in FreeCAD,
+    Fusion and build123d, with volumes compared (S)
+  The others are Fusion, Zoo, MecAgent, Revit (pyRevit MCP), an STL-to-parametric video, and
+  a Japanese FreeCAD video whose title says "not yet time to delegate everything".
+- **Pattern:** many generation demos and almost no checking. No conference talk was found;
+  FOSDEM 2026's CAD room had no AI talk.
+
+#### Transcripts
+
+- **The official YouTube Data API is no route.** `captions.list` and `captions.download`
+  need OAuth. Download also needs "permission to edit the video", and list returns metadata
+  only ([R][ytcapdl]).
+- **[youtube-transcript-api][yttapi]** (MIT) calls YouTube's undocumented web endpoint. Its
+  README says YouTube "has started blocking most IPs that are known to belong to cloud
+  providers" (**R**). It supports proxies.
+- **Hosted APIs fetch existing captions for public videos; only the URL leaves the machine:**
+  - Supadata: 100 free credits a month, 1 credit per existing transcript (**R**).
+  - SearchAPI.io: 100 free requests (**R**).
+  Neither one's terms were read.
+- **Speech-to-text** (local Whisper, or hosted services that receive the audio) needs the
+  video file, so it doesn't help where YouTube blocks the download.
+- **[media.ccc.de][mediaccc]** is the clean route for talks. It has an open API, CDN
+  downloads allowed under each talk's licence (often CC BY 4.0), and SRT/WebVTT subtitles
+  where c3subtitles made them (**R**).
+
+#### Model repositories (licences decide everything in an Apache-2.0 repo)
+
+- **[Thingi10K][thingi10k]:** a pip package filters by per-model licence. It's STL only,
+  meshes with real defects (S). This is the cleanest source of mesh fixtures; use only the
+  CC BY and CC0 subset in the repo.
+- **Thingiverse:**
+  - The only bulk source of OpenSCAD source + STL pairs, and of "remix fixes X" known-bad
+    cases (S).
+  - Its terms and developer pages returned 403, so they weren't read.
+  - Hand-picked, licence-checked models only.
+- **Printables:** per-model licences chosen by the uploader, and no official API (**R**/S).
+- **Not for redistribution here:**
+  - [Fusion 360 Gallery][f360gallery]: non-commercial research only, no redistribution (**R**).
+  - ABC (copyright stays with the creators, under Onshape's terms) and DeepCAD (no stated data
+    licence, derived from ABC) (**R**).
+  - Onshape public documents: automated data mining is barred (S).
+- **CC BY-NC and CC BY-ND files never go in the repo.** Keep a manifest of each file's
+  licence and attribution.
+
+**Effect on the plan:** none. Thingi10K (CC BY/CC0) is a candidate source of real defective
+meshes for the control tests (BENCH-3 item 2), recorded as a suggestion.
+
+[ytcapdl]: https://developers.google.com/youtube/v3/docs/captions/download
+[yttapi]: https://github.com/jdepoix/youtube-transcript-api
+[mediaccc]: https://media.ccc.de/about.html
+[thingi10k]: https://pypi.org/project/thingi10k/
+[f360gallery]: https://github.com/AutodeskAILab/Fusion360GalleryDataset/blob/master/LICENSE.md
+
 ## 4. Upstream contribution stance
 
 **Decided 2026-07-20: issue-first probe, commit no code yet.** Ask

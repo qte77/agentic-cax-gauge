@@ -39,6 +39,14 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Documentation
 
+- **Landscape §3.8 (2026-11-22, ranked adjacent (low)): videos, transcripts and model
+  repositories.**
+  - 16 agent-CAD YouTube videos, judged from title, description and chapters only, since
+    YouTube blocks this host. Only The Stack Underflow's videos show the part being checked.
+  - Transcript routes: the official API only serves videos you can edit; the open-source
+    client is blocked from cloud IPs; hosted APIs take only the URL; media.ccc.de is open.
+  - Model repositories, filtered by licence: Thingi10K (CC BY/CC0) is the cleanest; Fusion
+    360 Gallery, ABC and DeepCAD aren't redistributable.
 - **AutoCAD and Revit logs as evidence (landscape §3.7.2, 2026-11-15, ranked adjacent (low)):**
   - What each tool logs, with the documented gaps: no published `accoreconsole` exit codes,
     no Revit journal format, a Design Automation `success` that doesn't prove the output.
