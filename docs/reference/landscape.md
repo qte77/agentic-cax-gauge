@@ -1147,6 +1147,31 @@ chapters only**:
   - The channel's own conclusion is to measure the exported file, not the tool's report. It
     measures every export with its own code in Docker.
   This is this repo's thesis, demonstrated independently.
+- **What 12 more transcripts show** (fetched via QuickTube on 2026-11-22, auto-captions,
+  summarised by a subagent and paraphrased here; the transcripts aren't in the repo):
+  - **Checking is mostly looking.** The agent's own viewport screenshot plus a human glance
+    is the usual check. Real measurement is rare: one Measure-tool pass (`6trAkQY5_kc`), and
+    a blind cross-check that booleaned five agents' parts against each other at 0.000 mm³
+    difference (`hIVY_jWk_I8`). The author of the latter says his own scoring rubric was too
+    coarse to tell the agents apart.
+  - **Wrong but plausible parts are the usual failure, and a human catches them:**
+    - a pegboard pattern asked for as 10 × 10 came out at half density (`33H-3WURC80`)
+    - a pattern feature was left outside the body (`33H-3WURC80`)
+    - a CAM finish pass was put on the wrong side of a wall (`IZ__MZeZ-F4`)
+  - **Tool reports misled:**
+    - FreeCAD's IFC exporter silently dropped an upper floor slab, which only showed when the
+      file was opened in a second tool (`QlppsgdSW-Q`)
+    - a Fusion mass-property tool misbehaved (`hIVY_jWk_I8`)
+    - a fillet call timed out, then "looked fine" (`Vk5udhBfj4w`)
+  - **Stated limits:** the authors say constraint-heavy mechanical parts and drawings as input
+    are weak spots, while patterned or organic shapes come easily (`xp52dUrZfiM`,
+    `MrOUIC1TJGY`).
+  - **Known-bad candidates for this repo's controls, recorded only:**
+    - a half-density hole pattern, which is watertight with the right bbox, so it tests
+      whether the volume band catches it
+    - a part missing one feature
+    - an export that drops an element
+  - **Two transcripts still missing:** `6rDDWx1hXH8` and `Gen8rG40ntA` timed out twice.
 - **Pattern:** many generation demos and almost no checking. No conference talk was found;
   FOSDEM 2026's CAD room had no AI talk.
 
