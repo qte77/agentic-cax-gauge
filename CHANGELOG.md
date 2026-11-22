@@ -46,6 +46,12 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Documentation
 
+- **Landscape §3.8: what 12 more agent-CAD video transcripts show** (via QuickTube,
+  paraphrased; the transcripts aren't stored):
+  - checking is mostly a screenshot and a human glance
+  - wrong but plausible parts are caught by people: a half-density pattern, a dropped IFC
+    slab, a wrong-side CAM pass
+  - known-bad control candidates are recorded, not adopted
 - **Focus recorded (owner 2026-11-22):** the plan's Positioning row now names the gap the
   16 reviewed agent-CAD videos leave: generation is shown, checking almost never is.
   Landscape §3.8 adds:
