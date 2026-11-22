@@ -1171,7 +1171,9 @@ chapters only**:
       whether the volume band catches it
     - a part missing one feature
     - an export that drops an element
-  - **Two transcripts still missing:** `6rDDWx1hXH8` and `Gen8rG40ntA` timed out twice.
+  - **Two videos have no transcript:** `6rDDWx1hXH8` and `Gen8rG40ntA`. A retry on
+    2026-11-22 showed why: QuickTube reports that the uploader turned captions off. They
+    stay judged from title, description and chapters.
 - **Pattern:** many generation demos and almost no checking. No conference talk was found;
   FOSDEM 2026's CAD room had no AI talk.
 
@@ -1193,6 +1195,12 @@ chapters only**:
   (no login) returned YouTube's auto-generated English transcripts for `afRByXEssXk` and
   `868tnyHR_ks`. Its REST API needs a key from a signed-in account. Only the video URL
   leaves the machine; its terms weren't read.
+- **New uploads can be tracked without a login.** A channel's RSS feed
+  (`feeds/videos.xml?channel_id=UC…`) and its uploads-playlist feed (`playlist_id=UU…`)
+  each returned the latest 15 videos with HTTP 200, from this Codespace and from a
+  GitHub-hosted runner (one probe run, 2026-11-22). oEmbed answered from the runner too.
+  This finds new videos only; transcripts still need a route above. A shared monitor
+  workflow is tracked, gated on a second caller, in [qte77/.github#75][gh-monitor].
 - **[media.ccc.de][mediaccc]** is the clean route for talks. It has an open API, CDN
   downloads allowed under each talk's licence (often CC BY 4.0), and SRT/WebVTT subtitles
   where c3subtitles made them (**R**).
@@ -1228,6 +1236,7 @@ meshes for the control tests (BENCH-3 item 2), recorded as a suggestion.
 [mediaccc]: https://media.ccc.de/about.html
 [thingi10k]: https://pypi.org/project/thingi10k/
 [quicktube]: https://quicktube.ai/api-docs
+[gh-monitor]: https://github.com/qte77/.github/issues/75
 [f360gallery]: https://github.com/AutodeskAILab/Fusion360GalleryDataset/blob/master/LICENSE.md
 
 ## 4. Upstream contribution stance
