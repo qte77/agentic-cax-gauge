@@ -1138,6 +1138,15 @@ chapters only**:
     Fusion and build123d, with volumes compared (S)
   The others are Fusion, Zoo, MecAgent, Revit (pyRevit MCP), an STL-to-parametric video, and
   a Japanese FreeCAD video whose title says "not yet time to delegate everything".
+- **What the two Stack Underflow transcripts say** (read via QuickTube, paraphrased):
+  - FreeCAD called the cable clip "valid" after a unitless `8` was typed into its parameter
+    spreadsheet, and the part stayed at the old 6 mm. "Valid" meant one solid piece, not the
+    size asked for.
+  - SolidCraft answered "okay" to a cut that went through empty space; only an unchanged face
+    count and volume showed it.
+  - The channel's own conclusion is to measure the exported file, not the tool's report. It
+    measures every export with its own code in Docker.
+  This is this repo's thesis, demonstrated independently.
 - **Pattern:** many generation demos and almost no checking. No conference talk was found;
   FOSDEM 2026's CAD room had no AI talk.
 
@@ -1155,6 +1164,10 @@ chapters only**:
   Neither one's terms were read.
 - **Speech-to-text** (local Whisper, or hosted services that receive the audio) needs the
   video file, so it doesn't help where YouTube blocks the download.
+- **[QuickTube][quicktube]** worked from this Codespace (tried 2026-11-22). Its web form
+  (no login) returned YouTube's auto-generated English transcripts for `afRByXEssXk` and
+  `868tnyHR_ks`. Its REST API needs a key from a signed-in account. Only the video URL
+  leaves the machine; its terms weren't read.
 - **[media.ccc.de][mediaccc]** is the clean route for talks. It has an open API, CDN
   downloads allowed under each talk's licence (often CC BY 4.0), and SRT/WebVTT subtitles
   where c3subtitles made them (**R**).
@@ -1170,8 +1183,12 @@ chapters only**:
   - Its terms and developer pages returned 403, so they weren't read.
   - Hand-picked, licence-checked models only.
 - **Printables:** per-model licences chosen by the uploader, and no official API (**R**/S).
-- **Not for redistribution here:**
+- **Not for committing to this repo:** the repo is public under Apache-2.0, which lets anyone
+  use its contents commercially. A file under a non-commercial or no-redistribution licence
+  must stay out of git even though this project itself is non-commercial. Local use, fetched
+  at test time into a git-ignored cache, is a separate question; per source:
   - [Fusion 360 Gallery][f360gallery]: non-commercial research only, no redistribution (**R**).
+    Local use for this project's non-commercial research fits those terms.
   - ABC (copyright stays with the creators, under Onshape's terms) and DeepCAD (no stated data
     licence, derived from ABC) (**R**).
   - Onshape public documents: automated data mining is barred (S).
@@ -1185,6 +1202,7 @@ meshes for the control tests (BENCH-3 item 2), recorded as a suggestion.
 [yttapi]: https://github.com/jdepoix/youtube-transcript-api
 [mediaccc]: https://media.ccc.de/about.html
 [thingi10k]: https://pypi.org/project/thingi10k/
+[quicktube]: https://quicktube.ai/api-docs
 [f360gallery]: https://github.com/AutodeskAILab/Fusion360GalleryDataset/blob/master/LICENSE.md
 
 ## 4. Upstream contribution stance

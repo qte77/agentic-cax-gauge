@@ -39,6 +39,13 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Documentation
 
+- **Focus recorded (owner 2026-11-22):** the plan's Positioning row now names the gap the
+  16 reviewed agent-CAD videos leave: generation is shown, checking almost never is.
+  Landscape §3.8 adds:
+  - QuickTube as a transcript route that works from this host
+  - what the two Stack Underflow transcripts show: "valid" and "okay" both hid wrong parts
+  - a corrected licence note: non-commercial files stay out of the public Apache-2.0 repo,
+    while local use is judged per source
 - **Landscape §3.8 (2026-11-22, ranked adjacent (low)): videos, transcripts and model
   repositories.**
   - 16 agent-CAD YouTube videos, judged from title, description and chapters only, since
