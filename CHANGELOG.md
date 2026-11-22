@@ -46,6 +46,10 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Documentation
 
+- **Landscape §3.8 (2026-11-22):** the two videos without transcripts have captions turned
+  off by the uploader (they had looked like timeouts). YouTube channel and uploads-playlist
+  RSS feeds work without a login from this Codespace and from a GitHub-hosted runner, so
+  new uploads can be tracked; a shared monitor workflow is tracked in qte77/.github#75.
 - **Landscape §3.8: what 12 more agent-CAD video transcripts show** (via QuickTube,
   paraphrased; the transcripts aren't stored):
   - checking is mostly a screenshot and a human glance
