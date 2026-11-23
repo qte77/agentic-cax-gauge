@@ -47,4 +47,7 @@ exclude = [
     # confirmed live the same day by a local lychee run (200). Exact URLs only
     "^https://hexagon\\.com/company/divisions/manufacturing-intelligence/msc-software$",
     "^https://hexagon\\.com/company/newsroom/press-releases/2025/hexagon-unveils-autonomous-metrology-suite-to-deliver-manufacturing-quality-at-speed$",
+    # 403 to lychee locally on 2026-11-23; the article was confirmed live the same day with
+    # polyfetch --tier patchright --headed under xvfb-run. Exact URL only
+    "^https://www\\.ice\\.org\\.uk/news-views-insights/inside-infrastructure/how-ai-can-help-with-routine-engineering-tasks$",
 ]

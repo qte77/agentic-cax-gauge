@@ -55,6 +55,12 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Documentation
 
+- **Landscape §3.2: three owner leads (2026-11-23, all ranked adjacent (low)):** SOMA, a
+  GPL-3.0 desktop app where an agent writes CadQuery and checks overhang, wall thickness and
+  clearance (one-sided minimum), and looks at its own renders; an MIT-funded interview study
+  of agentic AI in engineering (arXiv:2604.09633); and an ICE blog on AI agents for civil
+  engineers. None changes a plan decision. SOMA's section tool is noted as prior art for row
+  VIEWS.
 - **Landscape: LEAP71 as a whole (2026-11-22, ranked adjacent (low)):** all 21 public repos
   listed, including the new Chondrite data store with schema compiler and `LEAP71.Semantics`
   typed-quantity markers. Our reading: a unit carried in the type is the structural fix for

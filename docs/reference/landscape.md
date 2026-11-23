@@ -2,7 +2,7 @@
 title: Landscape — evidence, competitors, backend choice, contribution stance
 purpose: The research behind the design decisions, split out of plan 001 so the plan stays a plan
 created: 2026-07-20
-updated: 2026-11-15
+updated: 2026-11-23
 validated_links: 2026-11-15
 status: reference — dated, not needed to build
 ---
@@ -644,6 +644,74 @@ loop, the same shape as the CADCodeVerify/Query2CAD pattern this project's own r
 already weighed and rejected for itself (§2), not a new consideration, but worth knowing
 another vendor is building toward it. **Medium overlap** — same shelf as AdamCAD/Backflip
 above, generation-side, no independent (human- or render-gated) verification described.
+
+**Added 2026-11-23 — three owner leads: SOMA, an MIT-funded interview study, an ICE blog.**
+
+**[SOMA][soma]** (Rank: adjacent (low); [repo][somagh], GPL-3.0, TypeScript/Electron, 520★
+on 2026-11-23, read at commit `cf8e629` of 2026-11-22). A desktop app in which an agent writes a CadQuery
+model. The agent is either its built-in SOMA AI or a CLI agent (Claude Code, Codex CLI and
+others) in the app's terminal. The app rebuilds the model on every change and shows it in a 3D
+viewer. What it checks, from the README, the home page, the [agent template][somaagents] and
+the [analysis skill][somaanalysis] (two of its 21 skill files read):
+
+- The agent runs `soma build` after every change and fixes build errors itself.
+- `soma render` writes a picture, and the template tells the agent to open it and look at it
+  to check its work. The model judges its own render, inside its own loop.
+- `soma analyze overhang | thickness | clearance` gives a value at every spot of the surface
+  and flags critical ones. The thresholds come from the active skill, or default to above 45°,
+  below 1.2 mm and below 0.5 mm. Clearance has one threshold, a minimum.
+- FEM with CalculiX, and the person: the home page says "You are the designer: you decide
+  what to build, check the result and point at what is wrong." The viewer has section and
+  explode tools.
+
+Our reading. SOMA joins `agentcad` and `cad-skill` in doing both render and checks (the
+"Honest read" above). Its checks, though, are printability fields (overhang, wall, gap), not
+the watertight, volume and bounds checks those two and this gauge run. Three contrasts with
+this project's rules, limited to the files read:
+
+- the agent's look at its own render sits in the loop, where plan §3.1 keeps a model
+  advisory and outside any gate;
+- an analysis with no threshold from a skill falls back to a default rather than reporting
+  `SKIP`;
+- the clearance check is minimum-only, where `.claude/rules/verification-honesty.md` asks for
+  two-sided windows. Its tolerances skill wasn't read, so fits may be covered there.
+
+Its section tool is prior art for row VIEWS (plan §5), if the M3 table calls for a section
+view. **Effect on the plan:** none. It checks its own output, so like ArchLang (§3.7) it isn't
+a consumer, and it hasn't asked (ADOPT's trigger). Being GPL-3.0, nothing is copied from it
+into this Apache-2.0 repo.
+
+**[Agentic AI in Engineering and Manufacturing][agenticmfg]** (Rank: adjacent (low);
+arXiv:2604.09633, Edwards, Bauer, Jacquillat, Hart and Ahmed, funded by the MIT Initiative for
+New Manufacturing; CC BY-NC-ND 4.0, so paraphrased here). A qualitative study of 33
+interviews across 28 companies: large enterprises, small and medium firms, AI developers, and
+CAD/CAM/CAE vendors. It evaluates no agent-made CAD, and the authors call their sample limited
+and non-random. What interviewees report:
+
+- in safety-critical work, AI stays advisory and people validate its suggestions;
+- organisations say they can't deploy AI for mission-critical work until verification
+  methods mature;
+- 3D CAD models "remain largely opaque to current foundation models", and some teams hand
+  geometric queries to CAD kernels, which the authors call exploratory;
+- a defence contractor's engineering manager runs AI designs through the same review
+  checkpoints as human ones: "If it passes the logic reviews, it gets approved."
+
+The authors suggest dedicated validation checkpoints for AI output as its volume grows. Our
+reading: it's interview evidence for the plan's premise that checking, not generating, is the
+gap. "Passes review, so approved" is the step where a necessary check gets read as a
+sufficient one, which is the reading this gauge's wording rules out. **Effect on the plan:**
+none. It supports §3.1's framing and names no tool to check against.
+
+**ICE: [AI can help you with routine engineering tasks — here's how][iceagents]** (Rank:
+adjacent (low); Civil Engineer blog, 31 January 2025, by Dr Mike Rustell, Brunel University
+lecturer and director of the AI firm Inframatic.ai). An introduction to AI agents for civil
+engineers: parsing CAD files, logs and PDFs, calling tools, delegating to sub-agents. Its one
+checking example is hypothetical: an agent that scans structural drawings for missing
+sections and tells the engineer only if it finds an inconsistency. It says agents' output
+"will need human oversight, particularly for safety and regulatory compliance". Our reading:
+a checker that stays silent unless it finds something makes "nothing found" read as
+"passed". This project reports that case as `SKIP` or `review` instead. **Effect on the
+plan:** none. It's opinion, and names no tool.
 
 ### 3.3 `earthtojake/text-to-cad` — the largest adjacent project
 
@@ -1349,6 +1417,9 @@ and stated in the PR.
 | [MeltFlex AI — MCP server + CLI][meltflex] | `meltflex-mcp` package (npm registry) and the CLI/AI-BIM pages, read directly |
 | [DEVELOP3D — Kyrall launch coverage][kyralld3d] | Trade press, read directly; a separate Xometry co-founder interview is cited in prose only — its page 403s to lychee, so it was re-read via `xometry.pro/en/wp-json/wp/v2/articles?slug=ai-interviews-kyrall`, which does not |
 | [AEC Magazine — GPT-6 Astra and BIM modelling][aecastra] | Read directly |
+| [SOMA][soma] · [repo][somagh] | Home page, README, agent template and analysis skill, read directly (repo at `cf8e629`) |
+| [arXiv:2604.09633][agenticmfg] | Agentic AI in engineering and manufacturing: 33 industry interviews, read directly |
+| [ICE — AI agents for routine engineering tasks][iceagents] | Civil Engineer blog, 2025-01-31, read directly |
 
 [blind]: https://arxiv.org/abs/2407.06581
 [blink]: https://arxiv.org/abs/2404.12390
@@ -1507,3 +1578,9 @@ and stated in the PR.
 [vertivsimready]: https://huggingface.co/datasets/Vertiv/simready-assets
 [kyralld3d]: https://develop3d.com/cad/kyrall-launches-its-ai-automated-cad-modeller/
 [aecastra]: https://aecmag.com/bim/gpt-6-astra-and-the-future-of-bim-modelling/
+[soma]: https://somacad.app/
+[somagh]: https://github.com/Kai-Jungsthoefel/SOMA
+[somaagents]: https://github.com/Kai-Jungsthoefel/SOMA/blob/cf8e629/app/resources/template/AGENTS.md
+[somaanalysis]: https://github.com/Kai-Jungsthoefel/SOMA/blob/cf8e629/app/resources/skills/analysis.md
+[agenticmfg]: https://arxiv.org/abs/2604.09633
+[iceagents]: https://www.ice.org.uk/news-views-insights/inside-infrastructure/how-ai-can-help-with-routine-engineering-tasks
