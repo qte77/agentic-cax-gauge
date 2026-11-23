@@ -8,6 +8,21 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Added
 
+- **`make release_smoke`**, run before a minor or major tag: loads `site/index.html` and a
+  `--source` report on seven presets (desktop 1280×800; iPhone 13, Pixel 7 and iPad Mini, each
+  portrait and landscape) through polyfetch's Chromium (`scripts/release_smoke.py`). It
+  reports a page that didn't load, browser console errors and failed requests, horizontal
+  overflow, an image that didn't load or a report without its four views, a standalone touch
+  target under 44×44 CSS px on a touch preset (WCAG 2.2 SC 2.5.5; links inside text are
+  exempt, as that criterion's Inline exception says) and a missing screenshot. Screenshots
+  go to `reports/release-smoke/` for a human; no model judges. Exit 2 when polyfetch is
+  absent, so an unrun check never reads as green. Blind spot: Patchright disables the
+  Console API, so a page script's own `console.error` is not seen. The device-list matrix
+  and the touch-target check are ideas from
+  [mobile-agent-testers](https://github.com/pierridotite/mobile-agent-testers), written here
+  in our own words; its LLM verdicts are not adopted.
+- **Sample-site tap targets:** the index's part and run links were 20 px tall (run links
+  9×20 px) on phones; they are now at least 44×44 CSS px.
 - **Known-bad benchmark controls** (owner 2026-11-22), modelled on failures in agent-CAD
   videos (landscape §3.8). Each expected result comes from the brief's closed form:
   - brief 10 with half its holes fails the volume band
