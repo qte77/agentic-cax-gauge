@@ -70,7 +70,7 @@ checkout rather than installed:
 
 | Env var | Meaning |
 |---|---|
-| `CAXGAUGE_POLYFETCH_DIR` | Path to a polyfetch-scrape checkout (Chromium via its `make doctor`). Unset or missing: the browser and render checks report `SKIP`, never `PASS` |
+| `CAXGAUGE_POLYFETCH_DIR` | Path to a polyfetch-scrape checkout (Chromium via its `make doctor`). Unset or missing: the browser and render checks report `SKIP`, never `PASS`, and `make release_smoke` exits 2 |
 
 Later milestones add
 regression checks, then **build123d**/OpenSCAD backends; optional VLM annotation via
