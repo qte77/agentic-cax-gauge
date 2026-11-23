@@ -10,8 +10,11 @@
   h1 { font-size: 22px; margin: 8px 0 4px; }
   .label { padding: 8px 12px; border-left: 4px solid #b26b00; background: #fff; }
   ul { padding: 0; list-style: none; }
-  li { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 12px; margin: 10px 0; }
+  li { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 4px 12px; margin: 10px 0; }
   li a { font-weight: 600; }
+  /* Tap targets at least 44x44 CSS px on touch screens (make release_smoke checks this). */
+  li > a:first-child, a[href^="bench/"] { display: inline-block; min-width: 44px; min-height: 44px;
+         line-height: 44px; text-align: center; }
   .verdict { font-size: 13px; padding: 1px 8px; border-radius: 3px; margin-left: 6px; }
   .fail { background: #fde2e1; } .review { background: #fff4d6; }
   p.small { font-size: 13px; color: #555; }
