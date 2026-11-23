@@ -20,7 +20,20 @@ PRs #106 and #107 (2026-11-14/15) failed "Lint MD and Links" only on
 `docs/reference/landscape.md` and passed locally and on rerun both times. **Do:** rerun the
 failed job and check that the failing URL is one the PR didn't touch before merging. A
 lasting fix (excluding the URL or accepting 403 for that host in `lychee.toml`) is an owner
-call, still open.
+call, still open. A third run hit it on #124 (2026-11-23); a rerun passed.
+
+### `github.com/.../blob/...` pages return 503 to CI's link check (2 occurrences)
+
+- **Context**: Citing a file in another GitHub repo from a doc.
+- **Problem**: On 2026-11-23 the runner's lychee got 503 from every non-excluded `blob` link,
+  while other `github.com` links passed. #122 failed four times on two SOMA blob links. #124,
+  #125 and #127 failed on three older ones, and #127 still failed after five reruns. `main`
+  had passed with the same links an hour earlier.
+- **Solution**: Cite another repo's file as a `raw.githubusercontent.com/<owner>/<repo>/<full
+  commit SHA>/<path>` permalink, not a `blob` link, with the SHA taken from
+  `gh api repos/<owner>/<repo>/commits/<branch>`. This was done in #122 and in the PR that
+  added this entry. Never exclude `github.com` in `lychee.toml`.
+- **References**: `docs/reference/landscape.md`, `lychee.toml`.
 
 ### A missing check is not a passing check (2 occurrences)
 
