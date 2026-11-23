@@ -1582,7 +1582,7 @@ and stated in the PR.
 [aecastra]: https://aecmag.com/bim/gpt-6-astra-and-the-future-of-bim-modelling/
 [soma]: https://somacad.app/
 [somagh]: https://github.com/Kai-Jungsthoefel/SOMA
-[somaagents]: https://github.com/Kai-Jungsthoefel/SOMA/blob/cf8e629/app/resources/template/AGENTS.md
-[somaanalysis]: https://github.com/Kai-Jungsthoefel/SOMA/blob/cf8e629/app/resources/skills/analysis.md
+[somaagents]: https://raw.githubusercontent.com/Kai-Jungsthoefel/SOMA/cf8e629ef0dc1c2c54ee3fb62d50a208aa938c27/app/resources/template/AGENTS.md
+[somaanalysis]: https://raw.githubusercontent.com/Kai-Jungsthoefel/SOMA/cf8e629ef0dc1c2c54ee3fb62d50a208aa938c27/app/resources/skills/analysis.md
 [agenticmfg]: https://arxiv.org/abs/2604.09633
 [iceagents]: https://www.ice.org.uk/news-views-insights/inside-infrastructure/how-ai-can-help-with-routine-engineering-tasks
