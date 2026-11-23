@@ -55,6 +55,12 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Documentation
 
+- **Landscape §3.2: three owner leads (2026-11-23, all ranked adjacent (low)):** SOMA, a
+  GPL-3.0 desktop app where an agent writes CadQuery and checks overhang, wall thickness and
+  clearance (one-sided minimum), and looks at its own renders; an MIT-funded interview study
+  of agentic AI in engineering (arXiv:2604.09633); and an ICE blog on AI agents for civil
+  engineers. None changes a plan decision. SOMA's section tool is noted as prior art for row
+  VIEWS.
 - **Landscape §3.2, PCB track (2026-11-23):** Autodesk moved its Fusion Electronics API page,
   which broke the link check. The new page no longer calls the API read-only: properties are
   writable, and scripts can run batches of Electronics commands. Whether the design-rule check
