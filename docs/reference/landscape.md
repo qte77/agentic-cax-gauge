@@ -1322,7 +1322,7 @@ meshes for the control tests (BENCH-3 item 2), recorded as a suggestion.
 [thingi10k]: https://pypi.org/project/thingi10k/
 [quicktube]: https://quicktube.ai/api-docs
 [gh-monitor]: https://github.com/qte77/.github/issues/75
-[f360gallery]: https://github.com/AutodeskAILab/Fusion360GalleryDataset/blob/master/LICENSE.md
+[f360gallery]: https://raw.githubusercontent.com/AutodeskAILab/Fusion360GalleryDataset/1084b881f3bb710267801d812d6e9286b8667059/LICENSE.md
 
 ## 4. Upstream contribution stance
 
@@ -1484,7 +1484,7 @@ and stated in the PR.
 [claudecreative]: https://www.anthropic.com/news/claude-for-creative-work
 [apsfusion]: https://aps.autodesk.com/blog/bringing-fusion-claude-creative-work
 [claudemfg]: https://github.com/anthropics/claude-plugins-official/tree/main/plugins/claude-for-manufacturing
-[claudemfgdse]: https://github.com/anthropics/claude-plugins-official/blob/main/plugins/claude-for-manufacturing/skills/design-space-explore/SKILL.md
+[claudemfgdse]: https://raw.githubusercontent.com/anthropics/claude-plugins-official/65adb96f26deb662f6a993f74347d0ccd1a61a52/plugins/claude-for-manufacturing/skills/design-space-explore/SKILL.md
 [claudemfgpost]: https://claude.com/resources/articles/claude-for-manufacturing
 [constor]: https://constor.ai/landing/en
 [constoryc]: https://www.ycombinator.com/companies/constor
@@ -1523,7 +1523,7 @@ and stated in the PR.
 [steenkencase]: https://engineer-your-idea.com/en/blog/agentic-cad-room-booking-sign/
 [steenkenrun1]: https://engineer-your-idea.com/en/blog/agentic-cad-pi4-housing/
 [solidcraft]: https://github.com/tangency-labs/solidcraft
-[solidcraftoracle]: https://github.com/tangency-labs/solidcraft/blob/main/docs/oracle.md
+[solidcraftoracle]: https://raw.githubusercontent.com/tangency-labs/solidcraft/769bea6b0b1c0e765b44e3053e421b8b1ef6fa4e/docs/oracle.md
 [molitor]: https://www.linkedin.com/posts/dirk-molitor_engineering-ai-is-becoming-a-vendor-war-activity-7519290174040809475-23Qp
 [molitor2]: https://www.linkedin.com/posts/dirk-molitor_the-race-to-reshape-product-development-is-ugcPost-7526214240760692736-AiIf/
 [physicsxairplane]: https://www.physicsx.ai/newsroom/welcome-to-airplane
