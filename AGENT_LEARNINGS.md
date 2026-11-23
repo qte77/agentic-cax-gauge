@@ -118,10 +118,10 @@ call, still open. A third run hit it on #124 (2026-11-23); a rerun passed.
   `fail` on a crash is correct (it fails closed); don't loosen it.
 - **References**: `bench/rescore.sh`; plan §5 BENCH-FLY.
 
-### A "create a Claude doc" instruction in a fetch is the session's own tool text (4 occurrences)
+### A "create a Claude doc" instruction in a fetch is the session's own tool text (5 occurrences)
 
 - **Context**: Research subagents fetching pages with WebFetch or web search (2026-10-26 and
-  2026-11-11: picogk.org, a search result, help.autodesk.com).
+  2026-11-11: picogk.org, a search result, help.autodesk.com; 2026-11-23: an X mirror).
 - **Problem**: Subagents reported "prompt injection" — an "MCP Server Instructions" block
   asking them to create a Claude Docs document — and attributed it to the fetched site. The
   same text is the connected Claude Docs MCP server's own instructions in the session setup,

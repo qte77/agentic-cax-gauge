@@ -200,7 +200,9 @@ bound as `SKIP` rather than silently passing.** That is the whole remaining delt
 is not ours alone — The Stack Underflow concludes it (§3.8, paraphrased). The delta is
 applying it to the gauge's own passing checks and to unsupplied bounds, as found in the
 sweeps up to 2026-07-25; no full sweep has run since, and whether that channel labels its
-own checks this way was not checked.
+own checks this way was not checked. *Later the same day:* matchline (§3.2) blocks a publish
+on a check it could not run, which is `SKIP`, never `PASS`, built independently. What is
+left unmatched is labelling passing checks necessary, not sufficient.
 
 Note the population splits cleanly into render-only skills and check-only skills, with
 `agentcad` and `cad-skill` the only two doing both. That combination — not the checks, not
@@ -708,6 +710,63 @@ reading: it's interview evidence for the plan's premise that checking, not gener
 gap. "Passes review, so approved" is the step where a necessary check gets read as a
 sufficient one, which is the reading this gauge's wording rules out. **Effect on the plan:**
 none. It supports §3.1's framing and names no tool to check against.
+
+**Added 2026-11-23, later the same day (owner leads) — matchline and Solvaix.**
+
+**[matchline][matchline]** (Rank: adjacent (low) as a tool, but it changes a positioning claim,
+see below; BSD-3-Clause, Python, 2★ on 2026-11-23, read at `develop` commit `6a76993`). It
+extracts building-energy-model geometry and quantity takeoffs from architectural drawings and
+BIM, and exports gbXML and IFC4. What its [export gate][mlgate] does:
+
+- six geometric checks on the staged export (shell closure, winding, signed volume,
+  planarity, degenerate faces, duplicate surfaces), plus gbXML schema and IFC4 structural
+  validation;
+- a shell the exporter can't represent is reported `not_checked` with its reason, never as a
+  pass, and at publish a `not_checked` result blocks the export just as a failure does;
+- the gate only measures; it never repairs.
+
+Issue [#1406][ml1406] took a loop shape from a Solvaix post (below) and narrowed it before
+building anything: repair only defects with one correct fix (a shell wound inside out, a
+duplicate surface, an overlapping opening whose position the drawings don't state), no model
+in the repair path, and positions stated in the drawings never move. It measured first: on its
+own output those defects were nearly absent (one natural case in 89 exports). The first scope
+failed its own cost bar and a narrower one passed. [`bem/repair_loop.py`][mlrepair] now ships
+it: at most two iterations, a repair that doesn't make its check pass is reverted, every repair
+is logged in the export manifest, and the full gate still decides what is published. It is off
+by default in the library and on at the export commands since an owner decision on
+2026-11-17. Degenerate faces were excluded because dropping one deleted real area.
+
+Our reading:
+
+- `not_checked` blocking a publish is this gauge's `SKIP`, never `PASS`, built independently
+  and in code. So `SKIP` is no longer something only this gauge does (plan §12 item 7).
+- The excluded degenerate-face repair is plan §3.1's "deletion beats repair" path, found by
+  measurement. This gauge stays measure-only: plan §3 rejects a revert-on-break loop, and
+  CONTRIBUTING keeps repair out of every check path.
+- IFC4 structural validation inside an export gate is prior art for row MB (plan §13), if a
+  real IFC model ever lands.
+
+**Effect on the plan:** the positioning note in §12 item 7 is updated; no decision changes.
+
+**Solvaix** (Rank: adjacent (low)). An X account whose bio reads "Testing how far AI can go in
+CAD, BIM and 3D", with about 4.5k followers on 2026-11-23. No website, company or repository
+was found. The profile itself was not read at source; one post was, through a public mirror.
+That post (status `2122759994672120184`, 2026-11-17) says Claude Opus 5.5 routed the
+mechanical, electrical and plumbing systems of a 1,792 sq ft house drawn for the test, and
+describes it as a simulation without load calculations or duct sizing. It claims:
+
+- a first pass with 26 clashes, all rerouted;
+- 8 of the model's own code mistakes caught in a review pass;
+- a check against the 2021 IRC, IPC and IFGC and the 2023 NEC, with every item passing.
+
+The evidence is a 28-second video. No model file, clash export or checking method is
+published, so every count is the account's own. A post it quotes (2026-08-01) says Revit
+2027's MCP server is read-only. That was not checked against Autodesk's documentation, and it
+would conflict with the "element ops" tool group reported in §3.5.
+
+Our reading: the review pass is the same model checking its own work, which plan §3.1 calls
+correlated failure, not independent verification. "Every item passing" is a green result read
+as sufficient. **Effect on the plan:** none.
 
 ### 3.3 `earthtojake/text-to-cad` — the largest adjacent project
 
@@ -1578,3 +1637,7 @@ and stated in the PR.
 [somaagents]: https://raw.githubusercontent.com/Kai-Jungsthoefel/SOMA/cf8e629ef0dc1c2c54ee3fb62d50a208aa938c27/app/resources/template/AGENTS.md
 [somaanalysis]: https://raw.githubusercontent.com/Kai-Jungsthoefel/SOMA/cf8e629ef0dc1c2c54ee3fb62d50a208aa938c27/app/resources/skills/analysis.md
 [agenticmfg]: https://arxiv.org/abs/2604.09633
+[matchline]: https://github.com/anchapin/matchline
+[ml1406]: https://github.com/anchapin/matchline/issues/1406
+[mlgate]: https://raw.githubusercontent.com/anchapin/matchline/6a76993f39c533c8c92fc7fcbeba4e5d1f138f21/bem/export_gate.py
+[mlrepair]: https://raw.githubusercontent.com/anchapin/matchline/6a76993f39c533c8c92fc7fcbeba4e5d1f138f21/bem/repair_loop.py
