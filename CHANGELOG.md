@@ -71,10 +71,11 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 ### Documentation
 
 - **Positioning claim scoped (plan §12 item 7, landscape "Honest read"):** "nobody else
-  states" the honesty framing was too broad. The Stack Underflow independently states that a
-  tool's "ok" is no evidence of the right part (§3.8). What stays unmatched is labelling the
-  gauge's own passing checks necessary, not sufficient, and `SKIP` for unsupplied bounds, as
-  found up to 2026-07-25.
+  states" the honesty framing was too broad. The Stack Underflow, a YouTube channel in
+  landscape §3.8, independently concludes that a tool's "ok" is no evidence of the right part
+  (paraphrased). Still not found elsewhere in the sweeps up to 2026-07-25: labelling passing
+  checks necessary, not sufficient, and reporting unsupplied bounds as `SKIP`. Whether that
+  channel labels its own checks this way was not checked.
 - **Landscape §3.2: two owner leads (2026-11-23, both ranked adjacent (low)):** SOMA, a
   GPL-3.0 desktop app where an agent writes CadQuery and checks overhang, wall thickness and
   clearance (one-sided minimum), and looks at its own renders; and an MIT-funded interview

@@ -197,9 +197,10 @@ commodity — `agentcad`, `cad-skill` and `3d-print-skill` do it. **Nobody found
 labels a passing check as necessary-but-not-sufficient, and nobody reports an unsupplied
 bound as `SKIP` rather than silently passing.** That is the whole remaining delta.
 *Scoped 2026-11-23:* the idea behind it, that a tool's "ok" is no evidence of the right part,
-is not ours alone — The Stack Underflow states it (§3.8). The delta is applying it to the
-gauge's own passing checks and to unsupplied bounds, as found up to 2026-07-25; no full
-sweep has run since.
+is not ours alone — The Stack Underflow concludes it (§3.8, paraphrased). The delta is
+applying it to the gauge's own passing checks and to unsupplied bounds, as found in the
+sweeps up to 2026-07-25; no full sweep has run since, and whether that channel labels its
+own checks this way was not checked.
 
 Note the population splits cleanly into render-only skills and check-only skills, with
 `agentcad` and `cad-skill` the only two doing both. That combination — not the checks, not
