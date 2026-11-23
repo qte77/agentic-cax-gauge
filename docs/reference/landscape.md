@@ -201,7 +201,7 @@ is not ours alone — The Stack Underflow concludes it (§3.8, paraphrased). The
 applying it to the gauge's own passing checks and to unsupplied bounds, as found in the
 sweeps up to 2026-07-25; no full sweep has run since, and whether that channel labels its
 own checks this way was not checked. *Later the same day:* matchline (§3.2) blocks a publish
-on a check it could not run, which is `SKIP`, never `PASS`, built independently. What is
+on a check it could not run, the same idea as `SKIP`, never `PASS`, built independently. What is
 left unmatched is labelling passing checks necessary, not sufficient.
 
 Note the population splits cleanly into render-only skills and check-only skills, with
@@ -733,13 +733,15 @@ own output those defects were nearly absent (one natural case in 89 exports). Th
 failed its own cost bar and a narrower one passed. [`bem/repair_loop.py`][mlrepair] now ships
 it: at most two iterations, a repair that doesn't make its check pass is reverted, every repair
 is logged in the export manifest, and the full gate still decides what is published. It is off
-by default in the library and on at the export commands since an owner decision on
-2026-11-17. Degenerate faces were excluded because dropping one deleted real area.
+by default in the library and, per its docstring, on at the export commands since an owner
+decision on 2026-11-17. Degenerate faces were excluded because dropping one broke shell
+closure or deleted real area.
 
 Our reading:
 
-- `not_checked` blocking a publish is this gauge's `SKIP`, never `PASS`, built independently
-  and in code. So `SKIP` is no longer something only this gauge does (plan §12 item 7).
+- `not_checked` is the same idea as this gauge's `SKIP`, never `PASS`, built independently
+  and in code, and stricter: it blocks the publish, where our `SKIP` is reported and kept out
+  of green. So `SKIP` is no longer something only this gauge does (plan §12 item 7).
 - The excluded degenerate-face repair is plan §3.1's "deletion beats repair" path, found by
   measurement. This gauge stays measure-only: plan §3 rejects a revert-on-break loop, and
   CONTRIBUTING keeps repair out of every check path.
@@ -759,12 +761,13 @@ describes it as a simulation without load calculations or duct sizing. It claims
 - 8 of the model's own code mistakes caught in a review pass;
 - a check against the 2021 IRC, IPC and IFGC and the 2023 NEC, with every item passing.
 
-The evidence is a 28-second video. No model file, clash export or checking method is
-published, so every count is the account's own. A post it quotes (2026-08-01) says Revit
+The post's evidence is a 28-second video. It links no model file, clash export or checking
+method, so every count is the account's own. A post it quotes (2026-08-01) says Revit
 2027's MCP server is read-only. That was not checked against Autodesk's documentation, and it
 would conflict with the "element ops" tool group reported in §3.5.
 
-Our reading: the review pass is the same model checking its own work, which plan §3.1 calls
+Our reading: as the post describes it, the review pass is the same model checking its own
+work, which plan §3.1 calls
 correlated failure, not independent verification. "Every item passing" is a green result read
 as sufficient. **Effect on the plan:** none.
 
