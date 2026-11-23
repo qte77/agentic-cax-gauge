@@ -647,7 +647,7 @@ already weighed and rejected for itself (§2), not a new consideration, but wort
 another vendor is building toward it. **Medium overlap** — same shelf as AdamCAD/Backflip
 above, generation-side, no independent (human- or render-gated) verification described.
 
-**Added 2026-11-23 — three owner leads: SOMA, an MIT-funded interview study, an ICE blog.**
+**Added 2026-11-23 — two owner leads: SOMA and an MIT-funded interview study.**
 
 **[SOMA][soma]** (Rank: adjacent (low); [repo][somagh], GPL-3.0, TypeScript/Electron, 520★
 on 2026-11-23, read at commit `cf8e629` of 2026-11-22). A desktop app in which an agent writes a CadQuery
@@ -703,17 +703,6 @@ reading: it's interview evidence for the plan's premise that checking, not gener
 gap. "Passes review, so approved" is the step where a necessary check gets read as a
 sufficient one, which is the reading this gauge's wording rules out. **Effect on the plan:**
 none. It supports §3.1's framing and names no tool to check against.
-
-**ICE: [AI can help you with routine engineering tasks — here's how][iceagents]** (Rank:
-adjacent (low); Civil Engineer blog, 31 January 2025, by Dr Mike Rustell, Brunel University
-lecturer and director of the AI firm Inframatic.ai). An introduction to AI agents for civil
-engineers: parsing CAD files, logs and PDFs, calling tools, delegating to sub-agents. Its one
-checking example is hypothetical: an agent that scans structural drawings for missing
-sections and tells the engineer only if it finds an inconsistency. It says agents' output
-"will need human oversight, particularly for safety and regulatory compliance". Our reading:
-a checker that stays silent unless it finds something makes "nothing found" read as
-"passed". This project reports that case as `SKIP` or `review` instead. **Effect on the
-plan:** none. It's opinion, and names no tool.
 
 ### 3.3 `earthtojake/text-to-cad` — the largest adjacent project
 
@@ -1421,7 +1410,6 @@ and stated in the PR.
 | [AEC Magazine — GPT-6 Astra and BIM modelling][aecastra] | Read directly |
 | [SOMA][soma] · [repo][somagh] | Home page, README, agent template and analysis skill, read directly (repo at `cf8e629`) |
 | [arXiv:2604.09633][agenticmfg] | Agentic AI in engineering and manufacturing: 33 industry interviews, read directly |
-| [ICE — AI agents for routine engineering tasks][iceagents] | Civil Engineer blog, 2025-01-31, read directly |
 
 [blind]: https://arxiv.org/abs/2407.06581
 [blink]: https://arxiv.org/abs/2404.12390
@@ -1585,4 +1573,3 @@ and stated in the PR.
 [somaagents]: https://raw.githubusercontent.com/Kai-Jungsthoefel/SOMA/cf8e629ef0dc1c2c54ee3fb62d50a208aa938c27/app/resources/template/AGENTS.md
 [somaanalysis]: https://raw.githubusercontent.com/Kai-Jungsthoefel/SOMA/cf8e629ef0dc1c2c54ee3fb62d50a208aa938c27/app/resources/skills/analysis.md
 [agenticmfg]: https://arxiv.org/abs/2604.09633
-[iceagents]: https://www.ice.org.uk/news-views-insights/inside-infrastructure/how-ai-can-help-with-routine-engineering-tasks
