@@ -9,7 +9,7 @@ endif
 .PHONY: \
 	setup_uv setup setup_cad \
 	autofix lint type test test_cov test_browser check_complexity validate audit check_docs check_links \
-	site \
+	site release_smoke \
 	help
 .DEFAULT_GOAL := help
 
@@ -56,7 +56,7 @@ lint: ## Check formatting + lint (fails on issues, does not fix)
 	uv run ruff format --check . $(RUFF_QUIET) && uv run ruff check . $(RUFF_QUIET)
 
 type: ## Run pyright (strict) type checking
-	uv run pyright src $(PYRIGHT_QUIET)
+	uv run pyright src scripts $(PYRIGHT_QUIET)
 
 test: ## Run tests (cad/browser-marked tests excluded by default)
 	uv run pytest $(PYTEST_QUIET)
@@ -127,6 +127,15 @@ site: ## Regenerate site/ sample reports (needs CAXGAUGE_POLYFETCH_DIR + the so1
 	expect 1 tests/fixtures/feature_absorbed_buggy.stl --envelope 41,41,14 --volume-band 8540,8720 --source $$fixtures --out site/boss-buggy
 	expect 0 $(SO101)/hardware/stl/so101/pipette_mount_so101.stl --source $(SO101)/src/hardware/cad/so101/pipette_mount.py --out site/so101-pipette-mount
 	echo "site: regenerated site/ (index.html is hand-written; commit both)"
+
+
+# MARK: RELEASE
+
+
+# Before a minor or major tag: site/ on 7 device presets (scripts/release_smoke.py). Exits 2
+# when polyfetch is absent — an unrun release check must not read as green.
+release_smoke: ## Load site/ pages on a phone/tablet/desktop matrix in Chromium; needs CAXGAUGE_POLYFETCH_DIR
+	uv run python scripts/release_smoke.py
 
 
 # MARK: HELP
