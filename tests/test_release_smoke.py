@@ -220,6 +220,26 @@ def test_main_broken_probe_exits_1(
     assert "verified" not in capsys.readouterr().out.lower()
 
 
+def test_run_deletes_only_its_own_stale_screenshots(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+):
+    out = tmp_path / "out"
+    out.mkdir()
+    stale = out / f"{smoke.slug(PHONE.name)}--{smoke.slug('index.html')}.png"
+    other = out / "committed-render.png"
+    stale.write_bytes(b"old")
+    other.write_bytes(b"keep")
+    proc = subprocess.CompletedProcess(["probe"], 1, stdout="", stderr="")
+    monkeypatch.setenv(POLYFETCH_ENV, str(tmp_path))
+    monkeypatch.setattr(smoke.shutil, "which", lambda _name: "/usr/bin/uv")
+    monkeypatch.setattr(smoke, "_run_probe", lambda *a, **k: proc)
+
+    smoke.run(tmp_path, out, matrix=MATRIX, pages=PAGES)
+
+    assert not stale.exists()
+    assert other.read_bytes() == b"keep"
+
+
 def test_main_probe_timeout_exits_1(monkeypatch: pytest.MonkeyPatch, capsys, tmp_path: Path):
     def raise_timeout(*_a: object, **_k: object) -> subprocess.CompletedProcess[str]:
         raise subprocess.TimeoutExpired(cmd=["probe"], timeout=1.0)

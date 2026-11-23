@@ -189,8 +189,10 @@ def run(site: Path, out: Path, *, matrix: Sequence[Cell], pages: Mapping[str, in
         raise RuntimeError(f"needs uv and {POLYFETCH_ENV}")
     uv, polyfetch = tools
     out.mkdir(parents=True, exist_ok=True)
-    for stale in out.glob("*.png"):
-        stale.unlink()
+    # Only the names this run writes (`release_smoke_probe._load`): `--out` may hold other PNGs.
+    for cell in matrix:
+        for page in pages:
+            (out / f"{slug(cell.name)}--{slug(page)}.png").unlink(missing_ok=True)
     budget = len(matrix) * len(pages) * LOAD_TIMEOUT_S + _STARTUP_BUDGET_S
     with _serve(site) as base:
         config = {
