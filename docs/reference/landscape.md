@@ -507,10 +507,12 @@ Trace's `--format json --exit-code-violations` pattern is upstream KiCad's own:
 The most active agent bridge is [`mixelpixx/kicad-mcp-server`][kicadmcp] (MIT); this project
 would use the CLI. **Autodesk Fusion's electronics workspace** (EAGLE's successor — EAGLE
 access was "scheduled to end on June 7, 2026", per [Autodesk's blog][eagleeol]) fails the bar:
-its [electronics API][fusionelectron] "is in preview and is read-only for modifying the
-design", so a script can read design data but cannot trigger a design-rule check. Fusion's
+its [electronics API][fusionelectron] is in preview, and Fusion's
 [system requirements][fusionsysreq] (2026-10-20) list Windows, macOS and a web browser — no
-Linux. The free [personal-use tier][fusioncompare] includes PCB design capped at 2 sheets per
+Linux. **Updated 2026-11-23:** the API page has moved and no longer calls the API read-only.
+Most properties are now writable, and a script can run a batch of native Electronics
+commands against a board. The page doesn't say whether the design-rule check is one of them,
+and we haven't checked the command reference. The free [personal-use tier][fusioncompare] includes PCB design capped at 2 sheets per
 schematic and 4 signal layers, board area unlimited (both re-fetched with polyfetch's headed
 browser, which Autodesk's bot block lets through). **Verdict:** a PCB track is feasible free and headless on KiCad alone — the
 DRC/ERC exit code as the deterministic check, the exported STL through the existing
@@ -1565,7 +1567,7 @@ and stated in the PR.
 [kicadcli]: https://docs.kicad.org/9.0/en/cli/cli.html
 [kicadmcp]: https://github.com/mixelpixx/kicad-mcp-server
 [eagleeol]: https://www.autodesk.com/products/fusion-360/blog/eagle-to-autodesk-fusion-transition/
-[fusionelectron]: https://help.autodesk.com/cloudhelp/ENU/Fusion-360-API/files/ElectronicsIntro.htm
+[fusionelectron]: https://help.autodesk.com/cloudhelp/ENU/Fusion-360-API/files/ElectronicsIntro_UM.htm
 [fusionsysreq]: https://www.autodesk.com/support/technical/article/caas/sfdcarticles/sfdcarticles/System-requirements-for-Autodesk-Fusion-360.html
 [fusioncompare]: https://www.autodesk.com/products/fusion-360/personal/compare
 [benchcad2]: https://github.com/BenchCAD-org/benchcad-2-main
