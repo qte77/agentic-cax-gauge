@@ -172,6 +172,10 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Changed
 
+- **Sample site regenerated with v0.3.0** (`make site`): the three fixture reports gain the
+  `preflight-only` style and the current fixture script, the renders are byte-identical, and
+  the index footer now says v0.3.0, not v0.2.1. `make release_smoke` found nothing on 14 page
+  loads; a human still looks at the screenshots.
 - Claude Code `.claude/settings.json` sets `BASH_MAX_OUTPUT_LENGTH` to `15000` and
   `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE` to `50` ([docs](https://code.claude.com/docs/en/env-vars))
 
