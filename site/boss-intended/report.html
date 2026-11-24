@@ -4,6 +4,7 @@ body { font: 14px/1.5 system-ui, sans-serif; margin: 16px; color: #1d1d1f; backg
 h1 { overflow-wrap: anywhere; }
 .verdict { font-size: 20px; font-weight: 600; padding: 8px 12px; border-radius: 4px; }
 .fail { background: #fde2e1; } .review { background: #fff4d6; }
+.preflight-only { background: #e8e8ed; }
 .label, .norender { padding: 8px 12px; border-left: 4px solid #b26b00; background: #fff; }
 .norender { border-color: #c0392b; font-weight: 600; }
 .checks { overflow-x: auto; }
@@ -21,9 +22,9 @@ script is how they were produced, for reproducibility):
     UV_PROJECT_ENVIRONMENT=/tmp/claude-1000/venv-wave1-preflight uv run \
         python tests/fixtures/make_fixtures.py
 
-Only the headline feature-absorbed pair needs `build123d` (the `cad` extra); the
-other three fixtures are built directly from `trimesh` primitives so most of this
-script runs with the core dependency alone.
+The headline feature-absorbed pair and the two benchmark control parts with holes need
+`build123d` (the `cad` extra); the other three fixtures are built directly from `trimesh`
+primitives so most of this script runs with the core dependency alone.
 &quot;&quot;&quot;
 
 from pathlib import Path
@@ -105,10 +106,45 @@ def make_feature_absorbed() -&gt; None:
     )
 
 
+def make_bench_controls() -&gt; None:
+    &quot;&quot;&quot;Export the benchmark control parts with holes via build123d (test_bench_controls.py).
+
+    - `wall_bracket_80.stl`: brief 16&#x27;s part (good there), also handed in for brief 17&#x27;s 100 mm
+      bracket as the known-bad &quot;old size&quot; part.
+    - `hole_grid_half_density.stl`: brief 10&#x27;s plate with 6 of its 12 holes, a checkerboard of
+      the 4 x 3 grid: the known-bad half-density pattern.
+
+    Run alone (`python -c &quot;import make_fixtures as m; m.make_bench_controls()&quot;` from this
+    directory) so the other committed fixtures are not rewritten.
+    &quot;&quot;&quot;
+    from build123d import Align, Box, Cylinder, Pos, Rot, export_stl
+
+    low = (Align.MIN, Align.MIN, Align.MIN)
+    bracket = Box(80, 60, 4, align=low) + Pos(0, 56, 4) * Box(80, 4, 46, align=low)
+    for x in (20, 60):  # 40 mm apart, centred across the width, 35 mm above the bottom
+        bracket -= Pos(x, 58, 35) * Rot(90, 0, 0) * Cylinder(radius=2.5, height=10)
+
+    plate = Box(90, 70, 5, align=low)
+    for i, x in enumerate((15, 35, 55, 75)):
+        for j, y in enumerate((15, 35, 55)):
+            if (i + j) % 2 == 0:
+                plate -= Pos(x, y, 2.5) * Cylinder(radius=3, height=10)
+
+    for name, part in ((&quot;wall_bracket_80&quot;, bracket), (&quot;hole_grid_half_density&quot;, plate)):
+        path = FIXTURES / f&quot;{name}.stl&quot;
+        export_stl(part, str(path))
+        mesh = trimesh.load(path)
+        print(
+            f&quot;{name}: watertight={mesh.is_watertight} volume={mesh.volume:.1f}&quot;,
+            f&quot;extents={mesh.extents}&quot;,
+        )
+
+
 if __name__ == &quot;__main__&quot;:
     make_good()
     make_oversize()
     make_non_manifold()
     make_feature_absorbed()
+    make_bench_controls()
     print(&quot;fixtures written to&quot;, FIXTURES)
 </code></pre></section><div class="checks"><table><tr><th>Check</th><th>Status</th><th>Detail</th></tr><tr><td>file_integrity</td><td>PASS</td><td>binary STL: header present, 516 triangles, file length matches 84 + 50*n</td></tr><tr><td>watertight</td><td>PASS</td><td>watertight=True, winding_consistent=True, euler_number=2 (reported only, not asserted — plan §7.2)</td></tr><tr><td>bbox</td><td>PASS</td><td>extents=(40.0, 40.0, 13.0), envelope=(41.0, 41.0, 14.0)</td></tr><tr><td>volume</td><td>PASS</td><td>volume=8628.058157554531, band=[8540.0, 8720.0]</td></tr><tr><td>browser_load</td><td>PASS</td><td>viewer reported body[data-state]=rendered</td></tr><tr><td>render</td><td>PASS</td><td>4 view(s) captured at 800x600</td></tr></table></div></body></html>
