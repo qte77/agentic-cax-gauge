@@ -6,6 +6,9 @@
 accept = [200, 201, 204, 429]
 timeout = 30
 max_retries = 2
+# Also check `#section` anchors: a link to a heading that was renamed or moved fails here
+# instead of landing silently at the top of the page.
+include_fragments = true
 
 exclude_path = [
     ".venv", ".claude", "node_modules", ".pytest_cache", ".complexipy_cache",
@@ -47,4 +50,8 @@ exclude = [
     # confirmed live the same day by a local lychee run (200). Exact URLs only
     "^https://hexagon\\.com/company/divisions/manufacturing-intelligence/msc-software$",
     "^https://hexagon\\.com/company/newsroom/press-releases/2025/hexagon-unveils-autonomous-metrology-suite-to-deliver-manufacturing-quality-at-speed$",
+    # 403 to the CI runner's lychee on four PRs (#106, #107, #124, #133; 2026-11-14 to 11-24),
+    # passing on rerun each time; confirmed live 2026-11-24 by a local lychee run (200 after
+    # redirects) and polyfetch (200). Exact URL only
+    "^https://docs\\.blender\\.org/api/current$",
 ]
