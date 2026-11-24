@@ -172,6 +172,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Changed
 
+- **Link check also checks anchors** (`include_fragments = true` in `lychee.toml`): a link to
+  a `#section` that no longer exists now fails. `https://docs.blender.org/api/current` is
+  excluded, exact URL only, after CI's runner got 403 on four PRs while the page was live.
 - Claude Code `.claude/settings.json` sets `BASH_MAX_OUTPUT_LENGTH` to `15000` and
   `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE` to `50` ([docs](https://code.claude.com/docs/en/env-vars))
 
