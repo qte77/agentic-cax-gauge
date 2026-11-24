@@ -18,9 +18,8 @@ below.
 PRs #106, #107, #124 and #133 (2026-11-14 to 11-24) failed "Lint MD and Links" only on
 `https://docs.blender.org/api/current` (403 to the GitHub runner). It passed locally and on
 rerun each time. **Resolved 2026-11-24 (owner):** that exact URL is excluded in `lychee.toml`,
-with the evidence beside it. **Do** the same for the next host that only CI's runner gets
-blocked by: rerun first, confirm the page live locally, then exclude the exact URL, never the
-host.
+with the evidence beside it. **Do:** when only CI's runner is blocked on a page, rerun first,
+confirm the page live locally, then exclude the exact URL, never the host.
 
 ### `github.com/.../blob/...` pages return 503 to CI's link check (2 occurrences)
 
