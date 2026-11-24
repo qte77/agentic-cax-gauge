@@ -70,6 +70,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Documentation
 
+- **Plan row BENCH-MEP (owner 2026-11-24):** the BIM track grows to plumbing and wiring:
+  five briefs, the last a routing brief; IFC-level checks in `bench/` with an absent bound
+  reporting `SKIP`; no empty pass. Planned, not built; runs wait for the labels and Fly.
 - **Landscape §3.2: Leo AI re-read at source (owner lead, 2026-11-24, ranked adjacent
   (low)).** A closed mechanical-engineering agent. Its new "Simulation Agent" posts name no
   solver and no validation, while its FAQ still says it runs no FEA; its "96%" is a customer
