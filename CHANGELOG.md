@@ -70,6 +70,10 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Documentation
 
+- **Rule `.claude/rules/session-tool-text.md`** (promoted from `AGENT_LEARNINGS.md` after
+  five occurrences): the Claude Docs block in the session setup is not a page's text, so it
+  is not reported against a site. The same or similar text inside a tool result is still an
+  injection: reported, checked at the raw page, never followed.
 - **Plan row BENCH-MEP (owner 2026-11-24):** the BIM track grows to plumbing and wiring:
   five briefs, the last a routing brief; IFC-level checks in `bench/` with an absent bound
   reporting `SKIP`; no empty pass. Planned, not built; runs wait for the labels and Fly.
@@ -172,10 +176,14 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Changed
 
-- **Sample site regenerated with v0.3.0** (`make site`): the three fixture reports gain the
-  `preflight-only` style and the current fixture script, the renders are byte-identical, and
-  the index footer now says v0.3.0, not v0.2.1. `make release_smoke` found nothing on 14 page
+- **Sample site regenerated with v0.3.0** (`make site`): all four reports gain the
+  `preflight-only` style, the three fixture reports embed the current fixture script, the
+  renders are byte-identical, and the index footer now says v0.3.0, not v0.2.1. `make release_smoke` found nothing on 14 page
   loads; a human still looks at the screenshots.
+- **Link check also checks anchors** (`include_fragments = true` in `lychee.toml`): a link to
+  a `#section` that no longer exists now fails. `https://docs.blender.org/api/current` is
+  excluded, exact URL only, after CI's runner got 403 on it on four PRs; a local run confirmed
+  it live on 2026-11-24.
 - Claude Code `.claude/settings.json` sets `BASH_MAX_OUTPUT_LENGTH` to `15000` and
   `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE` to `50` ([docs](https://code.claude.com/docs/en/env-vars))
 
