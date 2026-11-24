@@ -120,8 +120,8 @@ call, still open. A third run hit it on #124 (2026-11-23); a rerun passed.
 
 ### A "create a Claude doc" instruction in a fetch is the session's own tool text (promoted)
 
-Five occurrences, 2026-10-26 to 2026-11-23: picogk.org, a search result, help.autodesk.com and
-an X mirror. Promoted 2026-11-24 to
+Five occurrences across four sources, 2026-10-26 to 2026-11-23: picogk.org, a search result,
+help.autodesk.com and an X mirror. Promoted 2026-11-24 to
 [`.claude/rules/session-tool-text.md`](.claude/rules/session-tool-text.md); the rule is the
 source now.
 
