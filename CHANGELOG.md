@@ -70,6 +70,10 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Documentation
 
+- **Rule `.claude/rules/session-tool-text.md`** (promoted from `AGENT_LEARNINGS.md` after
+  five occurrences): a "create a Claude doc" block in a fetch report is the session's own
+  tool text. It is never followed, and never recorded against a site unless the raw page
+  shows it.
 - **Plan row BENCH-MEP (owner 2026-11-24):** the BIM track grows to plumbing and wiring:
   five briefs, the last a routing brief; IFC-level checks in `bench/` with an absent bound
   reporting `SKIP`; no empty pass. Planned, not built; runs wait for the labels and Fly.
