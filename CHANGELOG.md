@@ -75,6 +75,13 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
   solver and no validation, while its FAQ still says it runs no FEA; its "96%" is a customer
   quote with no method. Its own guide grades an AI solver against hand-solved problems and
   known-wrong results, which this repo already does, so nothing is adopted.
+- **Landscape §3.2: matchline and Solvaix (owner leads, 2026-11-23, both ranked adjacent
+  (low)).** matchline, a BSD-3 BIM/energy-model exporter, blocks a publish on any check it
+  could not run (`not_checked`) and repairs only defects with one correct fix, with no model
+  in the loop. Solvaix, an X account, posts AI building-services demos; in the one post read,
+  the review pass is the same model checking itself and no method is linked. matchline's
+  gate is the same idea as `SKIP`, never `PASS`, built independently, so plan §12 item 7 now
+  leaves only the necessary-not-sufficient label unmatched.
 - **Positioning claim scoped (plan §12 item 7, landscape "Honest read"):** "nobody else
   states" the honesty framing was too broad. The Stack Underflow, a YouTube channel in
   landscape §3.8, independently concludes that a tool's "ok" is no evidence of the right part
