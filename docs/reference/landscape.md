@@ -178,6 +178,7 @@ Sources: [CadQuery][cadquery], [build123d][build123d], [OpenSCAD][openscad],
 | [BlenderLLM][blenderllm] | Fine-tuned Qwen2.5-Coder-7B + CADBench | Low |
 | [ScadLM][scadlm] | Hackathon agentic text-to-OpenSCAD; authors report feedback approaches underperformed | Low, but a cautionary data point |
 | [MecAgent][mecagent] | Copilot app attached to an open CAD session, building native, editable features, assemblies and drawings from text, spec sheets, STEP files or PDF drawings. **Re-read 2026-11-14 (vendor pages):** only SolidWorks (2024–2026) is listed as available; Inventor, CATIA V5, 3DEXPERIENCE, Fusion, NX, Solid Edge, Onshape and Creo are listed as "soon"/end of 2026. Its home and about pages describe no check on generated geometry; no benchmark is cited | Medium. Rank: adjacent (low) |
+| [Leo AI][leoai] | Closed, enterprise-priced agent for mechanical engineers: answers questions with cited sources, generates parametric CAD from text, sketches or images, and reviews assemblies and STEP files (its "Inspector"). Its home page and FAQ list different CAD and PLM integrations (SolidWorks, Inventor, NX, Fusion and others). **Read at source 2026-11-24 (two LinkedIn posts, home page, FAQ, two blog posts):** a "Leo Simulation Agent" was announced that day for static, modal, buckling, harmonic and thermal analysis "within minutes", naming no solver and no validation, while the [FAQ][leofaq] still said Leo "does not run FEA or CFD simulation itself". A "96% accuracy" figure is a customer quote with no method. Its [own guide][leocheck] (2026-11-05) tells readers to grade an AI solver on 10 hand-solved problems with planted errors: the same move as this repo's closed-form bands and known-bad controls (plan §5 BENCH-3), so nothing new to adopt. Any simulation result it gives would be inform-only here: CAE sits on the render side of the trust boundary (plan §12 item 1) | Medium. Rank: adjacent (low) |
 
 Added by the 2026-07-25 marketplace sweep. All of these ship as agent skills:
 
@@ -1553,6 +1554,8 @@ and stated in the PR.
 [bricsshape]: https://www.bricsys.com/news/bricscad-shape-discontinued
 [steenkenpost]: https://www.linkedin.com/posts/anton-steenken_ai-cad-demos-are-full-of-sht-sound-familiar-ugcPost-7513887143623319553-qmVG/
 [leoai]: https://www.getleo.ai/
+[leofaq]: https://www.getleo.ai/faq
+[leocheck]: https://www.getleo.ai/blog/solve-engineering-problems-in-seconds-with-96-accuracy
 [trace]: https://buildwithtrace.com/
 [tracepublic]: https://github.com/buildwithtrace/trace-public
 [tracecli]: https://docs.buildwithtrace.com/resources/cli/
