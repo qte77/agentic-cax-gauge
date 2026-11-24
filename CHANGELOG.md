@@ -73,8 +73,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 - **Landscape §3.2: Leo AI re-read at source (owner lead, 2026-11-24, ranked adjacent
   (low)).** A closed mechanical-engineering agent. Its new "Simulation Agent" posts name no
   solver and no validation, while its FAQ still says it runs no FEA; its "96%" is a customer
-  quote with no method. Its own guide grades an AI solver on hand-solved problems with
-  planted errors, which this repo already does, so nothing is adopted.
+  quote with no method. Its own guide grades an AI solver against hand-solved problems and
+  known-wrong results, which this repo already does, so nothing is adopted.
 - **Positioning claim scoped (plan §12 item 7, landscape "Honest read"):** "nobody else
   states" the honesty framing was too broad. The Stack Underflow, a YouTube channel in
   landscape §3.8, independently concludes that a tool's "ok" is no evidence of the right part
