@@ -75,7 +75,7 @@ status: live — arc open
 |---|---|---|---|
 | ~~A~~ | ~~Move §3.2, §3.7 and §3.8 out of `landscape.md` into three sibling files, a pure move~~ | agent | **Shipped — #139** |
 | ~~B~~ | ~~Entry index table in the hub's §3 intro~~ | agent | **Shipped — #140** (105 rows) |
-| C | Fold in the LinkedIn ECAD post (2026-11-24) as a §3.2 entry after "PCB beyond Trace" | agent | Each claim checked at source or marked unchecked; entry in our own words; index row; checks pass; PR merged after A and B |
+| ~~C~~ | ~~Fold in the LinkedIn ECAD post (2026-11-24) as a §3.2 entry after "PCB beyond Trace"~~ | agent | **Shipped — PR_C** |
 
 Strike a row in the same PR that ships it.
 

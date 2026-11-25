@@ -125,6 +125,7 @@ This index lists the named entries in §3.1–§3.8, one row per table row or "A
 | Blender: headless is easy, the domain is still wrong | [§3.2](landscape-adjacent.md#32-adjacent-projects) | 2026-11-11 | not stated |
 | Trace (buildwithtrace.com) | [§3.2](landscape-adjacent.md#32-adjacent-projects) | 2026-10-09 | not stated |
 | KiCad and Fusion electronics (PCB beyond Trace) | [§3.2](landscape-adjacent.md#32-adjacent-projects) | 2026-11-11 | not stated |
+| Altium file-format post (ECAD and LLM-workability) | [§3.2](landscape-adjacent.md#32-adjacent-projects) | 2026-11-25 | adjacent (low) |
 | BenchCAD 2.0 | [§3.2](landscape-adjacent.md#32-adjacent-projects) | 2026-11-12 | not stated |
 | NVIDIA-Omniverse/simready-central | [§3.2](landscape-adjacent.md#32-adjacent-projects) | 2026-11-12 | not stated |
 | MeltFlex | [§3.2](landscape-adjacent.md#32-adjacent-projects) | 2026-11-12 | not stated |
