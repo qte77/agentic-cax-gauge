@@ -69,6 +69,118 @@ twice, not a CAx-specific artifact.
 **Ranking (owner 2026-11-14):** entries adjacent to the project's scope are kept, marked
 **Rank: adjacent (low)**. Only an entry that changes a plan decision ranks high.
 
+### Entry index
+
+This index lists the named entries in §3.1–§3.8, one row per table row or "Added" block. Dates and ranks are copied from each entry's own wording; "not stated" means the entry gives none. The entry text is the source, and this table points to it.
+
+| Entry | § | Added or read at source | Rank |
+|---|---|---|---|
+| build123d | [§3.1](#31-backend-decision) | not stated | not stated |
+| OpenSCAD | [§3.1](#31-backend-decision) | not stated | not stated |
+| CadQuery | [§3.1](#31-backend-decision) | not stated | not stated |
+| FreeCAD Python API | [§3.1](#31-backend-decision) | not stated | not stated |
+| pythonocc-core | [§3.1](#31-backend-decision) | not stated | not stated |
+| Onshape API | [§3.1](#31-backend-decision) | not stated | not stated |
+| Blender bpy | [§3.1](#31-backend-decision) | 2026-11-11 (checked) | not stated |
+| Rhino (rhino3dm / Compute) | [§3.1](#31-backend-decision) | 2026-11-11 (checked) | not stated |
+| SolidPython | [§3.1](#31-backend-decision) | not stated | not stated |
+| Fusion 360 API | [§3.1](#31-backend-decision) | not stated | not stated |
+| Zoo / KittyCAD | [§3.2](#32-adjacent-projects) | not stated | not stated |
+| AdamCAD | [§3.2](#32-adjacent-projects) | not stated | not stated |
+| Backflip AI | [§3.2](#32-adjacent-projects) | not stated | not stated |
+| CAD-Assistant | [§3.2](#32-adjacent-projects) | not stated | not stated |
+| cad-agent | [§3.2](#32-adjacent-projects) | not stated | not stated |
+| openscad-agent | [§3.2](#32-adjacent-projects) | not stated | not stated |
+| BlenderLLM | [§3.2](#32-adjacent-projects) | not stated | not stated |
+| ScadLM | [§3.2](#32-adjacent-projects) | not stated | not stated |
+| MecAgent | [§3.2](#32-adjacent-projects) | 2026-11-14 (re-read) | adjacent (low) |
+| Leo AI | [§3.2](#32-adjacent-projects) | 2026-11-24 (read at source) | adjacent (low) |
+| jdilla1277/agentcad | [§3.2](#32-adjacent-projects) | 2026-07-25 (sweep) | not stated |
+| flowful-ai/cad-skill | [§3.2](#32-adjacent-projects) | 2026-07-25 (sweep) | not stated |
+| drawing-agent.com | [§3.2](#32-adjacent-projects) | 2026-07-25 (sweep) | not stated |
+| CADSmith | [§3.2](#32-adjacent-projects) | 2026-07-25 (sweep) | not stated |
+| rawwerks/VibeCAD, mfranzon/render, mitsuhiko/agent-stuff | [§3.2](#32-adjacent-projects) | 2026-07-25 (sweep) | not stated |
+| EdwinjJ1/3d-print-skill | [§3.2](#32-adjacent-projects) | 2026-07-25 (sweep) | not stated |
+| microsoft/CADFusion | [§3.2](#32-adjacent-projects) | 2026-09-10 (sweep) | not stated |
+| CAD-Judge | [§3.2](#32-adjacent-projects) | 2026-09-10 (sweep) | not stated |
+| AutoBrep | [§3.2](#32-adjacent-projects) | 2026-09-10 (sweep) | not stated |
+| CAD-Llama | [§3.2](#32-adjacent-projects) | 2026-09-10 (sweep) | not stated |
+| CADmium | [§3.2](#32-adjacent-projects) | 2026-09-10 (sweep) | not stated |
+| OpenECAD | [§3.2](#32-adjacent-projects) | 2026-09-10 (sweep) | not stated |
+| GeoCAD | [§3.2](#32-adjacent-projects) | 2026-09-10 (sweep) | not stated |
+| LEAP71 (PicoGK) | [§3.2](#32-adjacent-projects) | 2026-09-19 (corrected 2026-11-11) | adjacent (low) ("Our reading" note only) |
+| Steenken case study, ABS housing (with his LinkedIn post) | [§3.2](#32-adjacent-projects) | 2026-10-09 | not stated |
+| Steenken's earlier run, Pi 4 housing in Fusion | [§3.2](#32-adjacent-projects) | 2026-10-11 | not stated |
+| SolidCraft | [§3.2](#32-adjacent-projects) | 2026-10-19 | not stated |
+| Molitor, the incumbents' AI race (LinkedIn) | [§3.2](#32-adjacent-projects) | 2026-10-23 | not stated |
+| Molitor follow-up, partnership map | [§3.2](#32-adjacent-projects) | 2026-11-12 | not stated |
+| PhysicsX Ai.rplane | [§3.2](#32-adjacent-projects) | 2026-11-12 | not stated |
+| The map's in-scope names, audited | [§3.2](#32-adjacent-projects) | 2026-11-12 | not stated |
+| AVEVA | [§3.2](#32-adjacent-projects) | 2026-11-12 (block date) | not stated |
+| Hexagon | [§3.2](#32-adjacent-projects) | 2026-11-12 (block date) | not stated |
+| Molitor's whitepaper | [§3.2](#32-adjacent-projects) | 2026-11-12 | not stated |
+| OpenAI on AI for hardware engineering | [§3.2](#32-adjacent-projects) | 2026-11-12 | not stated |
+| tanishqbhattad/rhino-mcp | [§3.2](#32-adjacent-projects) | 2026-10-26 | not stated |
+| Rhino beyond rhino-mcp | [§3.2](#32-adjacent-projects) | 2026-11-11 | not stated |
+| Blender: headless is easy, the domain is still wrong | [§3.2](#32-adjacent-projects) | 2026-11-11 | not stated |
+| Trace (buildwithtrace.com) | [§3.2](#32-adjacent-projects) | 2026-10-09 | not stated |
+| KiCad and Fusion electronics (PCB beyond Trace) | [§3.2](#32-adjacent-projects) | 2026-11-11 | not stated |
+| BenchCAD 2.0 | [§3.2](#32-adjacent-projects) | 2026-11-12 | not stated |
+| NVIDIA-Omniverse/simready-central | [§3.2](#32-adjacent-projects) | 2026-11-12 | not stated |
+| MeltFlex | [§3.2](#32-adjacent-projects) | 2026-11-12 | not stated |
+| Kyrall | [§3.2](#32-adjacent-projects) | 2026-11-12 | not stated |
+| SOMA | [§3.2](#32-adjacent-projects) | 2026-11-23 | adjacent (low) |
+| Agentic AI in Engineering and Manufacturing (MIT-funded interview study) | [§3.2](#32-adjacent-projects) | 2026-11-23 | adjacent (low) |
+| matchline | [§3.2](#32-adjacent-projects) | 2026-11-23 | adjacent (low) as a tool; changes a positioning claim |
+| Solvaix | [§3.2](#32-adjacent-projects) | 2026-11-23 | adjacent (low) |
+| earthtojake/text-to-cad | [§3.3](#33-earthtojaketext-to-cad--the-largest-adjacent-project) | 2026-07-20 (analysed; figures re-verified 2026-07-25) | not stated |
+| jdilla1277/agentcad (closest on thesis) | [§3.4](#34-jdilla1277agentcad--the-closest-on-thesis) | 2026-07-25 (found by sweep) | not stated |
+| ahujasid/blender-mcp | [§3.5](#35-cad-mcp-servers) | not stated | not stated |
+| neka-nat/freecad-mcp | [§3.5](#35-cad-mcp-servers) | not stated | not stated |
+| quellant/openscad-mcp | [§3.5](#35-cad-mcp-servers) | not stated | not stated |
+| hedless/onshape-mcp | [§3.5](#35-cad-mcp-servers) | not stated | not stated |
+| pzfreo/build123d-mcp | [§3.5](#35-cad-mcp-servers) | not stated | not stated |
+| daobataotie/CAD-MCP | [§3.5](#35-cad-mcp-servers) | not stated | not stated |
+| Claude for Fusion (Autodesk official MCP connector) | [§3.5](#35-cad-mcp-servers) | 2026-09-10 (found) | not stated |
+| Community Fusion-MCP servers (8+) | [§3.5](#35-cad-mcp-servers) | 2026-09-10 (same sweep) | not stated |
+| Claude for Manufacturing | [§3.5](#35-cad-mcp-servers) | 2026-11-14 | adjacent (low) |
+| Revit 2027 MCP server and community Revit tools | [§3.5](#35-cad-mcp-servers) | 2026-09-19 | not stated |
+| revit-mcp / revit-mcp-server | [§3.5](#35-cad-mcp-servers) | 2026-09-19 (block date) | not stated |
+| Mira (pirros.com) | [§3.5](#35-cad-mcp-servers) | 2026-09-19 (block date) | not stated |
+| BIBIM (SquareZero-Inc/bibim-revit) | [§3.5](#35-cad-mcp-servers) | 2026-09-19 (block date) | not stated |
+| ArchiLabs | [§3.5](#35-cad-mcp-servers) | 2026-09-19 (block date) | not stated |
+| Claude computer use | [§3.6](#36-gui-automation-state-of-the-art-context-for-the-deferred-gui-leg) | not stated | not stated |
+| OpenAI CUA / Operator | [§3.6](#36-gui-automation-state-of-the-art-context-for-the-deferred-gui-leg) | not stated | not stated |
+| UI-TARS-2 | [§3.6](#36-gui-automation-state-of-the-art-context-for-the-deferred-gui-leg) | not stated | not stated |
+| Agent S3 | [§3.6](#36-gui-automation-state-of-the-art-context-for-the-deferred-gui-leg) | not stated | not stated |
+| OmniParser v2 | [§3.6](#36-gui-automation-state-of-the-art-context-for-the-deferred-gui-leg) | not stated | not stated |
+| Free alternatives to Revit for an agent BIM track (IfcOpenShell, ifc-lite, others) | [§3.7](#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-26 | not stated |
+| Constor | [§3.7](#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-11-14 | adjacent (low) |
+| ArchLang | [§3.7](#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-11-15 | adjacent (low) |
+| IfcOpenShell 0.9.0 + trimesh | [§3.7](#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (verified) | not stated |
+| ifcopenshell.validate, IfcClash, IfcTester | [§3.7](#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (verified) | not stated |
+| ifcopenshell.util.shape (quantity takeoff) | [§3.7](#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (verified) | not stated |
+| Licences: ifcopenshell, ifcclash, ifctester, bcf-client | [§3.7](#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (verified) | not stated |
+| trimesh | [§3.7](#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (verified) | not stated |
+| IDS 1.0 (buildingSMART) | [§3.7](#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (verified) | not stated |
+| buildingSMART Validation Service | [§3.7](#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (verified) | not stated |
+| Autodesk/revit-ifc | [§3.7](#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (verified) | not stated |
+| APS Model Derivative (.rvt to IFC) | [§3.7](#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (verified) | not stated |
+| web-ifc-three | [§3.7](#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (verified) | not stated |
+| APS pricing | [§3.7](#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (verified) | not stated |
+| CODE-ACCORD | [§3.7](#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (verified) | not stated |
+| AutoCAD and Revit logs as evidence (§3.7.2) | [§3.7](#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-11-15 (researched) | adjacent (low) |
+| Agent-CAD videos on YouTube | [§3.8](#38-videos-transcripts-and-model-repositories--researched-2026-11-22) | 2026-11-22 (section heading) | adjacent (low) (section-level) |
+| YouTube Data API (captions) | [§3.8](#38-videos-transcripts-and-model-repositories--researched-2026-11-22) | 2026-11-22 (section heading) | adjacent (low) (section-level) |
+| youtube-transcript-api | [§3.8](#38-videos-transcripts-and-model-repositories--researched-2026-11-22) | 2026-11-22 (section heading) | adjacent (low) (section-level) |
+| Supadata and SearchAPI.io | [§3.8](#38-videos-transcripts-and-model-repositories--researched-2026-11-22) | 2026-11-22 (section heading) | adjacent (low) (section-level) |
+| media.ccc.de | [§3.8](#38-videos-transcripts-and-model-repositories--researched-2026-11-22) | 2026-11-22 (section heading) | adjacent (low) (section-level) |
+| Thingi10K | [§3.8](#38-videos-transcripts-and-model-repositories--researched-2026-11-22) | 2026-11-22 (section heading) | adjacent (low) (section-level) |
+| Thingiverse | [§3.8](#38-videos-transcripts-and-model-repositories--researched-2026-11-22) | 2026-11-22 (section heading) | adjacent (low) (section-level) |
+| Printables | [§3.8](#38-videos-transcripts-and-model-repositories--researched-2026-11-22) | 2026-11-22 (section heading) | adjacent (low) (section-level) |
+| Fusion 360 Gallery | [§3.8](#38-videos-transcripts-and-model-repositories--researched-2026-11-22) | 2026-11-22 (section heading) | adjacent (low) (section-level) |
+| QuickTube | [§3.8](#38-videos-transcripts-and-model-repositories--researched-2026-11-22) | 2026-11-22 (tried) | adjacent (low) (section-level) |
+
 ### 3.0 Sweep coverage — what was searched, and what was not
 
 Recorded so the next sweep does not redo the same ground. Re-swept 2026-07-25.

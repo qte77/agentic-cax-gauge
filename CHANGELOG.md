@@ -70,6 +70,10 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Documentation
 
+- **Landscape entry index (plan 004, item B):** `reference/landscape.md` §3 now opens with a
+  table of 105 named entries (§3.1–§3.8): entry, section link, date added or read at source,
+  and rank. Each date and rank is copied from the entry's own wording; "not stated" where the
+  entry gives none.
 - **Plan 004 (owner 2026-11-24/25):** a short docs arc to split `reference/landscape.md` by
   topic, add an entry index and fold in an ECAD lead, with its own handoff and file map.
   `docs/README.md` lists it and no longer carries a stale doc count.
