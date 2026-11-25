@@ -1,8 +1,8 @@
 # Docs map
 
 M2 is closed (`caxgauge check`: preflight, browser load, render, report); M3 (adoption) is
-next — see the plan's opening status. There are six
-docs here — four are reference material you do not need to build.
+next — see the plan's opening status. The reference docs are research you do not need to
+build.
 Development workflow lives in [`../CONTRIBUTING.md`](../CONTRIBUTING.md), agent rules in
 [`../AGENTS.md`](../AGENTS.md).
 
@@ -10,6 +10,7 @@ Development workflow lives in [`../CONTRIBUTING.md`](../CONTRIBUTING.md), agent 
 |---|---|---|
 | [`../README.md`](../README.md) | Live | What this is and why, in one screen |
 | [`plans/001-v0.md`](plans/001-v0.md) | **Live** | The plan **and** the handoff — one file. Opens with a Handoff section (state, execution model, commands, non-negotiables, owner gates, traps), then Part I (§1-§5: goal, locked decisions, approach, architecture, roadmap), then Part II (§6-§13: executable detail, substrate traps, tests, reuse, risks, BIM preflight) |
+| [`plans/004-landscape-split.md`](plans/004-landscape-split.md) | **Live** | A short docs arc: split `reference/landscape.md` by topic, add an entry index, fold in an ECAD lead. Opens with its own handoff; three workers run in parallel worktrees |
 | [`reference/landscape.md`](reference/landscape.md) | Reference | Research evidence, competitors, backend choice, contribution stance, BIM/IFC toolchain (§3.7.1, verified 2026-10-06), AutoCAD and Revit logs as evidence (§3.7.2), adjacent entries ranked low (ArchLang, Claude for Manufacturing, MecAgent, Constor); not needed to build |
 | [`reference/vendor-ai.md`](reference/vendor-ai.md) | Reference | What Dassault, Siemens, Autodesk, Ansys and PTC shipped in AI (2025–26), how it is used, and what checks its output (nothing independent). Includes the Fusion Compute MCP route relevant to the benchmark |
 | [`reference/engineering-ai-map.md`](reference/engineering-ai-map.md) | Reference | The companies on Dirk Molitor's 2026-11-11 engineering-AI partnership map that this project deliberately does not cover, grouped by why, with verified homepages |

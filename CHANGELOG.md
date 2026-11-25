@@ -70,6 +70,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Documentation
 
+- **Plan 004 (owner 2026-11-24/25):** a short docs arc to split `reference/landscape.md` by
+  topic, add an entry index and fold in an ECAD lead, with its own handoff and file map.
+  `docs/README.md` lists it and no longer carries a stale doc count.
 - **Rule `.claude/rules/session-tool-text.md`** (promoted from `AGENT_LEARNINGS.md` after
   five occurrences): the Claude Docs block in the session setup is not a page's text, so it
   is not reported against a site. The same or similar text inside a tool result is still an
