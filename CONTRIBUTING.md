@@ -22,7 +22,7 @@ For AI agent behavioral rules, see [AGENTS.md](AGENTS.md).
 | `python3 bench/blind.py make` / `unblind` | Blind labelling of the benchmark pilot: `make` copies each run's renders under a random ID into `site/bench-blind/` with only the brief (no tool, script or check results) and writes the sheet `bench/labels-blind.csv` (`accept` yes/no/unsure, `reject_reason` as reason codes from `bench/rubric.md`, the one rubric for every human judgement here) and the key `bench/blind-key.csv` (don't open it until the sheet is filled); `unblind` copies the answers into `bench/labels.csv` |
 | `python3 -I bench/provenance.py --brief BRIEF.md --tool TOOL --model MODEL` | Prints one run's provenance JSON: harness commit and dirty flag, the brief's SHA-256, the tool version (for build123d also its OCP version), Claude Code version, model. `bench/run.sh` calls it per run; a missing tool prints `unavailable: …`, never an error |
 | `make check_docs` | Markdown lint — prints `SKIP` if `markdownlint-cli2` is not installed |
-| `make check_links` | Link check (needs network) — prints `SKIP` if `lychee` is not installed |
+| `make check_links` | Link check, `#section` anchors included (`lychee.toml`; needs network) — prints `SKIP` if `lychee` is not installed. `lychee --offline --no-progress '**/*.md'` checks only local links and anchors, fast |
 | `make help` | List all recipes |
 
 **Emergency fallback** (if make commands fail):
