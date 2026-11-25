@@ -12,6 +12,9 @@ Development workflow lives in [`../CONTRIBUTING.md`](../CONTRIBUTING.md), agent 
 | [`plans/001-v0.md`](plans/001-v0.md) | **Live** | The plan **and** the handoff — one file. Opens with a Handoff section (state, execution model, commands, non-negotiables, owner gates, traps), then Part I (§1-§5: goal, locked decisions, approach, architecture, roadmap), then Part II (§6-§13: executable detail, substrate traps, tests, reuse, risks, BIM preflight) |
 | [`plans/004-landscape-split.md`](plans/004-landscape-split.md) | **Live** | A short docs arc: split `reference/landscape.md` by topic, add an entry index, fold in an ECAD lead. Opens with its own handoff; three workers run in parallel worktrees |
 | [`reference/landscape.md`](reference/landscape.md) | Reference | Research evidence, competitors, backend choice, contribution stance, BIM/IFC toolchain (§3.7.1, verified 2026-10-06), AutoCAD and Revit logs as evidence (§3.7.2), adjacent entries ranked low (ArchLang, Claude for Manufacturing, MecAgent, Constor); not needed to build |
+| [`reference/landscape-adjacent.md`](reference/landscape-adjacent.md) | Reference | §3.2 of the landscape, split out: the adjacent projects, entries ranked low unless they change a plan decision |
+| [`reference/landscape-bim.md`](reference/landscape-bim.md) | Reference | §3.7 of the landscape, split out: BIM in three regimes, the IFC toolchain (§3.7.1), AutoCAD and Revit logs as evidence (§3.7.2) |
+| [`reference/landscape-videos.md`](reference/landscape-videos.md) | Reference | §3.8 of the landscape, split out: agent-CAD videos, transcripts and model repositories |
 | [`reference/vendor-ai.md`](reference/vendor-ai.md) | Reference | What Dassault, Siemens, Autodesk, Ansys and PTC shipped in AI (2025–26), how it is used, and what checks its output (nothing independent). Includes the Fusion Compute MCP route relevant to the benchmark |
 | [`reference/engineering-ai-map.md`](reference/engineering-ai-map.md) | Reference | The companies on Dirk Molitor's 2026-11-11 engineering-AI partnership map that this project deliberately does not cover, grouped by why, with verified homepages |
 | [`reference/benchmarking.md`](reference/benchmarking.md) | Reference | What the literature (ABC, BetterBench, construct-validity review, LiveCodeBench, CAD benchmarks) and Berkeley RDI ask of a benchmark, and where `bench/` stands; the evidence behind BENCH-3 and the 2026-11-13 re-gating |
@@ -58,5 +61,6 @@ live doc are not tracked: the current section is the answer, and git has the res
 | `plans/003-scaffold-and-preflight.md` | `plans/001-v0.md` §6-§7 | `git show f3a84b0:docs/plans/003-scaffold-and-preflight.md` |
 | `handoffs/001`, `002`, `003` | `handoffs/001-v0.md` | `git show f3a84b0:docs/handoffs/<name>.md` |
 | `plans/001` landscape + contribution stance | `reference/landscape.md` | — |
+| `reference/landscape.md` §3.2, §3.7, §3.8 (moved 2026-11-24) | `reference/landscape-adjacent.md`, `landscape-bim.md`, `landscape-videos.md` | `git show 97114bd:docs/reference/landscape.md` |
 | `plans/001` upstream issue log, deferred-design essays | `plans/001-v0.md` §9 · §5 and §6 · `reference/landscape.md` §4 | `git show c9c5d1a:docs/plans/001-v0.md` |
 | `handoffs/001-v0.md` | `plans/001-v0.md`, opening "Handoff" section | `git show 4bac16d:docs/handoffs/001-v0.md` |

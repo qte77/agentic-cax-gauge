@@ -69,7 +69,7 @@ to CADTests' requirement checks.
 
 ## 4. ArchLang's evaluation, the most developed one we found (read 2026-11-15)
 
-[ArchLang](https://github.com/ChanMeng666/archlang) (see [landscape §3.7](landscape.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate))
+[ArchLang](https://github.com/ChanMeng666/archlang) (see [landscape §3.7](landscape-bim.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate))
 measures whether a model writes valid, sound and intent-matching floor plans from a brief.
 This is read from its `eval/` and `dataset/` READMEs and `eval/results.md`. What it does that
 we don't yet do:

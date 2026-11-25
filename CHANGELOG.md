@@ -70,6 +70,11 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Documentation
 
+- **`reference/landscape.md` split by topic (plan 004, item A):** §3.2 (adjacent projects), §3.7
+  (BIM) and §3.8 (videos, transcripts and model repositories) moved word for word to
+  `landscape-adjacent.md`, `landscape-bim.md` and `landscape-videos.md`. The hub keeps each
+  heading with a one-line pointer, so existing `§3.x` references and anchors still resolve.
+  Three inbound anchor links now point at the new files; `docs/README.md` lists them.
 - **Plan 004 (owner 2026-11-24/25):** a short docs arc to split `reference/landscape.md` by
   topic, add an entry index and fold in an ECAD lead, with its own handoff and file map.
   `docs/README.md` lists it and no longer carries a stale doc count.
@@ -181,8 +186,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 - **Sample site regenerated with v0.3.0** (`make site`): all four reports gain the
   `preflight-only` style, the three fixture reports embed the current fixture script, the
-  renders are byte-identical, and the index footer now says v0.3.0, not v0.2.1. `make release_smoke` found nothing on 14 page
-  loads; a human still looks at the screenshots.
+  renders are byte-identical, and the index footer now says v0.3.0, not v0.2.1.
+  `make release_smoke` found nothing on 14 page loads; a human still looks at the screenshots.
 - **Link check also checks anchors** (`include_fragments = true` in `lychee.toml`): a link to
   a `#section` that no longer exists now fails. `https://docs.blender.org/api/current` is
   excluded, exact URL only, after CI's runner got 403 on it on four PRs; a local run confirmed
