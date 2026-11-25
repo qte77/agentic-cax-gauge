@@ -381,13 +381,15 @@ reports getting layout-ready schematics fast with almost no KiCad experience, fo
 designs, and predicts that Altium will become irrelevant. **What the vendors' own pages say:**
 
 - KiCad's developer docs say that schematics, boards and libraries use an s-expression text
-  format ([KiCad file-format docs][kicadsexpr]). True.
+  format ([KiCad file-format docs][kicadsexpr]). The plain-text part of the claim holds; how
+  well an LLM edits or reviews these files is not checked.
 - Altium's docs recommend saving in "SCH Binary Version 5.0" and "PCB Binary Version 6.0"
-  ([Altium saving docs][altiumsave]), so the native formats are binary. Whether they are
-  "closed" is not checked.
+  ([Altium saving docs][altiumsave]), so the recommended save formats are binary. We did not
+  read what the other options are, and whether the formats are "closed" is not checked.
 - Altium does ship AI agents, in its Altium 365 Requirements Portal ([Altium docs, updated
-  2026-11-20][altiumagentic]). We found no such feature for schematic or layout, but one
-  product page and one release page do not prove there is none. That claim is only partly
+  2026-11-20][altiumagentic]). We found no such feature for schematic or layout on the Altium
+  Designer product page or the Altium 365 what's-new page, but two pages do not prove there
+  is none. That claim is only partly
   checked.
 - The speed report can't be checked, and the prediction is the author's opinion. Both are
   recorded as the post's claims, not ours.
