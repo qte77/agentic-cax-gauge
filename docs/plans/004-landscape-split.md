@@ -113,7 +113,7 @@ text and not the stub. Heading text is kept, so the anchor slug is unchanged:
 **Other inbound links, no change:**
 
 - Anchor-less links to `landscape.md`, or links to `#4-upstream-contribution-stance`:
-  `README.md:111`, `docs/README.md:13,59,60`, `docs/plans/001-v0.md` (117, 237, 433, 438,
+  `README.md:111`, `docs/README.md:14,60,61`, `docs/plans/001-v0.md` (117, 237, 433, 438,
   470, 746, 786, 814), `docs/reference/{cae,vendor-ai,engineering-ai-map}.md`,
   `CHANGELOG.md:163,243`, `AGENT_LEARNINGS.md`.
 - About 60 prose references such as "landscape §3.2" in the plan, `CHANGELOG.md`,
