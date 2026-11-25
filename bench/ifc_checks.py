@@ -22,15 +22,19 @@ An absent bound reports `skip`; an unknown key or a malformed value is an error,
 - `joints: 1`: every connection's two ports lie within this many mm of each other.
 - `ends: x,y,z; x,y,z` with `ends_tol: 5`: the open ports sit at these points, one each,
   within the tolerance in mm.
-- `fall: IfcPipeSegment=0.015,0.025`: each element of the class falls between its two ports
-  (rise over horizontal run) within the window.
+- `fall: IfcPipeSegment=0.015,0.025`: each element of the class has a slope between its two
+  ports (height difference over horizontal run) within the window. The magnitude only: the
+  direction of fall is left to the `ends` bound.
 - `height: IfcOutlet=290,310`: the Z of each element's geometric centre, in mm.
 - `path_length: 3000,6000`: the run's length in mm, summed port to port over every element
-  that owns ports (each must own exactly two) plus the gaps at its connections.
+  of a class that owns ports anywhere in the model (each must own exactly two), plus the gaps
+  at its connections.
 - `no_clash: yes`: no distribution element intersects a wall, and at least one pair was tested.
 
 Every window is two-sided and inclusive. An empty model, or facts that are missing or broken,
-fail every declared bound.
+fail every declared bound. Broken includes ids that are empty or repeated, a port naming an
+unknown element, and a connection that joins a port to itself or to its own element, or reuses
+a port.
 
 **Facts** (JSON, millimetres, written by PR B's extractor):
 
@@ -134,8 +138,12 @@ def read_front_matter(brief: Path) -> dict[str, str]:
     fields: dict[str, str] = {}
     for line in parts[1].splitlines():
         key, sep, value = line.partition(":")
-        if sep:
-            fields[key.strip()] = value.strip()
+        if not line.strip():
+            continue
+        if not sep or key.strip() in fields:  # run.sh's field() would read these differently
+            msg = f"{brief}: a front-matter line is key: value, each key once: {line!r}"
+            raise BoundError(msg)
+        fields[key.strip()] = value.strip()
     return fields
 
 
@@ -164,8 +172,8 @@ def _window(text: str) -> Window:
 
 
 def _count(text: str) -> tuple[int, int]:
-    low, _, high = text.partition("..")
-    if not re.fullmatch(r"\d+", low) or (high and not re.fullmatch(r"\d+", high)):
+    low, dots, high = text.partition("..")
+    if not re.fullmatch(r"\d+", low) or (dots and not re.fullmatch(r"\d+", high)):
         msg = f"a count is n or lo..hi, non-negative: {text!r}"
         raise BoundError(msg)
     lo, hi = int(low), int(high or low)
@@ -274,6 +282,18 @@ def _records(raw: Mapping[str, object], key: str) -> list[Mapping[str, object]]:
     return cast("list[Mapping[str, object]]", items)
 
 
+def _ids(values: list[str], what: str) -> set[str]:
+    if not all(values) or len(set(values)) != len(values):
+        msg = f"facts: {what} ids must be non-empty and unique"
+        raise TypeError(msg)
+    return set(values)
+
+
+def _text(r: Mapping[str, object], key: str) -> str:
+    value = r.get(key)
+    return value if isinstance(value, str) else ""
+
+
 def _pairs(raw: Mapping[str, object], key: str, known: set[str]) -> tuple[tuple[str, str], ...]:
     value = raw.get(key)
     items = cast("list[object]", value) if isinstance(value, list) else None
@@ -294,8 +314,8 @@ def _element(r: Mapping[str, object]) -> Element:
     systems = r.get("systems")
     names = cast("list[object]", systems) if isinstance(systems, list) else []
     return Element(
-        id=str(r.get("id")),
-        ifc_class=str(r.get("ifc_class")),
+        id=_text(r, "id"),
+        ifc_class=_text(r, "ifc_class"),
         systems=frozenset(s for s in names if isinstance(s, str)),
         centre=_coords(r.get("centre")),
     )
@@ -311,11 +331,12 @@ def load_facts(raw: object) -> Facts:
     if not elements:
         msg = "facts: the model has no elements"
         raise TypeError(msg)
-    element_ids = {e.id for e in elements}
+    element_ids = _ids([e.id for e in elements], "element")
     ports = tuple(
-        Port(str(r.get("id")), str(r.get("element")), _coords(r.get("position")))
+        Port(_text(r, "id"), _text(r, "element"), _coords(r.get("position")))
         for r in _records(data, "ports")
     )
+    _ids([p.id for p in ports], "port")
     if any(p.element not in element_ids for p in ports):
         msg = "facts: a port names an unknown element"
         raise TypeError(msg)
@@ -323,13 +344,23 @@ def load_facts(raw: object) -> Facts:
     if not isinstance(tested, int) or isinstance(tested, bool) or tested < 0:
         msg = "facts: clash_pairs_tested is not a count"
         raise TypeError(msg)
+    connections = _pairs(data, "connections", {p.id for p in ports})
+    _joints_are_sound(connections, {p.id: p.element for p in ports})
     return Facts(
         elements=elements,
         ports=ports,
-        connections=_pairs(data, "connections", {p.id for p in ports}),
+        connections=connections,
         clash_pairs_tested=tested,
         clashes=_pairs(data, "clashes", element_ids),
     )
+
+
+def _joints_are_sound(connections: tuple[tuple[str, str], ...], owner: dict[str, str]) -> None:
+    """Each connection joins two different elements, and each port joins at most once."""
+    used = [pid for pair in connections for pid in pair]
+    if len(set(used)) != len(used) or any(owner[a] == owner[b] for a, b in connections):
+        msg = "facts: a port is connected twice, to itself, or within its own element"
+        raise TypeError(msg)
 
 
 # --- checks ---------------------------------------------------------------------------
@@ -455,8 +486,9 @@ def _check_height(facts: Facts, bound: dict[str, Window]) -> tuple[bool, str]:
 
 
 def _check_path_length(facts: Facts, bound: Window) -> tuple[bool, str]:
-    owners = sorted({p.element for p in facts.ports})
-    spans = [_two_ends(facts, e) for e in owners]
+    ported = {e.ifc_class for e in facts.elements if _ports_of(facts, e.id)}
+    on_run = sorted(e.id for e in facts.elements if e.ifc_class in ported)
+    spans = [_two_ends(facts, e) for e in on_run]
     if not spans or None in spans:
         return False, "every element on the run needs exactly two placed ports"
     where = {p.id: p.position for p in facts.ports}

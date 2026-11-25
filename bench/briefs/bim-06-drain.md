@@ -1,5 +1,5 @@
 ---
-envelope: 3004,111,171
+envelope: 3003,111,171
 elements: IfcPipeSegment=1
 systems: IfcPipeSegment=DRAINAGE
 ports: 2

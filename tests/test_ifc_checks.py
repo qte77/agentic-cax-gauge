@@ -12,6 +12,7 @@ import math
 import re
 import subprocess
 import sys
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
@@ -247,6 +248,53 @@ def test_a_port_naming_an_unknown_element_fails_every_declared_bound():
     assert set(_statuses("bim-05-water-pipe", facts).values()) == {FAIL, SKIP}
 
 
+def _all_ids(facts: dict, eid: str) -> dict:
+    for e in facts["elements"]:
+        e["id"] = eid
+    for p in facts["ports"]:
+        p["element"] = eid
+    return facts
+
+
+def _second_port_named(facts: dict, pid: str) -> dict:
+    facts["ports"][1]["id"] = pid
+    return facts
+
+
+def _connections(facts: dict, pairs: list[list[str]]) -> dict:
+    facts["connections"] = pairs
+    return facts
+
+
+@pytest.mark.parametrize(
+    "broken",
+    [
+        lambda f: _all_ids(f, "x"),  # duplicate element ids collapse the network into one
+        lambda f: _all_ids(f, ""),
+        lambda f: _second_port_named(f, f["ports"][0]["id"]),  # duplicate port ids
+        lambda f: _connections(f, [["e0b", "e0b"], ["e1b", "e2a"]]),  # a port to itself
+        lambda f: _connections(f, [["e0a", "e0b"], ["e1b", "e2a"]]),  # within one element
+        lambda f: _connections(f, [["e0b", "e1a"], ["e0b", "e1a"], ["e1b", "e2a"]]),  # twice
+        lambda f: _connections(f, [["e0b", "e1a"], ["e1a", "e2a"]]),  # a port in two joints
+    ],
+    ids=["dup-elements", "empty-ids", "dup-ports", "self", "same-element", "repeat", "reused"],
+)
+def test_inconsistent_facts_fail_every_declared_bound(broken: Callable[[dict], dict]):
+    facts = broken(_bim05())
+    assert set(_statuses("bim-05-water-pipe", facts).values()) == {FAIL, SKIP}
+
+
+def test_an_element_of_a_ported_class_without_ports_fails_the_path_length():
+    facts = _bim09()
+    facts["elements"].append(_el("loose", "IfcPipeSegment", ["DOMESTICCOLDWATER"]))
+    assert _statuses("bim-09-route-around-wall", facts)["path_length"] == FAIL
+
+
+def test_a_path_shorter_than_the_straight_line_fails():
+    facts = _chain([(0, 0, 1000), (2000, 0, 1000)], ["IfcPipeSegment"], "DOMESTICCOLDWATER")
+    assert _statuses("bim-09-route-around-wall", facts)["path_length"] == FAIL
+
+
 @pytest.mark.parametrize("bad", [math.nan, math.inf, None, True, "1", [0, 0]])
 def test_a_bad_coordinate_fails_the_checks_that_need_it(bad: object):
     facts = _bim05()
@@ -406,6 +454,18 @@ def test_a_pipe_moved_out_of_the_wall_avoids_the_clash_but_misses_its_ends():
 def test_a_malformed_bound_is_an_error(fields: dict[str, str]):
     with pytest.raises(BoundError):
         parse_bounds(fields)
+
+
+@pytest.mark.parametrize(
+    "front",
+    ["ports 6", "ports: 6\nports: 7", "elements: IfcWall=2.."],
+    ids=["no-colon", "repeated-key", "open-range"],
+)
+def test_a_malformed_front_matter_line_is_an_error(front: str, tmp_path: Path):
+    brief = tmp_path / "brief.md"
+    brief.write_text(f"---\n{front}\n---\n\nBounds: none\n")
+    with pytest.raises(BoundError):
+        parse_bounds(read_front_matter(brief))
 
 
 def test_preflight_keys_are_left_to_caxgauge():
