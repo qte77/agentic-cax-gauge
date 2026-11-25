@@ -83,6 +83,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Documentation
 
+- Plan §5 row **THEME** (owner 2026-11-25): brand tokens and dark mode for `report.html` and
+  the Pages index from an unedited committed copy of the brand kit's `eyerest.css`; waits for
+  the kit PR. Status colours, the viewer and the render PNGs are unchanged.
 - `CONTRIBUTING.md`: `make check_links` now says it checks `#section` anchors (#135), and
   names the fast offline run.
 - **Landscape §3.2: an ECAD file-format post (owner lead, 2026-11-25, ranked adjacent (low)).**
