@@ -99,13 +99,13 @@ prose such as "§3.7".
 heading text is kept, so the anchor slug is unchanged:
 
 - `docs/reference/benchmarking.md:72` → `landscape.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate`
-- `docs/plans/001-v0.md:268` and `:794` → `landscape.md#38-videos-transcripts-and-model-repositories--researched-2026-11-22`
+- `docs/plans/001-v0.md:271` and `:797` → `landscape.md#38-videos-transcripts-and-model-repositories--researched-2026-11-22`
 
 **Other inbound links, no change:**
 
 - Anchor-less links to `landscape.md`, or links to `#4-upstream-contribution-stance`:
-  `README.md:111`, `docs/README.md:13,59,60`, `docs/plans/001-v0.md` (114, 234, 430, 435,
-  467, 743, 783, 811), `docs/reference/{cae,vendor-ai,engineering-ai-map}.md`,
+  `README.md:111`, `docs/README.md:13,59,60`, `docs/plans/001-v0.md` (117, 237, 433, 438,
+  470, 746, 786, 814), `docs/reference/{cae,vendor-ai,engineering-ai-map}.md`,
   `CHANGELOG.md:156,228`, `AGENT_LEARNINGS.md`.
 - About 60 prose references such as "landscape §3.2" in the plan, `CHANGELOG.md`,
   `tests/test_bench_controls.py` (lines 20, 149, 157, 178, 188), `docs/reference/*` and
