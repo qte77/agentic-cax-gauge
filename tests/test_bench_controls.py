@@ -81,7 +81,8 @@ def _at_origin(part: trimesh.Trimesh) -> trimesh.Trimesh:
 
 
 def test_every_bounded_brief_is_covered():
-    # 18 CAD briefs, minus the open-design snap lid (envelope only), plus 4 BIM briefs.
+    # 18 CAD briefs, minus the open-design snap lid (envelope only), plus 4 BIM briefs; the
+    # plumbing and wiring briefs bim-05…09 are envelope-only too (tests/test_ifc_checks.py).
     assert len(BOUNDED) == 21
 
 
