@@ -70,6 +70,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Documentation
 
+- `CONTRIBUTING.md`: `make check_links` now says it checks `#section` anchors (#135), and
+  names the fast offline run.
 - **Landscape §3.2: an ECAD file-format post (owner lead, 2026-11-25, ranked adjacent (low)).**
   A LinkedIn post argues that an LLM can work on KiCad's plain-text files but not on Altium's
   binaries. Checked at the vendors' own pages: KiCad's text format is confirmed, Altium's
