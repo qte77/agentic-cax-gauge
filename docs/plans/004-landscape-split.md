@@ -3,12 +3,15 @@ title: Plan 004 — split landscape.md, add an entry index, fold in an ECAD lead
 purpose: A short docs arc; three parallel workers in separate worktrees
 created: 2026-11-24
 updated: 2026-11-25
-status: live — arc open
+status: closed — all three items shipped (#139, #140, #141)
 ---
 
 # Plan 004: split `landscape.md`, add an entry index, fold in an ECAD lead
 
 ## Handoff: read this first
+
+**Closed 2026-11-25.** A shipped in #139, B in #140 and C in #141; nothing is left open. The
+rest of this file is the record of how the arc ran.
 
 **State (2026-11-25):**
 
