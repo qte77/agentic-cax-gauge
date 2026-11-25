@@ -389,8 +389,7 @@ designs, and predicts that Altium will become irrelevant. **What the vendors' ow
 - Altium does ship AI agents, in its Altium 365 Requirements Portal ([Altium docs, updated
   2026-11-20][altiumagentic]). We found no such feature for schematic or layout on the Altium
   Designer product page or the Altium 365 what's-new page, but two pages do not prove there
-  is none. That claim is only partly
-  checked.
+  is none. That claim is only partly checked.
 - The speed report can't be checked, and the prediction is the author's opinion. Both are
   recorded as the post's claims, not ours.
 
