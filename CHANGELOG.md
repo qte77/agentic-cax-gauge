@@ -70,7 +70,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Documentation
 
-- **Plan 002 (owner 2026-11-24/25):** a short docs arc to split `reference/landscape.md` by
+- **Plan 004 (owner 2026-11-24/25):** a short docs arc to split `reference/landscape.md` by
   topic, add an entry index and fold in an ECAD lead, with its own handoff and file map.
   `docs/README.md` lists it and no longer carries a stale doc count.
 - **Rule `.claude/rules/session-tool-text.md`** (promoted from `AGENT_LEARNINGS.md` after

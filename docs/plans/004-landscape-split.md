@@ -1,12 +1,12 @@
 ---
-title: Plan 002 — split landscape.md, add an entry index, fold in an ECAD lead
+title: Plan 004 — split landscape.md, add an entry index, fold in an ECAD lead
 purpose: A short docs arc; three parallel workers in separate worktrees
 created: 2026-11-24
 updated: 2026-11-25
 status: live — arc open
 ---
 
-# Plan 002: split `landscape.md`, add an entry index, fold in an ECAD lead
+# Plan 004: split `landscape.md`, add an entry index, fold in an ECAD lead
 
 ## Handoff: read this first
 
@@ -25,6 +25,8 @@ status: live — arc open
 
 **What to do next, in order:**
 
+0. PR #138, which adds this plan, must be merged first; otherwise a worker's worktree off
+   `main` has no plan to read.
 1. Spawn W-A, W-B and W-C **in one message**, each with `isolation: "worktree"`. Each brief
    is §"Worker briefs" below, pasted in whole. W-C researches and drafts only, so it can run
    alongside A, which moves the section C's entry belongs in.
@@ -32,6 +34,8 @@ status: live — arc open
    Reviewers are read-only and use `git diff` and `git show` on the branch, so they need no
    worktree. Fix rounds: the worker's worktree, or this session, fixes. Check only the delta.
 3. Merge **A first**. Then bring B up to date with `main`, rerun B's checks and merge B.
+   When updating B, retarget the § cells of its §3.2, §3.7 and §3.8 rows to the new files, so
+   they land on the entry and not the hub's one-line stub.
    Then a fresh worktree off `main` (this session or a short worker) inserts W-C's reviewed
    draft into `landscape-adjacent.md`, adds its index row, and ships it as PR C.
 4. Strike the rows, close the arc (§"Closing"), and delete the branches, local and remote.
@@ -77,6 +81,10 @@ Strike a row in the same PR that ships it.
 
 ## Code, file and source map
 
+**Baseline:** `landscape.md` line numbers are as of `main` at `dfa5f37`, which #138 does not
+touch. Line numbers in other files are as of the merged #138. Where a line may drift, the
+entry also names its content.
+
 **`docs/reference/landscape.md`** on `main` at 2026-11-24: 1,649 lines and 191 `[label]:`
 definitions, each label unique. There are no in-file `](#…)` links; cross-references are
 prose such as "§3.7".
@@ -93,10 +101,11 @@ prose such as "§3.7".
 | 962–1260 | §3.7 BIM, incl. §3.7.1 (l.1144) and §3.7.2 (l.1170); 16 definitions mid-section | 299 | **moves** → `landscape-bim.md` |
 | 1261–1394 | §3.8 Videos, transcripts, model repos; 7 definitions mid-section | 134 | **moves** → `landscape-videos.md` |
 | 1395–1421 | §4 Upstream contribution stance | 27 | stays |
-| 1422–1649 | Sources: a table of 56 refs, then 168 definitions | 229 | stays; drop the definitions the hub stops using |
+| 1422–1649 | Sources: a table of 55 source rows, then 168 definitions | 228 | stays; drop the definitions the hub stops using |
 
-**Inbound links that carry an anchor into a moved section.** Retarget each to the new file;
-heading text is kept, so the anchor slug is unchanged:
+**Inbound links that carry an anchor into a moved section.** The hub keeps each moved `###`
+heading, so these still resolve. Retarget them to the new file anyway, so they land on the
+text and not the stub. Heading text is kept, so the anchor slug is unchanged:
 
 - `docs/reference/benchmarking.md:72` → `landscape.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate`
 - `docs/plans/001-v0.md:271` and `:797` → `landscape.md#38-videos-transcripts-and-model-repositories--researched-2026-11-22`
@@ -106,11 +115,12 @@ heading text is kept, so the anchor slug is unchanged:
 - Anchor-less links to `landscape.md`, or links to `#4-upstream-contribution-stance`:
   `README.md:111`, `docs/README.md:13,59,60`, `docs/plans/001-v0.md` (117, 237, 433, 438,
   470, 746, 786, 814), `docs/reference/{cae,vendor-ai,engineering-ai-map}.md`,
-  `CHANGELOG.md:156,228`, `AGENT_LEARNINGS.md`.
+  `CHANGELOG.md:163,243`, `AGENT_LEARNINGS.md`.
 - About 60 prose references such as "landscape §3.2" in the plan, `CHANGELOG.md`,
   `tests/test_bench_controls.py` (lines 20, 149, 157, 178, 188), `docs/reference/*` and
   `.claude/rules/verification-honesty.md`. These stay valid, because the hub keeps every
-  heading and points onward.
+  `###` heading and points onward. The `####` sub-headings (§3.7.1, §3.7.2 and §3.8's three)
+  move with their sections; no inbound link targets them.
 
 **Lint and link tooling** (reuse it; add nothing):
 
@@ -123,9 +133,9 @@ heading text is kept, so the anchor slug is unchanged:
 
 **Docs index:** `docs/README.md`:
 
-- line 13 is the landscape row; add one row per new file after it (PR 0 already dropped the
+- line 14 is the `reference/landscape.md` row; add one row per new file after it (PR 0 already dropped the
   stale doc count on lines 4–5, so there is no number to keep in sync);
-- lines 55–61 are the "Removed, and where to find it" table; add a row there for relocated
+- the "Removed, and where to find it" table starts at line 48 (rows 56–62); add a row there for relocated
   content.
 
 **Item C's lead** (read 2026-11-25 with polyfetch's browser tier; HTTP 200):
@@ -159,13 +169,14 @@ heading text is kept, so the anchor slug is unchanged:
   `[steenkenpost]`, all `/posts/` URLs. They pass CI's lychee. A `/feed/update/` URL is
   untested, so run lychee on it locally before relying on it.
 
-**CHANGELOG:** `CHANGELOG.md` line 181 is an over-long line from #137. Rewrap it in A.
+**CHANGELOG:** `CHANGELOG.md` line 184 ("renders are byte-identical, and the index footer…")
+is an over-long line from #137. Rewrap it in A.
 
 ## Worker briefs (paste each in full; each runs in its own worktree)
 
 ### W-A: pure move (branch `docs/landscape-split`)
 
-Goal: split `docs/reference/landscape.md` as item A of `docs/plans/002-landscape-split.md`.
+Goal: split `docs/reference/landscape.md` as item A of `docs/plans/004-landscape-split.md`.
 Read that plan's map first; don't re-map. Work only in your worktree. Commit as you go, and
 don't push.
 
@@ -180,20 +191,20 @@ don't push.
    - one line linking back to the hub;
    - then the section **word for word**, original heading included;
    - then exactly the `[label]:` definitions its text uses, copied from the hub's 191.
-3. **Hub:** under each moved heading, replace the body with one line: ``Moved 2026-11-24 to
+3. **Hub:** under each moved heading, replace the body, `####` sub-headings included, with one line: ``Moved 2026-11-24 to
    [`landscape-adjacent.md`](landscape-adjacent.md#32-adjacent-projects).`` Use the right
    file and slug for each. Drop the definitions the hub no longer uses. Keep a definition
    that is used in several files, copied into each.
 4. Retarget the three anchor links in the map. Update `docs/README.md`: rows and the
-   "Removed" row. Add a CHANGELOG entry under Unreleased → Documentation, and rewrap line
-   181. Strike row A in the plan.
+   "Removed" row. Add a CHANGELOG entry under Unreleased → Documentation, and rewrap the
+   over-long #137 line. Strike row A in the plan.
 5. Run every check in §"Verification", parity included, and put the outputs in your report.
    Report: files changed, parity results, check results, anything left unclear. No wording
    edits to moved text; if one seems needed, report it instead.
 
 ### W-B: entry index (branch `docs/landscape-index`)
 
-Goal: item B of `docs/plans/002-landscape-split.md`. Read the plan's map first. Work only in
+Goal: item B of `docs/plans/004-landscape-split.md`. Read the plan's map first. Work only in
 your worktree. Commit, don't push.
 
 1. In the hub's §3 intro (lines 67–71, after the ranking paragraph), add `### Entry index`:
@@ -212,7 +223,7 @@ your worktree. Commit, don't push.
 
 ### W-C: ECAD lead, research and draft (branch `docs/landscape-ecad-lead`)
 
-Goal: item C of `docs/plans/002-landscape-split.md`. Read the plan's "Item C's lead" map
+Goal: item C of `docs/plans/004-landscape-split.md`. Read the plan's "Item C's lead" map
 first. Work only in your worktree. **Don't edit `docs/reference/landscape*.md`**, because A is
 moving that text. Deliver a draft in your report.
 
@@ -258,7 +269,8 @@ moving that text. Deliver a draft in your report.
 When A, B and C are merged:
 
 - strike all three rows;
-- set `status: closed` here and remove the pointer line in `001-v0.md`'s opening status;
+- set `status: closed` here and remove the "Docs arc in flight" paragraph under
+  `001-v0.md`'s "# Handoff — read this first";
 - update the project-state memory;
 - give the owner a progress report: shipped, what's next, blocked.
 
