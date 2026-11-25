@@ -71,7 +71,7 @@ twice, not a CAx-specific artifact.
 
 ### Entry index
 
-This index lists the named entries in §3.1–§3.8, one row per table row or "Added" block. Dates and ranks are copied from each entry's own wording; "not stated" means the entry gives none. The entry text is the source, and this table points to it.
+This index lists the named entries in §3.1–§3.8, one row per table row or "Added" block. Dates and ranks are copied from each entry's own wording; "not stated" means the entry gives none. §3.8 is ranked adjacent (low) as a whole, in its intro, and that rank is not copied onto its rows. The entry text is the source, and this table points to it.
 
 | Entry | § | Added or read at source | Rank |
 |---|---|---|---|
@@ -108,7 +108,7 @@ This index lists the named entries in §3.1–§3.8, one row per table row or "A
 | CADmium | [§3.2](landscape-adjacent.md#32-adjacent-projects) | 2026-09-10 (sweep) | not stated |
 | OpenECAD | [§3.2](landscape-adjacent.md#32-adjacent-projects) | 2026-09-10 (sweep) | not stated |
 | GeoCAD | [§3.2](landscape-adjacent.md#32-adjacent-projects) | 2026-09-10 (sweep) | not stated |
-| LEAP71 (PicoGK) | [§3.2](landscape-adjacent.md#32-adjacent-projects) | 2026-09-19 (corrected 2026-11-11) | adjacent (low) ("Our reading" note only) |
+| LEAP71 (PicoGK) | [§3.2](landscape-adjacent.md#32-adjacent-projects) | 2026-09-19 (corrected 2026-11-11) | not stated (its "Our reading" note says adjacent (low)) |
 | Steenken case study, ABS housing (with his LinkedIn post) | [§3.2](landscape-adjacent.md#32-adjacent-projects) | 2026-10-09 | not stated |
 | Steenken's earlier run, Pi 4 housing in Fusion | [§3.2](landscape-adjacent.md#32-adjacent-projects) | 2026-10-11 | not stated |
 | SolidCraft | [§3.2](landscape-adjacent.md#32-adjacent-projects) | 2026-10-19 | not stated |
@@ -131,7 +131,7 @@ This index lists the named entries in §3.1–§3.8, one row per table row or "A
 | Kyrall | [§3.2](landscape-adjacent.md#32-adjacent-projects) | 2026-11-12 | not stated |
 | SOMA | [§3.2](landscape-adjacent.md#32-adjacent-projects) | 2026-11-23 | adjacent (low) |
 | Agentic AI in Engineering and Manufacturing (MIT-funded interview study) | [§3.2](landscape-adjacent.md#32-adjacent-projects) | 2026-11-23 | adjacent (low) |
-| matchline | [§3.2](landscape-adjacent.md#32-adjacent-projects) | 2026-11-23 | adjacent (low) as a tool; changes a positioning claim |
+| matchline | [§3.2](landscape-adjacent.md#32-adjacent-projects) | 2026-11-23 | adjacent (low) as a tool, but it changes a positioning claim |
 | Solvaix | [§3.2](landscape-adjacent.md#32-adjacent-projects) | 2026-11-23 | adjacent (low) |
 | earthtojake/text-to-cad | [§3.3](#33-earthtojaketext-to-cad--the-largest-adjacent-project) | 2026-07-20 (analysed; figures re-verified 2026-07-25) | not stated |
 | jdilla1277/agentcad (closest on thesis) | [§3.4](#34-jdilla1277agentcad--the-closest-on-thesis) | 2026-07-25 (found by sweep) | not stated |
@@ -157,29 +157,29 @@ This index lists the named entries in §3.1–§3.8, one row per table row or "A
 | Free alternatives to Revit for an agent BIM track (IfcOpenShell, ifc-lite, others) | [§3.7](landscape-bim.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-26 | not stated |
 | Constor | [§3.7](landscape-bim.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-11-14 | adjacent (low) |
 | ArchLang | [§3.7](landscape-bim.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-11-15 | adjacent (low) |
-| IfcOpenShell 0.9.0 + trimesh | [§3.7](landscape-bim.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (verified) | not stated |
-| ifcopenshell.validate, IfcClash, IfcTester | [§3.7](landscape-bim.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (verified) | not stated |
-| ifcopenshell.util.shape (quantity takeoff) | [§3.7](landscape-bim.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (verified) | not stated |
-| Licences: ifcopenshell, ifcclash, ifctester, bcf-client | [§3.7](landscape-bim.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (verified) | not stated |
-| trimesh | [§3.7](landscape-bim.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (verified) | not stated |
-| IDS 1.0 (buildingSMART) | [§3.7](landscape-bim.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (verified) | not stated |
-| buildingSMART Validation Service | [§3.7](landscape-bim.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (verified) | not stated |
-| Autodesk/revit-ifc | [§3.7](landscape-bim.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (verified) | not stated |
-| APS Model Derivative (.rvt to IFC) | [§3.7](landscape-bim.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (verified) | not stated |
-| web-ifc-three | [§3.7](landscape-bim.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (verified) | not stated |
-| APS pricing | [§3.7](landscape-bim.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (verified) | not stated |
-| CODE-ACCORD | [§3.7](landscape-bim.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (verified) | not stated |
+| IfcOpenShell 0.9.0 + trimesh | [§3.7](landscape-bim.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (section heading) | not stated |
+| ifcopenshell.validate, IfcClash, IfcTester | [§3.7](landscape-bim.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (section heading) | not stated |
+| ifcopenshell.util.shape (quantity takeoff) | [§3.7](landscape-bim.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (section heading) | not stated |
+| Licences: ifcopenshell, ifcclash, ifctester, bcf-client | [§3.7](landscape-bim.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (section heading) | not stated |
+| trimesh | [§3.7](landscape-bim.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (section heading) | not stated |
+| IDS 1.0 (buildingSMART) | [§3.7](landscape-bim.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (section heading) | not stated |
+| buildingSMART Validation Service | [§3.7](landscape-bim.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (section heading) | not stated |
+| Autodesk/revit-ifc | [§3.7](landscape-bim.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (section heading) | not stated |
+| APS Model Derivative (.rvt to IFC) | [§3.7](landscape-bim.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (section heading) | not stated |
+| web-ifc-three | [§3.7](landscape-bim.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (section heading) | not stated |
+| APS pricing | [§3.7](landscape-bim.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (section heading) | not stated |
+| CODE-ACCORD | [§3.7](landscape-bim.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-10-06 (section heading) | not stated |
 | AutoCAD and Revit logs as evidence (§3.7.2) | [§3.7](landscape-bim.md#37-bim--three-regimes-ifc-adopted-behind-a-data-gate) | 2026-11-15 (researched) | adjacent (low) |
-| Agent-CAD videos on YouTube | [§3.8](landscape-videos.md#38-videos-transcripts-and-model-repositories--researched-2026-11-22) | 2026-11-22 (section heading) | adjacent (low) (section-level) |
-| YouTube Data API (captions) | [§3.8](landscape-videos.md#38-videos-transcripts-and-model-repositories--researched-2026-11-22) | 2026-11-22 (section heading) | adjacent (low) (section-level) |
-| youtube-transcript-api | [§3.8](landscape-videos.md#38-videos-transcripts-and-model-repositories--researched-2026-11-22) | 2026-11-22 (section heading) | adjacent (low) (section-level) |
-| Supadata and SearchAPI.io | [§3.8](landscape-videos.md#38-videos-transcripts-and-model-repositories--researched-2026-11-22) | 2026-11-22 (section heading) | adjacent (low) (section-level) |
-| media.ccc.de | [§3.8](landscape-videos.md#38-videos-transcripts-and-model-repositories--researched-2026-11-22) | 2026-11-22 (section heading) | adjacent (low) (section-level) |
-| Thingi10K | [§3.8](landscape-videos.md#38-videos-transcripts-and-model-repositories--researched-2026-11-22) | 2026-11-22 (section heading) | adjacent (low) (section-level) |
-| Thingiverse | [§3.8](landscape-videos.md#38-videos-transcripts-and-model-repositories--researched-2026-11-22) | 2026-11-22 (section heading) | adjacent (low) (section-level) |
-| Printables | [§3.8](landscape-videos.md#38-videos-transcripts-and-model-repositories--researched-2026-11-22) | 2026-11-22 (section heading) | adjacent (low) (section-level) |
-| Fusion 360 Gallery | [§3.8](landscape-videos.md#38-videos-transcripts-and-model-repositories--researched-2026-11-22) | 2026-11-22 (section heading) | adjacent (low) (section-level) |
-| QuickTube | [§3.8](landscape-videos.md#38-videos-transcripts-and-model-repositories--researched-2026-11-22) | 2026-11-22 (tried) | adjacent (low) (section-level) |
+| Agent-CAD videos on YouTube | [§3.8](landscape-videos.md#38-videos-transcripts-and-model-repositories--researched-2026-11-22) | 2026-11-22 (section heading) | not stated |
+| YouTube Data API (captions) | [§3.8](landscape-videos.md#38-videos-transcripts-and-model-repositories--researched-2026-11-22) | 2026-11-22 (section heading) | not stated |
+| youtube-transcript-api | [§3.8](landscape-videos.md#38-videos-transcripts-and-model-repositories--researched-2026-11-22) | 2026-11-22 (section heading) | not stated |
+| Supadata and SearchAPI.io | [§3.8](landscape-videos.md#38-videos-transcripts-and-model-repositories--researched-2026-11-22) | 2026-11-22 (section heading) | not stated |
+| media.ccc.de | [§3.8](landscape-videos.md#38-videos-transcripts-and-model-repositories--researched-2026-11-22) | 2026-11-22 (section heading) | not stated |
+| Thingi10K | [§3.8](landscape-videos.md#38-videos-transcripts-and-model-repositories--researched-2026-11-22) | 2026-11-22 (section heading) | not stated |
+| Thingiverse | [§3.8](landscape-videos.md#38-videos-transcripts-and-model-repositories--researched-2026-11-22) | 2026-11-22 (section heading) | not stated |
+| Printables | [§3.8](landscape-videos.md#38-videos-transcripts-and-model-repositories--researched-2026-11-22) | 2026-11-22 (section heading) | not stated |
+| Fusion 360 Gallery | [§3.8](landscape-videos.md#38-videos-transcripts-and-model-repositories--researched-2026-11-22) | 2026-11-22 (section heading) | not stated |
+| QuickTube | [§3.8](landscape-videos.md#38-videos-transcripts-and-model-repositories--researched-2026-11-22) | 2026-11-22 (tried) | not stated |
 
 ### 3.0 Sweep coverage — what was searched, and what was not
 
