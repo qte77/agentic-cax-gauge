@@ -70,6 +70,11 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Documentation
 
+- **Landscape §3.2: an ECAD file-format post (owner lead, 2026-11-25, ranked adjacent (low)).**
+  A LinkedIn post argues that an LLM can work on KiCad's plain-text files but not on Altium's
+  binaries. Checked at the vendors' own pages: KiCad's text format is confirmed, Altium's
+  recommended save formats are binary, and Altium's AI agents found so far are in requirements, not
+  schematic or layout (not proven absent). It changes no plan decision.
 - **Landscape entry index (plan 004, item B):** `reference/landscape.md` §3 now opens with a
   table of 105 named entries (§3.1–§3.8): entry, section link, date added or read at source,
   and rank. Each date and rank is copied from the entry's own wording; "not stated" where the

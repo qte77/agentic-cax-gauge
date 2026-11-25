@@ -371,6 +371,35 @@ browser, which Autodesk's bot block lets through). **Verdict:** a PCB track is f
 DRC/ERC exit code as the deterministic check, the exported STL through the existing
 preflight (e.g. board-in-enclosure fit). Not started: no trigger yet.
 
+**Added 2026-11-25 (owner lead) — a LinkedIn post arguing that the file format decides whether
+an LLM can work in an ECAD tool.** [The post][aklivanh] (Eyal Aklivanh, 2026-11-24) was read at
+source on 2026-11-25, and each of its claims was then checked against the vendors' own pages.
+Its argument: what decides an ECAD tool's future is whether an LLM can work on its design
+files. KiCad's files are plain text, so an LLM can read, edit and review them like code.
+Altium's are closed binaries, with no LLM integration in schematic or layout. The author
+reports getting layout-ready schematics fast with almost no KiCad experience, for simple
+designs, and predicts that Altium will become irrelevant. **What the vendors' own pages say:**
+
+- KiCad's developer docs say that schematics, boards and libraries use an s-expression text
+  format ([KiCad file-format docs][kicadsexpr]). The plain-text part of the claim holds; how
+  well an LLM edits or reviews these files is not checked.
+- Altium's docs recommend saving in "SCH Binary Version 5.0" and "PCB Binary Version 6.0"
+  ([Altium saving docs][altiumsave]), so the recommended save formats are binary. We did not
+  read what the other options are, and whether the formats are "closed" is not checked.
+- Altium does ship AI agents, in its Altium 365 Requirements Portal ([Altium docs, updated
+  2026-11-20][altiumagentic]). We found no such feature for schematic or layout on the Altium
+  Designer product page or the Altium 365 what's-new page, but two pages do not prove there
+  is none. That claim is only partly checked.
+- The speed report can't be checked, and the prediction is the author's opinion. Both are
+  recorded as the post's claims, not ours.
+
+**Our reading:** this supports KiCad as the ECAD an agent can work with, which we had already
+concluded from its CLI: [`kicad-cli`][kicadcli] runs `sch erc` and `pcb drc` and reports
+through exit codes. The post names no check. Reviewing files "like code" is not ERC or DRC, and
+a file an LLM can edit tells us nothing about whether the design is correct. It changes nothing
+for this project: the PCB track is "Not started: no trigger yet", and a post is not a trigger,
+because the owner decides. Rank: adjacent (low).
+
 **Added 2026-11-12 — [BenchCAD 2.0][benchcad2], a benchmark for exactly this question,
 scored differently.** Verified directly against its two GitHub repos — the scoring harness
 [BenchCAD-org/benchcad-2-main][benchcad2] and the data pipeline [BenchCAD-org/benchcad-2][benchcad2data]
@@ -701,3 +730,7 @@ as sufficient. **Effect on the plan:** none.
 [ml1406]: https://github.com/anchapin/matchline/issues/1406
 [mlgate]: https://raw.githubusercontent.com/anchapin/matchline/6a76993f39c533c8c92fc7fcbeba4e5d1f138f21/bem/export_gate.py
 [mlrepair]: https://raw.githubusercontent.com/anchapin/matchline/6a76993f39c533c8c92fc7fcbeba4e5d1f138f21/bem/repair_loop.py
+[aklivanh]: https://www.linkedin.com/posts/aklivanh_im-sorry-to-say-it-but-i-think-altium-is-activity-7531101254761103360-bhWM
+[kicadsexpr]: https://dev-docs.kicad.org/en/file-formats/sexpr-intro/index.html
+[altiumsave]: https://www.altium.com/documentation/altium-designer/saving-projects-documents
+[altiumagentic]: https://www.altium.com/documentation/altium-365/requirements-portal/agentic-requirements-engineering
