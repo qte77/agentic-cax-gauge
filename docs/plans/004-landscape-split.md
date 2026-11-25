@@ -73,7 +73,7 @@ status: live — arc open
 
 | ID | Item | Gate | Done-when |
 |---|---|---|---|
-| A | Move §3.2, §3.7 and §3.8 out of `landscape.md` into three sibling files, a pure move | agent | Every check in §"Verification" passes; PR merged |
+| ~~A~~ | ~~Move §3.2, §3.7 and §3.8 out of `landscape.md` into three sibling files, a pure move~~ | agent | Shipped on branch `docs/landscape-split` (PR number to add at merge) |
 | B | Entry index table in the hub's §3 intro | agent | Every row's date and rank traced to entry text; checks pass; PR merged |
 | C | Fold in the LinkedIn ECAD post (2026-11-24) as a §3.2 entry after "PCB beyond Trace" | agent | Each claim checked at source or marked unchecked; entry in our own words; index row; checks pass; PR merged after A and B |
 
