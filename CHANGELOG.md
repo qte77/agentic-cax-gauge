@@ -8,6 +8,19 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Added
 
+- **Plumbing and wiring briefs with their IFC-level classifier (plan §5 BENCH-MEP, PR A).**
+  Briefs `bim-05` cold-water pipe with an elbow, `bim-06` drain laid to a fall, `bim-07`
+  junction box feeding two outlets by conduit, `bim-08` wall with a pipe and a conduit through
+  its openings, and `bim-09` routing a pipe around a wall (constraints only, not the path).
+  Their IFC-level bounds sit in front matter: element counts, system membership, ports, open
+  ports, connected networks, joint gaps, end points, fall and height windows, path length,
+  and no clash with walls. `bench/ifc_checks.py` decides them in pure Python from a facts
+  JSON (schema in its docstring), so CI tests every rule with hand-written facts: a reference
+  model per brief, a known-bad model per bound, and missing, empty or broken facts failing
+  every declared bound. An unknown or malformed bound is an error, never a `SKIP`. Envelope
+  only for the mesh check: thin pipes get no volume band, so volume reports `SKIP`. **Not
+  enforced yet:** the facts extractor and the `bench/run.sh` wiring are PR B, so until then a
+  run of these briefs scores only the envelope. Nothing has run.
 - **`make release_smoke`**, run before a minor or major tag: loads `site/index.html` and a
   `--source` report on seven presets (desktop 1280×800; iPhone 13, Pixel 7 and iPad Mini, each
   portrait and landscape) through polyfetch's Chromium (`scripts/release_smoke.py`). It
