@@ -47,7 +47,7 @@ link-mode = "copy"
 [tool.ruff]
 target-version = "py312"
 line-length = 100
-src = ["src", "scripts", "tests"]
+src = ["src", "scripts", "bench", "tests"]
 # site/ holds generated reports and the benchmark agents' scripts, kept verbatim as a record.
 extend-exclude = ["site"]
 
@@ -78,7 +78,7 @@ ignore = ["src/caxgauge/verify/probes", "scripts/release_smoke_probe.py"]
 reportMissingImports = "error"
 
 [tool.pytest.ini_options]
-pythonpath = ["src", "scripts"]
+pythonpath = ["src", "scripts", "bench"]
 testpaths = ["tests"]
 addopts = "--strict-markers -m 'not cad and not browser'"
 markers = [
