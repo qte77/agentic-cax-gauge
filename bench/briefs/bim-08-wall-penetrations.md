@@ -29,6 +29,8 @@ DOMESTICCOLDWATER and the conduit to one whose type is ELECTRICAL.
 Bounds: element counts; system membership; 4 ports, all open, in two separate networks; no
 clash between the pipe or the conduit and the voided wall, paired with the 4 open ports within
 5 mm of the declared ends (a pipe moved clear of the wall avoids the clash but misses its
-ends). Envelope = 4000 × 1200 × 3000 mm with 1 mm margin. No volume band (volume reports
-`SKIP`). The IFC-level bounds are decided by `bench/ifc_checks.py` (plan §5 BENCH-MEP); until
-the extractor is wired (PR B), only the envelope is scored.
+ends). Blind spot: the openings' sizes and positions are not checked as bounds; an opening
+the pipe or conduit touches or misses shows as a clash, and the render shows the rest. Envelope = 4000 × 1200 × 3000 mm with 1 mm margin. No volume band (volume reports
+`SKIP`). The IFC-level bounds are decided by `bench/ifc_checks.py` from the facts
+`bench/ifc_facts.py` measures on the agent's IFC (plan §5 BENCH-MEP); touching the wall counts
+as a clash.

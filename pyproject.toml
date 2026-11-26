@@ -80,10 +80,11 @@ reportMissingImports = "error"
 [tool.pytest.ini_options]
 pythonpath = ["src", "scripts", "bench"]
 testpaths = ["tests"]
-addopts = "--strict-markers -m 'not cad and not browser'"
+addopts = "--strict-markers -m 'not cad and not browser and not ifc'"
 markers = [
     "cad: tests requiring build123d (uv sync --extra cad)",
     "browser: tests requiring polyfetch + Chromium",
+    "ifc: tests requiring IfcOpenShell, not a package dependency (make test_ifc)",
 ]
 
 [tool.coverage.run]

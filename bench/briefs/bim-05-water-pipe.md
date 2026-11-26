@@ -27,5 +27,5 @@ connected ports within 1 mm of each other; the 2 open ports within 5 mm of the d
 Envelope = the run's extents (2016 × 1516 × 32 mm: the centreline's extents plus the 16 mm
 radius where the pipe sticks out past them) with 1 mm margin. No volume band: a thin pipe's
 volume depends on the mesh more than on the model, so volume reports `SKIP`. The IFC-level
-bounds are decided by `bench/ifc_checks.py` from facts measured on the agent's IFC (plan §5
-BENCH-MEP); until the extractor is wired (PR B), only the envelope is scored.
+bounds are decided by `bench/ifc_checks.py` from the facts `bench/ifc_facts.py` measures on
+the agent's IFC (plan §5 BENCH-MEP).

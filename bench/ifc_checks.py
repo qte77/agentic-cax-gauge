@@ -1,10 +1,10 @@
 """Decide the IFC-level bounds of the plumbing and wiring briefs (plan §5 BENCH-MEP).
 
-Usage: python3 -I bench/ifc_checks.py BRIEF.md FACTS.json
+Usage: uv run python -I bench/ifc_checks.py BRIEF.md FACTS.json
 
 Pure Python, standard library only, so CI tests every rule with hand-written facts. It never
-opens an IFC file: `bench/ifc_facts.py` (PR B, IfcOpenShell) measures the model and writes the
-facts; this module only decides. It prints one result per check as JSON and exits 0 when no
+opens an IFC file: `bench/ifc_facts.py` (IfcOpenShell) measures the model and writes the facts;
+this module only decides. It prints one result per check as JSON and exits 0 when no
 check failed, which is necessary, not sufficient: the render and the human decide. Exit 1
 when a check failed, including when the facts are missing or unreadable. Exit 2 when the
 brief declares a bound this module cannot read, so nothing was checked.
@@ -29,14 +29,15 @@ An absent bound reports `skip`; an unknown key or a malformed value is an error,
 - `path_length: 3000,6000`: the run's length in mm, summed port to port over every element
   of a class that owns ports anywhere in the model (each must own exactly two), plus the gaps
   at its connections.
-- `no_clash: yes`: no distribution element intersects a wall, and at least one pair was tested.
+- `no_clash: yes`: no distribution element intersects, touches, lies inside or encloses a
+  wall, and at least one pair was tested.
 
 Every window is two-sided and inclusive. An empty model, or facts that are missing or broken,
 fail every declared bound. Broken includes ids that are empty or repeated, a port naming an
 unknown element, and a connection that joins a port to itself or to its own element, or reuses
 a port.
 
-**Facts** (JSON, millimetres, written by PR B's extractor):
+**Facts** (JSON, millimetres, written by `bench/ifc_facts.py`):
 
     {"elements": [{"id": str, "ifc_class": str, "systems": [str],
                    "centre": [x, y, z] | null}],

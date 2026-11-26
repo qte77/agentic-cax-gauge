@@ -2,7 +2,8 @@
 # Re-score benchmark runs with the render, locally. Runs made in the Fly sandbox are scored
 # preflight-only (no browser there); this reruns `caxgauge check` on each run's part.stl with
 # its brief's bounds and the four-view render, and writes the new verdict into that run's
-# row of site/bench/runs.tsv (the last row for that brief/tool/run). Reads only STL data —
+# row of site/bench/runs.tsv (the last row for that brief/tool/run), after deciding the
+# brief's IFC-level bounds again from the run's saved facts. Reads only STL and JSON data —
 # runs no model code.
 #
 # Usage: bench/rescore.sh [RUN_GLOB]     e.g. bench/rescore.sh 'bim-*'
@@ -48,6 +49,15 @@ for out in "$repo"/site/bench/${1:-*}/; do
 	1) verdict=fail ;;
 	3) verdict=preflight-only ;;
 	*) verdict="error-exit-$rc" ;;
+	esac
+	# The IFC-level bounds again, from the facts the run saved (pure Python, no IFC opened).
+	ifc_rc=0
+	uv run --directory "$repo" python -I "$repo/bench/ifc_checks.py" "$brief" "$out/ifc_facts.json" \
+		> "$out/ifc_checks.json" || ifc_rc=$?
+	case "$ifc_rc" in  # same merge as run.sh
+	0) ;;
+	1) if [ "$verdict" = review ] || [ "$verdict" = preflight-only ]; then verdict=fail; fi ;;
+	*) [[ "$verdict" == error-* ]] || verdict="error-ifc-checks-exit-$ifc_rc" ;;
 	esac
 	set_verdict "${run%-*-*}" "$tool" "$n" "$verdict"
 done

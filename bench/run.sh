@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 # CAD-generation benchmark pilot (plan §5 BENCH). For each brief × tool × run: an agent
 # (`claude -p`) writes a CAD script and exports part.stl in a clean temp dir; then
-# `caxgauge check` scores it with the brief's pre-declared bounds into site/bench/. No model
-# judges anything — the human reviews the renders afterwards.
+# `caxgauge check` scores it with the brief's pre-declared bounds into site/bench/, and
+# bench/ifc_checks.py decides the brief's IFC-level bounds, if any, from the facts
+# bench/ifc_facts.py measures on part.ifc. No model judges anything — the human reviews the
+# renders afterwards.
 #
 # Usage: bench/run.sh [BRIEF_GLOB] [TOOLS] [RUNS]
 #   e.g. bench/run.sh '01-*' build123d 1        # dry run
@@ -97,6 +99,21 @@ for brief in "$repo"/bench/briefs/$brief_glob.md; do
 				uv run --no-project --with ifcopenshell --with trimesh python "$repo/bench/ifc_to_stl.py" \
 					"$work/part.ifc" "$work/part.stl" || true
 			fi
+			# IFC-level bounds (plan §5 BENCH-MEP), decided for every run: a brief that declares them
+			# fails them all when there are no facts, whatever the tool or the extractor did. The
+			# facts go to a directory made after the agent has exited, never to $work, so no file
+			# the agent left there can stand in for them.
+			facts="$(mktemp -d "$tmp/ifc-XXXXXX")"
+			if [ -s "$work/part.ifc" ]; then
+				uv run --no-project --with ifcopenshell==0.9.0.post1 python -I "$repo/bench/ifc_facts.py" \
+					"$work/part.ifc" "$facts/ifc_facts.json" || echo "run.sh: ifc_facts wrote no facts"
+			fi
+			ifc_rc=0
+			uv run --directory "$repo" python -I "$repo/bench/ifc_checks.py" "$brief" "$facts/ifc_facts.json" \
+				> "$facts/ifc_checks.json" || ifc_rc=$?
+			rm -f "$out/ifc_facts.json" "$out/ifc_checks.json"  # $out is reused across rounds
+			cp "$facts"/ifc_*.json "$out/"
+			rm -rf "$facts"
 			cost="$(python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print(d.get("total_cost_usd", 0))' "$out/run.json" 2>/dev/null || echo 0)"
 			turns="$(python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print(d.get("num_turns", ""))' "$out/run.json" 2>/dev/null || echo)"
 			if [ -s "$work/part.stl" ]; then
@@ -115,6 +132,11 @@ for brief in "$repo"/bench/briefs/$brief_glob.md; do
 				1) verdict=fail ;;
 				3) verdict=preflight-only ;;  # BENCH_NO_RENDER=1: no render, nothing to review
 				*) verdict="error-exit-$rc" ;;
+				esac
+				case "$ifc_rc" in  # a failed IFC-level bound fails the run; 2 = unreadable brief, or uv failed
+				0) ;;
+				1) if [ "$verdict" = review ] || [ "$verdict" = preflight-only ]; then verdict=fail; fi ;;
+				*) [[ "$verdict" == error-* ]] || verdict="error-ifc-checks-exit-$ifc_rc" ;;  # first error wins
 				esac
 				stl=yes
 			else

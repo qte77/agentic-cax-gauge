@@ -23,5 +23,5 @@ Bounds: one segment in a DRAINAGE system; 2 ports, both open, within 5 mm of the
 ends; a fall between 1.5 % and 2.5 % (two-sided around the stated 2 %: too flat and too steep
 both fail). Envelope = the pipe's extents (about 3002.2 × 110 × 170.0 mm: the slope tilts the
 end faces by 1.1 mm along X) with about 1 mm margin. No volume band (volume reports `SKIP`).
-The IFC-level bounds are decided by `bench/ifc_checks.py` (plan §5 BENCH-MEP); until the
-extractor is wired (PR B), only the envelope is scored.
+The IFC-level bounds are decided by `bench/ifc_checks.py` from the facts `bench/ifc_facts.py`
+measures on the agent's IFC (plan §5 BENCH-MEP).

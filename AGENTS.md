@@ -62,7 +62,7 @@ If below threshold: gather more context or escalate to AGENT_REQUESTS.md.
 
 - Use `make` commands (document deviations)
 - TDD: write the failing test first, then the minimal implementation
-- Tag tool-dependent tests `@pytest.mark.cad` / `@pytest.mark.browser`
+- Tag tool-dependent tests `@pytest.mark.cad` / `@pytest.mark.browser` / `@pytest.mark.ifc`
 
 **Post-task:**
 
