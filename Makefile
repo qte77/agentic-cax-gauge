@@ -58,7 +58,7 @@ lint: ## Check formatting + lint (fails on issues, does not fix)
 type: ## Run pyright (strict) type checking
 	uv run pyright src scripts $(PYRIGHT_QUIET)
 
-test: ## Run tests (cad/browser-marked tests excluded by default)
+test: ## Run tests (cad/browser/ifc-marked tests excluded by default)
 	uv run pytest $(PYTEST_QUIET)
 
 test_cov: ## Run tests with coverage report
@@ -76,8 +76,8 @@ test_browser: ## Run browser-marked tests (real render); needs CAXGAUGE_POLYFETC
 # import check first, so a missing library fails here instead of skipping every test quietly.
 IFC_WITH := --with ifcopenshell==0.9.0.post1
 test_ifc: ## Run ifc-marked tests (bench/ifc_facts.py on IfcOpenShell-built models)
-	uv run $(IFC_WITH) python -c "import ifcopenshell"
-	uv run $(IFC_WITH) pytest -m ifc $(PYTEST_QUIET)
+	uv run $(IFC_WITH) python -c "import ifcopenshell" && \
+		uv run $(IFC_WITH) pytest -m ifc $(PYTEST_QUIET)
 
 check_complexity: ## Check cognitive complexity (max 15/function)
 	uv run complexipy src/caxgauge/ --max-complexity-allowed 15

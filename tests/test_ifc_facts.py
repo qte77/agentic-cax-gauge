@@ -309,6 +309,28 @@ def test_an_element_wholly_inside_a_wall_clashes(tmp_path: Path):
     assert len(facts["clashes"]) == 1
 
 
+def test_a_buried_item_of_a_two_item_element_clashes(tmp_path: Path):
+    model, _ = bim08()
+    fitting = model.box(FIT, (2000, -300, 1500), (2050, -250, 1550), "BEND")  # clear of the wall
+    buried = ifcopenshell.api.geometry.add_wall_representation(  # Y 50..100, inside the wall
+        model.file, context=model.body, length=0.05, thickness=0.05, height=0.05, offset=0.35
+    )
+    (body,) = fitting.Representation.Representations
+    body.Items = (*body.Items, *buried.Items)
+    status, facts = _clash(model, tmp_path)
+    assert status == FAIL
+    assert [pair[0] for pair in facts["clashes"]] == [f"#{fitting.id()}"]
+
+
+def test_a_flow_element_enclosing_a_wall_clashes(tmp_path: Path):
+    model = Model("MILLI")
+    wall = model.wall((1000, 0, 0), (1100, 100, 100))
+    fitting = model.box(FIT, (900, -100, -100), (1200, 200, 200), "BEND")
+    facts = _measure(model, tmp_path)
+    assert facts["clash_pairs_tested"] == 1
+    assert facts["clashes"] == [[f"#{fitting.id()}", f"#{wall.id()}"]]
+
+
 def test_a_pipe_without_a_body_leaves_the_clash_untested(tmp_path: Path):
     model, pipe = bim08(openings=False)
     pipe.Representation = None  # the pipe would cross the solid wall, if it had a body
@@ -355,6 +377,15 @@ def test_a_port_on_no_element_fails_every_declared_bound(tmp_path: Path):
     facts = _measure(model, tmp_path)
     assert "" in [p["element"] for p in facts["ports"]]
     assert {s for k, s in _status("bim-06", facts).items() if k in _brief("bim-06")} == {FAIL}
+
+
+def test_a_port_on_a_type_object_is_not_reported(tmp_path: Path):
+    model = bim06("MILLI")
+    pipe_type = ifcopenshell.api.root.create_entity(model.file, ifc_class="IfcPipeSegmentType")
+    ifcopenshell.api.system.add_port(model.file, element=pipe_type)
+    facts = _measure(model, tmp_path)
+    assert len(facts["ports"]) == 2  # the two on the placed segment
+    assert {s for k, s in _status("bim-06", facts).items() if k in _brief("bim-06")} == {PASS}
 
 
 def test_a_system_is_reported_by_its_predefined_type(tmp_path: Path):
@@ -409,8 +440,10 @@ def _cli(*args: Path) -> subprocess.CompletedProcess[str]:
 def test_cli_writes_the_facts_and_exits_0(tmp_path: Path):
     ifc, out = tmp_path / "part.ifc", tmp_path / "facts.json"
     bim06("MILLI").file.write(str(ifc))
-    assert _cli(ifc, out).returncode == 0
-    assert json.loads(out.read_text()) == ifc_facts.extract(ifcopenshell.open(str(ifc)))
+    done = _cli(ifc, out)
+    assert done.returncode == 0
+    expected = ifc_facts.extract(ifcopenshell.open(str(ifc)))
+    assert json.loads(out.read_text()) == expected
 
 
 def test_cli_exits_1_and_writes_nothing_on_an_unreadable_ifc(tmp_path: Path):
@@ -418,8 +451,10 @@ def test_cli_exits_1_and_writes_nothing_on_an_unreadable_ifc(tmp_path: Path):
     ifc.write_text("not an IFC file")
     done = _cli(ifc, out)
     assert done.returncode == 1
+    assert "cannot read" in done.stderr  # a handled error, not a traceback's exit 1
     assert not out.exists()
 
 
 def test_cli_exits_2_on_a_usage_error(tmp_path: Path):
-    assert _cli(tmp_path).returncode == 2
+    done = _cli(tmp_path)
+    assert done.returncode == 2

@@ -1,6 +1,6 @@
 ---
 envelope: 3001,2601,3001
-elements: IfcWall=1; IfcPipeSegment=2..8; IfcPipeFitting=1..7
+elements: IfcWall=1; IfcOpeningElement=0; IfcPipeSegment=2..8; IfcPipeFitting=1..7
 systems: IfcPipeSegment=DOMESTICCOLDWATER; IfcPipeFitting=DOMESTICCOLDWATER
 ports: 6..30
 open_ports: 2
@@ -8,7 +8,7 @@ networks: 1
 joints: 1
 ends: 0,0,1000; 3000,0,1000
 ends_tol: 5
-path_length: 3000,6000
+path_length: 3600,6000
 no_clash: yes
 ---
 
@@ -31,13 +31,16 @@ centreline, and connect the two ports wherever two elements meet. The ends at (0
 and (3000, 0, 1000) stay unconnected. Assign every segment and fitting to one distribution
 system whose type is DOMESTICCOLDWATER.
 
-Bounds: element counts (2–8 segments, 1–7 fittings, one wall); system membership; 6–30 ports
+Bounds: element counts (2–8 segments, 1–7 fittings, one wall, no opening); system membership; 6–30 ports
 (two per segment and fitting); 2 open ports within 5 mm of the declared ends; one connected
 network; connected ports within 1 mm of each other; no clash with the wall, paired with the
-ends; a path length, summed port to port along the run, between 3000 mm (the straight line,
-which the wall rules out) and 6000 mm (twice it). Blind spots: the wall's own position, the
+ends; a path length, summed port to port along the run, between 3600 mm and 6000 mm (twice the
+straight line). The shortest route round the wall's end, taut and clear of it by the pipe's
+16 mm radius, is 2·√(1384² + 1016²) + 232 ≈ 3666 mm, so 3600 mm sits just below it and well
+above the 3000 mm straight line through the wall. Blind spots: the wall's own position, the
 route staying horizontal at 1000 mm, and its leaving and arriving along X are not checked as
-bounds; the envelope covers the X and Y limits, and the render the rest. Envelope = 3000 × 2600
+bounds; the path length runs port to port, so a fitting whose body loops round the wall
+between two close ports counts only the distance between them; the envelope covers the X and Y limits, and the render the rest. Envelope = 3000 × 2600
 × 3000 mm (the wall from Y = -1000 to the route's limit at 1600) with 1 mm margin. No volume
 band (volume reports `SKIP`). The IFC-level bounds are decided by `bench/ifc_checks.py` from the
 facts `bench/ifc_facts.py` measures on the agent's IFC (plan §5 BENCH-MEP); touching the wall

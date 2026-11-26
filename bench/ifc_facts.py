@@ -13,20 +13,23 @@ error.
   each distribution system the element is assigned to. `centre` is the middle of the bounding
   box of its tessellated body, in world coordinates; `null` when it has no body or the body
   fails to tessellate.
-- `ports`: every `IfcDistributionPort`, with the element it is nested in (`""` when none, which
-  the classifier rejects) and the origin of its placement (`null` when it has none).
+- `ports`: every `IfcDistributionPort` except those nested in a type object, which describe
+  the type's occurrences rather than a port in the model, with the element it is nested in
+  (`""` when none, which the classifier rejects) and the origin of its placement (`null` when
+  it has none).
 - `connections`: one pair per pair of connected ports. IfcOpenShell records a connection in
   both directions, so a pair and its reverse count once; a port connected to two different
   ports appears in two pairs, which the classifier rejects.
 - `clashes`: each pair of a distribution element and a wall whose bodies intersect or touch,
-  or where the element lies wholly inside the wall. Walls are voided by their openings first.
-  `clash_pairs_tested` counts the pairs; it is 0 when the model has no such pair, when any of
-  those elements has no body, or when the clash test fails, because a clash test that left an
-  element out has not tested the model.
+  or where a vertex of either body lies inside the other, which catches an element, or one
+  item of it, buried in the wall, and an element enclosing a wall. Walls are voided by their
+  openings first. `clash_pairs_tested` counts the pairs; it is 0 when the model has no such
+  pair, when any of those elements has no body, or when the clash test fails, because a clash
+  test that left an element out has not tested the model.
 
 Blind spots: clashes are found on tessellated meshes, so a curved body that only grazes a wall
 can read as a gap as wide as the mesher's deflection; only walls are tested, not slabs or other
-elements; the inside test casts one ray from one vertex, so it assumes the wall's mesh is
+elements; the inside test casts one ray from each vertex, so it assumes both meshes are
 closed.
 """
 
@@ -110,22 +113,26 @@ def _port(port: Entity, scale: float) -> dict[str, object]:
     return {"id": _id(port), "element": _id(owner) if owner else "", "position": position}
 
 
-def _inside(point: np.ndarray, mesh: Mesh) -> bool:
-    """Whether `point` is inside the closed mesh: an odd count of ray crossings."""
+def _inside(points: np.ndarray, mesh: Mesh) -> bool:
+    """Whether any of `points` is inside the closed mesh: an odd count of ray crossings."""
     verts, faces = mesh
+    near = np.all((points >= verts.min(axis=0)) & (points <= verts.max(axis=0)), axis=1)
     v0, v1, v2 = verts[faces[:, 0]], verts[faces[:, 1]], verts[faces[:, 2]]
     e1, e2 = v1 - v0, v2 - v0
     p = np.cross(RAY, e2)
     det = np.einsum("ij,ij->i", e1, p)
     hit = np.abs(det) > 1e-12
     inv = np.divide(1.0, det, out=np.zeros_like(det), where=hit)
-    s = point - v0
-    u = np.einsum("ij,ij->i", s, p) * inv
-    q = np.cross(s, e1)
-    v = (q @ RAY) * inv
-    t = np.einsum("ij,ij->i", e2, q) * inv
-    crossings = hit & (u >= 0) & (v >= 0) & (u + v <= 1) & (t > 1e-9)
-    return int(crossings.sum()) % 2 == 1
+    for point in points[near]:  # only points within the mesh's bounding box can be inside
+        s = point - v0
+        u = np.einsum("ij,ij->i", s, p) * inv
+        q = np.cross(s, e1)
+        v = (q @ RAY) * inv
+        t = np.einsum("ij,ij->i", e2, q) * inv
+        crossings = hit & (u >= 0) & (v >= 0) & (u + v <= 1) & (t > 1e-9)
+        if int(crossings.sum()) % 2 == 1:
+            return True
+    return False
 
 
 def _clashes(model: ifcopenshell.file, meshes: dict[int, Mesh]) -> tuple[int, list[list[str]]]:
@@ -151,12 +158,18 @@ def _clashes(model: ifcopenshell.file, meshes: dict[int, Mesh]) -> tuple[int, li
         a, b = clash.a, clash.b
         flow, wall = (b, a) if a.id() in wall_ids else (a, b)
         pairs.add((_id(flow), _id(wall)))
-    for flow in flows:
-        first_vertex = meshes[flow.id()][0][0]
+    for flow in flows:  # nesting leaves no surfaces crossing, so the collision test misses it
+        f = meshes[flow.id()]
         for wall in walls:
-            if _inside(first_vertex, meshes[wall.id()]):
+            w = meshes[wall.id()]
+            if _inside(f[0], w) or _inside(w[0], f):
                 pairs.add((_id(flow), _id(wall)))
     return len(flows) * len(walls), [list(p) for p in sorted(pairs)]
+
+
+def _on_type(port: Entity) -> bool:
+    owner = ifcopenshell.util.system.get_port_element(port)
+    return owner is not None and owner.is_a("IfcTypeObject")
 
 
 def extract(model: ifcopenshell.file) -> dict[str, object]:
@@ -170,7 +183,7 @@ def extract(model: ifcopenshell.file) -> dict[str, object]:
     connections = [list(p) for p in dict.fromkeys(tuple(sorted(p)) for p in pairs)]
     return {
         "elements": [_element(e, meshes) for e in model.by_type("IfcElement")],
-        "ports": [_port(p, scale) for p in model.by_type("IfcDistributionPort")],
+        "ports": [_port(p, scale) for p in model.by_type("IfcDistributionPort") if not _on_type(p)],
         "connections": connections,
         "clash_pairs_tested": tested,
         "clashes": clashes,
@@ -184,7 +197,7 @@ def main(argv: list[str]) -> int:
         return 2
     try:
         model = ifcopenshell.open(argv[0])
-    except (OSError, RuntimeError) as unreadable:
+    except (OSError, RuntimeError, ifcopenshell.Error) as unreadable:
         print(f"ifc_facts: cannot read {argv[0]}: {unreadable}", file=sys.stderr)
         return 1
     facts = extract(model)

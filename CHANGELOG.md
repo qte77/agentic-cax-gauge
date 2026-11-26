@@ -11,12 +11,16 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 - **The IFC extractor and its `bench/run.sh` wiring (plan §5 BENCH-MEP, PR B).**
   `bench/ifc_facts.py` measures an IFC model into the facts `bench/ifc_checks.py` decides, in
   millimetres whatever the file's unit: elements with their systems and body centres, ports,
-  connections, and clashes between distribution elements and walls. Touching a wall and lying
-  wholly inside one count as clashes; an element without a body leaves the clash test at zero
-  pairs, so `no_clash` fails rather than passing untested. `bench/run.sh` now decides every
-  run's IFC-level bounds (`ifc_checks.json`): a failed bound turns `review` or
-  `preflight-only` into `fail`, and a brief that declares bounds fails them all when there
-  are no facts, whatever the tool. `bench/rescore.sh` decides them again from the saved facts,
+  connections, and clashes between distribution elements and walls. Touching a wall, a body
+  or one item of it buried in a wall, and a body enclosing a wall count as clashes; an element
+  without a body leaves the clash test at zero pairs, so `no_clash` fails rather than passing
+  untested. Ports nested in a type object are left out. `bench/run.sh` now decides every
+  run's IFC-level bounds (`ifc_checks.json`), measuring into a directory made after the agent
+  exits so no file the agent leaves can stand in for the facts: a failed bound turns `review`
+  or `preflight-only` into `fail`, and a brief that declares bounds fails them all when there
+  are no facts, whatever the tool. `bim-09` now allows no opening in the wall and starts its
+  path-length window at 3600 mm, just under the shortest route round the wall's end (about
+  3666 mm), so a straight run through a hole fails. `bench/rescore.sh` decides them again from the saved facts,
   so a re-score keeps an IFC failure. New `make test_ifc` (marker `ifc`, local only, borrows
   `ifcopenshell==0.9.0.post1`): reference models of `bim-05`…`bim-09` meet every declared
   bound in millimetres and in metres with identical facts; a pipe through a solid wall

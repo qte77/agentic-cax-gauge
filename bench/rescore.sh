@@ -52,12 +52,12 @@ for out in "$repo"/site/bench/${1:-*}/; do
 	esac
 	# The IFC-level bounds again, from the facts the run saved (pure Python, no IFC opened).
 	ifc_rc=0
-	python3 -I "$repo/bench/ifc_checks.py" "$brief" "$out/ifc_facts.json" \
+	uv run --directory "$repo" python -I "$repo/bench/ifc_checks.py" "$brief" "$out/ifc_facts.json" \
 		> "$out/ifc_checks.json" || ifc_rc=$?
 	case "$ifc_rc" in  # same merge as run.sh
 	0) ;;
 	1) if [ "$verdict" = review ] || [ "$verdict" = preflight-only ]; then verdict=fail; fi ;;
-	*) verdict="error-ifc-checks-exit-$ifc_rc" ;;
+	*) [[ "$verdict" == error-* ]] || verdict="error-ifc-checks-exit-$ifc_rc" ;;
 	esac
 	set_verdict "${run%-*-*}" "$tool" "$n" "$verdict"
 done

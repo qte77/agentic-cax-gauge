@@ -195,10 +195,13 @@ def test_a_clash_bound_is_paired_with_declared_ends(path: Path):
         assert len(bounds["ends"].points) >= 2
 
 
-def test_the_path_length_window_starts_at_the_straight_line():
+def test_the_path_length_window_starts_between_the_straight_line_and_the_shortest_route():
     bounds = _bounds("bim-09-route-around-wall")
     a, b = bounds["ends"].points
-    assert bounds["path_length"][0] == pytest.approx(math.dist(a, b))
+    # The taut route round the wall's end, clear of it by the pipe's 16 mm radius: corners at
+    # (1384, 1016) and (1616, 1016).
+    shortest = 2 * math.hypot(1400 - 16, 1000 + 16) + 200 + 2 * 16
+    assert math.dist(a, b) < bounds["path_length"][0] <= shortest
 
 
 def test_the_fall_window_contains_the_stated_fall():
@@ -404,14 +407,31 @@ def test_a_detour_longer_than_the_window_fails_the_path_length():
     assert _statuses("bim-09-route-around-wall", facts)["path_length"] == FAIL
 
 
-def test_a_straight_run_through_the_wall_passes_length_but_fails_the_clash():
-    facts = _chain([(0, 0, 1000), (3000, 0, 1000)], ["IfcPipeSegment"], "DOMESTICCOLDWATER")
+def _straight_run() -> dict:
+    """Segment, fitting, segment in a straight line from one declared end to the other."""
+    xs = [0, 1450, 1450, 1550, 1550, 3000]
+    classes = ["IfcPipeSegment", "IfcPipeFitting", "IfcPipeSegment"]
+    facts = _chain([(x, 0, 1000) for x in xs], classes, "DOMESTICCOLDWATER")
     facts["elements"].insert(0, _el("w", "IfcWall"))
-    facts["clash_pairs_tested"] = 1
-    facts["clashes"] = [["e0", "w"]]
+    facts["clash_pairs_tested"] = 3
+    return facts
+
+
+def test_a_straight_run_through_the_wall_fails_the_length_and_the_clash():
+    facts = _straight_run()
+    facts["clashes"] = [["e0", "w"], ["e1", "w"], ["e2", "w"]]
     statuses = _statuses("bim-09-route-around-wall", facts)
-    assert statuses["path_length"] == PASS  # the low edge is the straight line itself
+    assert statuses["path_length"] == FAIL
     assert statuses["no_clash"] == FAIL
+
+
+def test_a_straight_run_through_an_opening_fails_the_count_and_the_length():
+    facts = _straight_run()
+    facts["elements"].insert(1, _el("op", "IfcOpeningElement"))  # it clashes with nothing
+    statuses = _statuses("bim-09-route-around-wall", facts)
+    assert statuses["no_clash"] == PASS
+    assert statuses["elements"] == FAIL
+    assert statuses["path_length"] == FAIL
 
 
 def test_a_clash_check_that_tested_nothing_fails():

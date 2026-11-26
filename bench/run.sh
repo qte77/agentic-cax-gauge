@@ -100,17 +100,20 @@ for brief in "$repo"/bench/briefs/$brief_glob.md; do
 					"$work/part.ifc" "$work/part.stl" || true
 			fi
 			# IFC-level bounds (plan §5 BENCH-MEP), decided for every run: a brief that declares them
-			# fails them all when there are no facts, whatever the tool or the extractor did.
+			# fails them all when there are no facts, whatever the tool or the extractor did. The
+			# facts go to a directory made after the agent has exited, never to $work, so no file
+			# the agent left there can stand in for them.
+			facts="$(mktemp -d "$tmp/ifc-XXXXXX")"
 			if [ -s "$work/part.ifc" ]; then
 				uv run --no-project --with ifcopenshell==0.9.0.post1 python -I "$repo/bench/ifc_facts.py" \
-					"$work/part.ifc" "$work/ifc_facts.json" || echo "run.sh: ifc_facts wrote no facts"
+					"$work/part.ifc" "$facts/ifc_facts.json" || echo "run.sh: ifc_facts wrote no facts"
 			fi
 			ifc_rc=0
-			python3 -I "$repo/bench/ifc_checks.py" "$brief" "$work/ifc_facts.json" \
-				> "$work/ifc_checks.json" || ifc_rc=$?
+			uv run --directory "$repo" python -I "$repo/bench/ifc_checks.py" "$brief" "$facts/ifc_facts.json" \
+				> "$facts/ifc_checks.json" || ifc_rc=$?
 			rm -f "$out/ifc_facts.json" "$out/ifc_checks.json"  # $out is reused across rounds
-			cp "$work/ifc_checks.json" "$out/"
-			[ -f "$work/ifc_facts.json" ] && cp "$work/ifc_facts.json" "$out/"
+			cp "$facts"/ifc_*.json "$out/"
+			rm -rf "$facts"
 			cost="$(python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print(d.get("total_cost_usd", 0))' "$out/run.json" 2>/dev/null || echo 0)"
 			turns="$(python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print(d.get("num_turns", ""))' "$out/run.json" 2>/dev/null || echo)"
 			if [ -s "$work/part.stl" ]; then
@@ -133,7 +136,7 @@ for brief in "$repo"/bench/briefs/$brief_glob.md; do
 				case "$ifc_rc" in  # a failed IFC-level bound fails the run; 2 = the brief is unreadable
 				0) ;;
 				1) if [ "$verdict" = review ] || [ "$verdict" = preflight-only ]; then verdict=fail; fi ;;
-				*) verdict="error-ifc-checks-exit-$ifc_rc" ;;
+				*) [[ "$verdict" == error-* ]] || verdict="error-ifc-checks-exit-$ifc_rc" ;;  # first error wins
 				esac
 				stl=yes
 			else
