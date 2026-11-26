@@ -30,5 +30,6 @@ Bounds: element counts; system membership; 4 ports, all open, in two separate ne
 clash between the pipe or the conduit and the voided wall, paired with the 4 open ports within
 5 mm of the declared ends (a pipe moved clear of the wall avoids the clash but misses its
 ends). Envelope = 4000 × 1200 × 3000 mm with 1 mm margin. No volume band (volume reports
-`SKIP`). The IFC-level bounds are decided by `bench/ifc_checks.py` (plan §5 BENCH-MEP); until
-the extractor is wired (PR B), only the envelope is scored.
+`SKIP`). The IFC-level bounds are decided by `bench/ifc_checks.py` from the facts
+`bench/ifc_facts.py` measures on the agent's IFC (plan §5 BENCH-MEP); touching the wall counts
+as a clash.

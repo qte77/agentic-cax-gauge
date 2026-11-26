@@ -1,6 +1,6 @@
 """The IFC-level classifier for the plumbing and wiring briefs (plan §5 BENCH-MEP, PR A).
 
-`bench/ifc_checks.py` decides from facts that PR B's extractor will measure. These tests
+`bench/ifc_checks.py` decides from facts that `bench/ifc_facts.py` measures. These tests
 hand-write those facts: one reference model per brief that meets every declared bound, a
 known-bad model per bound, and broken or empty facts. Hand-written facts are not measured
 from any IFC, so they test the decision rules only, never the extractor.
@@ -34,7 +34,7 @@ BRIEFS = BENCH / "briefs"
 MEP = sorted(BRIEFS.glob("bim-0[5-9]-*.md"))
 
 # Read from the IFC4 schema in IfcOpenShell 0.9.0.post1 on 2026-11-25
-# (IfcDistributionSystemEnum). CI has no IfcOpenShell; PR B's marked test reads it live.
+# (IfcDistributionSystemEnum). CI has no IfcOpenShell; tests/test_ifc_facts.py reads it live.
 VERIFIED_SYSTEMS = {"DOMESTICCOLDWATER", "DRAINAGE", "ELECTRICAL"}
 
 
@@ -472,7 +472,7 @@ def test_preflight_keys_are_left_to_caxgauge():
     assert parse_bounds({"envelope": "1,2,3", "volume_band": "1,2", "volume": "2"}) == {}
 
 
-# --- the command line that PR B's run.sh wiring calls ----------------------------------
+# --- the command line that bench/run.sh calls ------------------------------------------
 
 
 def _cli(brief: Path, facts: Path) -> subprocess.CompletedProcess[str]:

@@ -27,5 +27,5 @@ Bounds: element counts; system membership; 8 ports, none open; one connected net
 connected ports within 1 mm of each other; each outlet's centre (of its geometry) between
 290 and 310 mm above the floor around the stated 300 mm. Envelope = the row's extents
 (1100 × 50 × 100 mm) with 1 mm margin. No volume band (volume reports `SKIP`). The IFC-level
-bounds are decided by `bench/ifc_checks.py` (plan §5 BENCH-MEP); until the extractor is wired
-(PR B), only the envelope is scored.
+bounds are decided by `bench/ifc_checks.py` from the facts `bench/ifc_facts.py` measures on
+the agent's IFC (plan §5 BENCH-MEP).

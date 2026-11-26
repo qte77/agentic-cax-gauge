@@ -39,5 +39,6 @@ which the wall rules out) and 6000 mm (twice it). Blind spots: the wall's own po
 route staying horizontal at 1000 mm, and its leaving and arriving along X are not checked as
 bounds; the envelope covers the X and Y limits, and the render the rest. Envelope = 3000 × 2600
 × 3000 mm (the wall from Y = -1000 to the route's limit at 1600) with 1 mm margin. No volume
-band (volume reports `SKIP`). The IFC-level bounds are decided by `bench/ifc_checks.py` (plan §5
-BENCH-MEP); until the extractor is wired (PR B), only the envelope is scored.
+band (volume reports `SKIP`). The IFC-level bounds are decided by `bench/ifc_checks.py` from the
+facts `bench/ifc_facts.py` measures on the agent's IFC (plan §5 BENCH-MEP); touching the wall
+counts as a clash.

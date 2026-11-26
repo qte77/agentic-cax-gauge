@@ -8,6 +8,22 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Added
 
+- **The IFC extractor and its `bench/run.sh` wiring (plan §5 BENCH-MEP, PR B).**
+  `bench/ifc_facts.py` measures an IFC model into the facts `bench/ifc_checks.py` decides, in
+  millimetres whatever the file's unit: elements with their systems and body centres, ports,
+  connections, and clashes between distribution elements and walls. Touching a wall and lying
+  wholly inside one count as clashes; an element without a body leaves the clash test at zero
+  pairs, so `no_clash` fails rather than passing untested. `bench/run.sh` now decides every
+  run's IFC-level bounds (`ifc_checks.json`): a failed bound turns `review` or
+  `preflight-only` into `fail`, and a brief that declares bounds fails them all when there
+  are no facts, whatever the tool. `bench/rescore.sh` decides them again from the saved facts,
+  so a re-score keeps an IFC failure. New `make test_ifc` (marker `ifc`, local only, borrows
+  `ifcopenshell==0.9.0.post1`): reference models of `bim-05`…`bim-09` meet every declared
+  bound in millimetres and in metres with identical facts; a pipe through a solid wall
+  clashes, one through an opening does not, touching clashes and a 0.5 mm gap does not; each
+  brief's system types are read from the installed IFC4 schema. The test models are built with
+  IfcOpenShell, the library the extractor reads them with, so they are not independent
+  controls. Nothing has run.
 - **Plumbing and wiring briefs with their IFC-level classifier (plan §5 BENCH-MEP, PR A).**
   Briefs `bim-05` cold-water pipe with an elbow, `bim-06` drain laid to a fall, `bim-07`
   junction box feeding two outlets by conduit, `bim-08` wall with a pipe and a conduit through
@@ -18,9 +34,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
   JSON (schema in its docstring), so CI tests every rule with hand-written facts: a reference
   model per brief, a known-bad model per bound, and missing, empty or broken facts failing
   every declared bound. An unknown or malformed bound is an error, never a `SKIP`. Envelope
-  only for the mesh check: thin pipes get no volume band, so volume reports `SKIP`. **Not
-  enforced yet:** the facts extractor and the `bench/run.sh` wiring are PR B, so until then a
-  run of these briefs scores only the envelope. Nothing has run.
+  only for the mesh check: thin pipes get no volume band, so volume reports `SKIP`. The facts
+  extractor and the `bench/run.sh` wiring followed in PR B (above). Nothing has run.
 - **`make release_smoke`**, run before a minor or major tag: loads `site/index.html` and a
   `--source` report on seven presets (desktop 1280×800; iPhone 13, Pixel 7 and iPad Mini, each
   portrait and landscape) through polyfetch's Chromium (`scripts/release_smoke.py`). It
