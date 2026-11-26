@@ -54,4 +54,7 @@ exclude = [
     # passing on rerun each time; confirmed live 2026-11-24 by a local lychee run (200 after
     # redirects) and polyfetch (200). Exact URL only
     "^https://docs\\.blender\\.org/api/current$",
+    # 403 to the CI runner's lychee on two of three attempts on PR #145 (2026-11-26); confirmed
+    # live the same day by a local lychee run (200). Exact URL only
+    "^https://adsknews\\.autodesk\\.com/en/news/upcoming-3d-generative-ai-foundation-models/$",
 ]
