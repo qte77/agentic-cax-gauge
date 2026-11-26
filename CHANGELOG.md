@@ -16,7 +16,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
   without a body leaves the clash test at zero pairs, so `no_clash` fails rather than passing
   untested. Ports nested in a type object are left out. `bench/run.sh` now decides every
   run's IFC-level bounds (`ifc_checks.json`), measuring into a directory made after the agent
-  exits so no file the agent leaves can stand in for the facts: a failed bound turns `review`
+  exits so no file the agent leaves in its work directory can stand in for the facts: a failed bound turns `review`
   or `preflight-only` into `fail`, and a brief that declares bounds fails them all when there
   are no facts, whatever the tool. `bim-09` now allows no opening in the wall and starts its
   path-length window at 3600 mm, just under the shortest route round the wall's end (about

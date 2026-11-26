@@ -1,6 +1,6 @@
 """Decide the IFC-level bounds of the plumbing and wiring briefs (plan §5 BENCH-MEP).
 
-Usage: python3 -I bench/ifc_checks.py BRIEF.md FACTS.json
+Usage: uv run python -I bench/ifc_checks.py BRIEF.md FACTS.json
 
 Pure Python, standard library only, so CI tests every rule with hand-written facts. It never
 opens an IFC file: `bench/ifc_facts.py` (IfcOpenShell) measures the model and writes the facts;
@@ -29,8 +29,8 @@ An absent bound reports `skip`; an unknown key or a malformed value is an error,
 - `path_length: 3000,6000`: the run's length in mm, summed port to port over every element
   of a class that owns ports anywhere in the model (each must own exactly two), plus the gaps
   at its connections.
-- `no_clash: yes`: no distribution element intersects, touches or lies inside a wall, and at
-  least one pair was tested.
+- `no_clash: yes`: no distribution element intersects, touches, lies inside or encloses a
+  wall, and at least one pair was tested.
 
 Every window is two-sided and inclusive. An empty model, or facts that are missing or broken,
 fail every declared bound. Broken includes ids that are empty or repeated, a port naming an

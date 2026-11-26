@@ -133,7 +133,7 @@ for brief in "$repo"/bench/briefs/$brief_glob.md; do
 				3) verdict=preflight-only ;;  # BENCH_NO_RENDER=1: no render, nothing to review
 				*) verdict="error-exit-$rc" ;;
 				esac
-				case "$ifc_rc" in  # a failed IFC-level bound fails the run; 2 = the brief is unreadable
+				case "$ifc_rc" in  # a failed IFC-level bound fails the run; 2 = unreadable brief, or uv failed
 				0) ;;
 				1) if [ "$verdict" = review ] || [ "$verdict" = preflight-only ]; then verdict=fail; fi ;;
 				*) [[ "$verdict" == error-* ]] || verdict="error-ifc-checks-exit-$ifc_rc" ;;  # first error wins
