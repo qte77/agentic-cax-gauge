@@ -213,6 +213,10 @@ Format based on [Keep a Changelog](https://keepachangelog.com/), [Semantic Versi
 
 ### Changed
 
+- **Link check excludes one Autodesk news URL**, exact URL only
+  (`adsknews.autodesk.com/en/news/upcoming-3d-generative-ai-foundation-models/`): CI's runner
+  got 403 on it on two of three attempts on 2026-11-26, and a local lychee run confirmed it
+  live (200) the same day.
 - **Sample site regenerated with v0.3.0** (`make site`): all four reports gain the
   `preflight-only` style, the three fixture reports embed the current fixture script, the
   renders are byte-identical, and the index footer now says v0.3.0, not v0.2.1.
